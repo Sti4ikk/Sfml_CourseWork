@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <Windows.h>
+#include <string>
 
 using namespace sf;
 
@@ -40,16 +41,16 @@ int main()
     rectangle3.setFillColor(Color(175, 180, 240));
 
     sf::Text text(L"АВТОРИЗАЦИЯ", font);
-    text.setCharacterSize(44); // Установка размера шрифта
+    text.setCharacterSize(48); // Установка размера шрифта
     text.setFillColor(sf::Color::Black); // Установка цвета текста
     // Установка начального положения текста
-    text.setPosition(150.f, 15.f); // Новые координаты (x, y)
+    text.setPosition(145.f, 8.f); // Новые координаты (x, y)
 
 
-    sf::Text login(L"ВОЙТИ", font);
-    login.setCharacterSize(36); // Установка размера шрифта
-    login.setFillColor(sf::Color::Black); // Установка цвета текста
-    login.setPosition(330.f, 263.f); // Новые координаты (x, y)
+    sf::Text entrance(L"ВОЙТИ", font);
+    entrance.setCharacterSize(36); // Установка размера шрифта
+    entrance.setFillColor(sf::Color::Black); // Установка цвета текста
+    entrance.setPosition(330.f, 263.f); // Новые координаты (x, y)
 
 
 
@@ -62,7 +63,7 @@ int main()
 
     // Загрузка изображения в текстуру
     sf::Texture texture2;
-    if (!texture2.loadFromFile("password.png")) {
+    if (!texture2.loadFromFile("password1.png")) {
         // Обработка ошибки загрузки изображения
         return EXIT_FAILURE;
     }
@@ -75,12 +76,22 @@ int main()
     sprite2.setScale(1.f / 9.f, 1.f / 9.f);
 
     // Установка начального положения спрайта
-    sprite1.setPosition(40.f, 77.f); // Новые координаты (x, y)
-    sprite2.setPosition(40.f, 167.f); // Новые координаты (x, y)
+    sprite1.setPosition(400.f, 77.f); // Новые координаты (x, y)
+    sprite2.setPosition(400.f, 167.f); // Новые координаты (x, y)
 
+    sf::Text login("", font);
+    login.setCharacterSize(42); // Установка размера шрифта
+    login.setFillColor(sf::Color::Black); // Установка цвета текста
+    login.setPosition(90.f, 80.f); // Новые координаты (x, y)
 
+    sf::Text password("", font);
+    password.setCharacterSize(42); // Установка размера шрифта
+    password.setFillColor(sf::Color::Black); // Установка цвета текста
+    password.setPosition(90.f, 170.f); // Новые координаты (x, y)
 
-    
+    // првоерка, какое поле выбпал для ввода
+    bool isRectangle1Clicked = false;
+    bool isRectangle2Clicked = false;
 
     while (window.isOpen())
     {
@@ -89,9 +100,57 @@ int main()
         {
             if (event.type == sf::Event::Closed)
                 window.close();
-        }
 
-        
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    if (rectangle1.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    {
+                        isRectangle1Clicked = true;
+                        isRectangle2Clicked = false;
+                    }
+                    else if (rectangle2.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    {
+                        isRectangle1Clicked = false;
+                        isRectangle2Clicked = true;
+                    }
+                }
+
+            }
+
+            
+            if (event.type == sf::Event::TextEntered)
+            {
+                if (event.text.unicode < 128)
+                {
+                    if (isRectangle1Clicked && login.getString().getSize() < 12)
+                    {
+                        login.setString(login.getString() + static_cast<char>(event.text.unicode));
+                    }
+                    
+
+                    if (isRectangle2Clicked && password.getString().getSize() < 12)
+                    {
+                        password.setString(password.getString() + static_cast<char>(event.text.unicode));
+                    }
+                }
+            }
+
+
+            // удаление текста
+            if (event.type == sf::Event::MouseButtonPressed) {
+                if (event.mouseButton.button == sf::Mouse::Left) {
+                    if (login.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+                        login.setString("");
+                    }
+                    if (password.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+                        password.setString("");
+                    }
+                }
+            }
+        }
 
         /*if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
             // Изменение размера окна на 1920x1080
@@ -104,8 +163,15 @@ int main()
         window.draw(rectangle1);
         window.draw(rectangle2);
         window.draw(rectangle3);
+        // Замена символов пароля на *
+        sf::String maskedPassword;
+        for (std::size_t i = 0; i < password.getSize(); ++i) {
+            maskedPassword += '*';
+        }
         window.draw(text);
+        window.draw(entrance);
         window.draw(login);
+        window.draw(password);
         window.draw(sprite1);
         window.draw(sprite2);
         window.display();
