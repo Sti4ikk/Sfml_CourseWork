@@ -17,7 +17,7 @@ int main()
     }
 
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
-    sf::RenderWindow window(sf::VideoMode(500, 400), "", sf::Style::None);
+    sf::RenderWindow window(sf::VideoMode(500, 412), "", sf::Style::None);
 
     
     // Загрузка изображения для иконки окна
@@ -40,8 +40,8 @@ int main()
     rectangle2.move(35, 160);
     rectangle3.move(35, 255);
     square.move(45, 340);
-    line1.move(98, 80);
-    line2.move(98, 160);
+    line1.move(99, 80);
+    line2.move(99, 160);
     // Устанавливаем ему цвет
     rectangle1.setFillColor(Color::Black);
     rectangle2.setFillColor(Color::Black);
@@ -69,7 +69,7 @@ int main()
 
     sf::Text rememberMe(L"Запомнить меня", font);
     rememberMe.setCharacterSize(14); // Установка размера шрифта
-    rememberMe.setFillColor(sf::Color::White); // Установка цвета текста
+    rememberMe.setFillColor(sf::Color(59, 60, 54)); // Установка цвета текста
     rememberMe.setPosition(81.f, 344.f); // Новые координаты (x, y)
 
 
@@ -102,6 +102,11 @@ int main()
         // Обработка ошибки загрузки изображения
         return EXIT_FAILURE;
     }
+    sf::Texture krest;
+    if (!krest.loadFromFile("krest.png")) {
+        // Обработка ошибки загрузки изображения
+        return EXIT_FAILURE;
+    }
 
 
     // Создание спрайта и установка текстуры
@@ -110,12 +115,14 @@ int main()
     sf::Sprite sprite3(texture3);
     sf::Sprite sprite4(texture4);
     sf::Sprite sprite_galka(galka);
+    sf::Sprite sprite_krest(krest);
 
     sprite1.setScale(1.f / 10.f, 1.f / 10.f);
     sprite2.setScale(1.f / 10.f, 1.f / 10.f);
     sprite3.setScale(1.f / 12.f, 1.f / 12.f);
     sprite4.setScale(1.f / 12.f, 1.f / 12.f);
     sprite_galka.setScale(1.f / 19.f, 1.f / 19.f);
+    sprite_krest.setScale(1.f / 30.f, 1.f / 30.f);
 
     // Установка начального положения спрайта
     sprite1.setPosition(42.f, 92.f);
@@ -123,21 +130,22 @@ int main()
     sprite3.setPosition(416.f, 175.f);
     sprite4.setPosition(416.f, 175.f);
     sprite_galka.setPosition(44.f, 339.f);
+    sprite_krest.setPosition(478.f, 6.f);
  
     sf::Text login("", font);
-    login.setCharacterSize(38); // Установка размера шрифта
+    login.setCharacterSize(28); // Установка размера шрифта
     login.setFillColor(sf::Color::White); // Установка цвета текста
-    login.setPosition(110.f, 93.f); // Новые координаты (x, y)
+    login.setPosition(110.f, 98.f); // Новые координаты (x, y)
 
     sf::Text password1("", font);
-    password1.setCharacterSize(38); // Установка размера шрифта
+    password1.setCharacterSize(28); // Установка размера шрифта
     password1.setFillColor(sf::Color::White); // Установка цвета текста
-    password1.setPosition(110.f, 173.f); // Новые координаты (x, y)
+    password1.setPosition(110.f, 178.f); // Новые координаты (x, y)
 
     sf::Text password2("", font);
-    password2.setCharacterSize(72); // Установка размера шрифта
+    password2.setCharacterSize(44); // Установка размера шрифта
     password2.setFillColor(sf::Color::White); // Установка цвета текста
-    password2.setPosition(110.f, 173.f); // Новые координаты (x, y)
+    password2.setPosition(110.f, 178.f); // Новые координаты (x, y)
 
     // првоерка, какое поле выбпал для ввода
     bool isRectangle1Clicked = false;
@@ -154,10 +162,22 @@ int main()
         sf::Event event;
         while (window.pollEvent(event))
         {
+            // закрытие приложения
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    if (sprite_krest.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                        window.close();
+                }
+            }
+            // для закрытия из панели задач
             if (event.type == sf::Event::Closed)
                 window.close();
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
                 window.close();
+
 
             else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
             {
@@ -288,6 +308,7 @@ int main()
         else window.draw(password2);
         window.draw(sprite1);
         window.draw(sprite2);
+        window.draw(sprite_krest);
         if (isPasswordOpen)  window.draw(sprite4);
         else  window.draw(sprite3);
         if (isRememberMeOn) window.draw(sprite_galka);
