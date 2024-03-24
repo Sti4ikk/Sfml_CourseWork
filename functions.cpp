@@ -3,6 +3,7 @@
 #include "enums.h"
 #include <string>
 #include "structs.h"
+#include <Windows.h>
 
 int checkDataOfUser(std::vector<Authentication>& authentication, std::string login, std::string password)
 {
@@ -16,4 +17,9 @@ int checkDataOfUser(std::vector<Authentication>& authentication, std::string log
 	}
 	if (!check)
 		return 0;
+}
+
+void openUrl(const std::string& url)
+{
+	ShellExecuteA(nullptr, "open", url.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
 }

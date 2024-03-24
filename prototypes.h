@@ -15,3 +15,4 @@ int checkDataOfUser(std::vector<Authentication>& authentication, std::string log
 // функцию меню
 int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>& employee, bool &isRememberMePressed);
 void main_menu(std::vector<Employee> &employee);
+void openUrl(const std::string& url);

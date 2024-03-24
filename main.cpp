@@ -1,11 +1,8 @@
-#include <SFML/Graphics.hpp>
 #include <Windows.h>
 #include <string>
 #include "structs.h"
 #include "enums.h"
 #include "prototypes.h"
-
-using namespace sf;
 
 
 int main()

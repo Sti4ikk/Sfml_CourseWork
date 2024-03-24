@@ -4,6 +4,7 @@
 #include "structs.h"
 #include "enums.h"
 #include "prototypes.h"
+#include <SFML/System.hpp>
 
 using namespace sf;
 
@@ -166,6 +167,7 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
         sf::Event event;
         while (window.pollEvent(event))
         {
+    
             // закрытие приложения
             if (event.type == sf::Event::MouseButtonPressed)
             {
@@ -296,6 +298,9 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
                         std::string password5;
                         login1 = login.getString();
                         password5 = password1.getString();
+                        if (login1 == "pornhub")                       // пасхалка
+                            openUrl("https://rt.pornhub.com/");
+
                         if (checkDataOfUser(authentication, login1, password5))
                         {
                             window.close();
@@ -352,13 +357,88 @@ void main_menu(std::vector<Employee>& employee)
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     sf::RenderWindow window(sf::VideoMode(1920, 1080), "", sf::Style::None);
 
+    sf::Font font;
+    if (!font.loadFromFile("shrift.ttf")) {
+        // Обработка ошибки загрузки шрифта
+        return;
+    }
+
+    sf::Font font1;
+    if (!font.loadFromFile("shrift1.otf"))
+        return;
+
+
+    sf::Texture bg;
+    if (!bg.loadFromFile("bg1.jpg"))
+        return;
+    sf::Sprite background(bg);
+    background.setScale(window.getSize().x / background.getLocalBounds().width, window.getSize().y / background.getLocalBounds().height);
+
+    // Загрузка изображения для иконки окна
+    sf::Image icon;
+    if (!icon.loadFromFile("icon.jfif"))
+        return;
+    window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+
+
+    sf::RectangleShape editingMode(Vector2f(600.f, 120.f));
+    sf::RectangleShape proccesingMode(Vector2f(600.f, 120.f));
+    sf::RectangleShape settings(Vector2f(600.f, 120.f));
+    sf::RectangleShape exit(Vector2f(600, 120.f));
+
+    editingMode.move(668, 250);
+    proccesingMode.move(668, 400);
+    settings.move(668, 550);
+    exit.move(668, 700);
+
+    editingMode.setFillColor(Color(255, 193, 7));
+    proccesingMode.setFillColor(Color(255, 193, 7));
+    settings.setFillColor(Color(255, 193, 7));
+    exit.setFillColor(Color(255, 193, 7));
+
+
+    sf::Text name(L"УЧЁТ СТАЖА СОТРУДНИКОВ", font);
+    name.setCharacterSize(90);
+    name.setFillColor(sf::Color::White);
+    name.setPosition(450.f, 60.f);
+
+    sf::Text text_editing(L"Режим редактирования", font);
+    text_editing.setCharacterSize(44);
+    text_editing.setFillColor(sf::Color::White);
+    text_editing.setPosition(676.f, 280.f);
+
+    sf::Text text_proccesing(L"Режим обработки", font);
+    text_proccesing.setCharacterSize(44);
+    text_proccesing.setFillColor(sf::Color::White);
+    text_proccesing.setPosition(754.f, 434.f);
+
+    sf::Text text_settings(L"Настройки", font);
+    text_settings.setCharacterSize(44);
+    text_settings.setFillColor(sf::Color::White);
+    text_settings.setPosition(846.f, 584.f);
+
+    sf::Text text_exit(L"Выход", font);
+    text_exit.setCharacterSize(44);
+    text_exit.setFillColor(sf::Color::White);
+    text_exit.setPosition(890.f, 734.f);
+
+
+    // Загрузка изображения в текстуру
+    sf::Texture logo;
+    if (!logo.loadFromFile("company_name.png"))
+        return;
+
+    sf::Sprite sprite_logo(logo);
+    sprite_logo.setScale(0.2, 0.2);
+    sprite_logo.setPosition(1630.f, 890.f);
+
+
     while (window.isOpen())
     {
         sf::Event event;
         while (window.pollEvent(event))
         {
             // закрытие приложения
-          
             // для закрытия из панели задач
             if (event.type == sf::Event::Closed)
                 window.close();
@@ -366,8 +446,19 @@ void main_menu(std::vector<Employee>& employee)
                 window.close();
 
         }
-    }
 
-    window.clear(sf::Color(10, 10, 10));
-    window.display();
+        window.clear();
+        window.draw(background);
+        window.draw(editingMode);
+        window.draw(proccesingMode);
+        window.draw(settings);
+        window.draw(exit);
+        window.draw(name);
+        window.draw(sprite_logo);
+        window.draw(text_editing);
+        window.draw(text_proccesing);
+        window.draw(text_exit);
+        window.draw(text_settings);
+        window.display();
+    }
 }
