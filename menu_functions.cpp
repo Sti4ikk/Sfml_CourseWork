@@ -216,6 +216,15 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
                     }
                 }
             }
+
+            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+            if (rectangle3.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                // Изменение цвета прямоугольника, если курсор находится над ним
+                rectangle3.setFillColor(Color(255, 245, 7));
+            else
+                // Возвращение к исходному цвету, если курсор не находится над прямоугольником
+                rectangle3.setFillColor(Color(255, 193, 7));
+
             // проверка на галочку
             if (event.type == sf::Event::MouseButtonPressed)
             {
@@ -357,15 +366,16 @@ void main_menu(std::vector<Employee>& employee)
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     sf::RenderWindow window(sf::VideoMode(1920, 1080), "", sf::Style::None);
 
-    sf::Font font;
-    if (!font.loadFromFile("shrift.ttf")) {
+    sf::Font font2;
+    if (!font2.loadFromFile("shrift.ttf")) {
         // Обработка ошибки загрузки шрифта
         return;
     }
-
-    sf::Font font1;
-    if (!font.loadFromFile("shrift1.otf"))
+    sf::Font font;
+    if (!font.loadFromFile("shrift2.ttf")) {
+        // Обработка ошибки загрузки шрифта
         return;
+    }
 
 
     sf::Texture bg;
@@ -385,39 +395,42 @@ void main_menu(std::vector<Employee>& employee)
     sf::RectangleShape proccesingMode(Vector2f(600.f, 120.f));
     sf::RectangleShape settings(Vector2f(600.f, 120.f));
     sf::RectangleShape exit(Vector2f(600, 120.f));
+    sf::RectangleShape line1(Vector2f(1920.f, 2.f));
 
     editingMode.move(668, 250);
     proccesingMode.move(668, 400);
     settings.move(668, 550);
     exit.move(668, 700);
+    line1.move(0, 110);
 
     editingMode.setFillColor(Color(255, 193, 7));
     proccesingMode.setFillColor(Color(255, 193, 7));
     settings.setFillColor(Color(255, 193, 7));
     exit.setFillColor(Color(255, 193, 7));
+    line1.setFillColor(Color(59, 60, 54));
 
 
     sf::Text name(L"УЧЁТ СТАЖА СОТРУДНИКОВ", font);
-    name.setCharacterSize(90);
+    name.setCharacterSize(66);
     name.setFillColor(sf::Color::White);
-    name.setPosition(450.f, 60.f);
+    name.setPosition(406.f, 25.f);
 
-    sf::Text text_editing(L"Режим редактирования", font);
+    sf::Text text_editing(L"Режим редактирования", font2);
     text_editing.setCharacterSize(44);
     text_editing.setFillColor(sf::Color::White);
     text_editing.setPosition(676.f, 280.f);
 
-    sf::Text text_proccesing(L"Режим обработки", font);
+    sf::Text text_proccesing(L"Режим обработки", font2);
     text_proccesing.setCharacterSize(44);
     text_proccesing.setFillColor(sf::Color::White);
     text_proccesing.setPosition(754.f, 434.f);
 
-    sf::Text text_settings(L"Настройки", font);
+    sf::Text text_settings(L"Настройки", font2);
     text_settings.setCharacterSize(44);
     text_settings.setFillColor(sf::Color::White);
     text_settings.setPosition(846.f, 584.f);
 
-    sf::Text text_exit(L"Выход", font);
+    sf::Text text_exit(L"Выход", font2);
     text_exit.setCharacterSize(44);
     text_exit.setFillColor(sf::Color::White);
     text_exit.setPosition(890.f, 734.f);
@@ -444,11 +457,44 @@ void main_menu(std::vector<Employee>& employee)
                 window.close();
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
                 window.close();
+            // закрытие приложения
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    if (exit.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                        window.close();
+                }
+            }
+
+            // подсвечивание кнопки при наведении
+            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+            if (editingMode.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                // Изменение цвета прямоугольника, если курсор находится над ним
+                editingMode.setFillColor(Color(255, 245, 7));
+            else
+                // Возвращение к исходному цвету, если курсор не находится над прямоугольником
+                editingMode.setFillColor(Color(255, 193, 7));
+            if (proccesingMode.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                proccesingMode.setFillColor(Color(255, 245, 7));
+            else
+                proccesingMode.setFillColor(Color(255, 193, 7));
+            if (settings.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                settings.setFillColor(Color(255, 245, 7));
+            else
+                settings.setFillColor(Color(255, 193, 7));
+            if (exit.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                exit.setFillColor(Color(255, 245, 7));
+            else
+                exit.setFillColor(Color(255, 193, 7));
+
 
         }
 
         window.clear();
         window.draw(background);
+        window.draw(line1);
         window.draw(editingMode);
         window.draw(proccesingMode);
         window.draw(settings);
