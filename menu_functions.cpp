@@ -1,4 +1,4 @@
-#include <SFML/Graphics.hpp>
+п»ї#include <SFML/Graphics.hpp>
 #include <Windows.h>
 #include <string>
 #include "structs.h"
@@ -15,19 +15,19 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
 
     sf::Font font;
     if (!font.loadFromFile("shrift.ttf")) {
-        // Обработка ошибки загрузки шрифта
+        // РћР±СЂР°Р±РѕС‚РєР° РѕС€РёР±РєРё Р·Р°РіСЂСѓР·РєРё С€СЂРёС„С‚Р°
         return EXIT_FAILURE;
     }
 
-    // Загрузка изображения для иконки окна
+    // Р—Р°РіСЂСѓР·РєР° РёР·РѕР±СЂР°Р¶РµРЅРёСЏ РґР»СЏ РёРєРѕРЅРєРё РѕРєРЅР°
     sf::Image icon;
     if (!icon.loadFromFile("icon.jpg")) {
-        // Обработка ошибки загрузки изображения
+        // РћР±СЂР°Р±РѕС‚РєР° РѕС€РёР±РєРё Р·Р°РіСЂСѓР·РєРё РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
         return EXIT_FAILURE;
     }
     window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
-    // Создаем прямоугольник размером 70х100
+    // РЎРѕР·РґР°РµРј РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРє СЂР°Р·РјРµСЂРѕРј 70С…100
     sf::RectangleShape rectangle1(Vector2f(430.f, 70.f));
     sf::RectangleShape rectangle2(Vector2f(430.f, 70.f));
     sf::RectangleShape rectangle3(Vector2f(430.f, 70.f));
@@ -41,7 +41,7 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
     square.move(45, 340);
     line1.move(99, 80);
     line2.move(99, 160);
-    // Устанавливаем ему цвет
+    // РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј РµРјСѓ С†РІРµС‚
     rectangle1.setFillColor(Color::Black);
     rectangle2.setFillColor(Color::Black);
     rectangle3.setFillColor(Color(255, 193, 7));
@@ -49,86 +49,86 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
     line1.setFillColor(Color(59, 60, 54));
     line2.setFillColor(Color(59, 60, 54));
 
-    rectangle1.setOutlineThickness(1.f); // толщина контура
-    rectangle2.setOutlineThickness(1.f); // толщина контура
-    rectangle1.setOutlineColor(sf::Color(59, 60, 54)); // цвет контура
-    rectangle2.setOutlineColor(sf::Color(59, 60, 54)); // цвет контура
+    rectangle1.setOutlineThickness(1.f); // С‚РѕР»С‰РёРЅР° РєРѕРЅС‚СѓСЂР°
+    rectangle2.setOutlineThickness(1.f); // С‚РѕР»С‰РёРЅР° РєРѕРЅС‚СѓСЂР°
+    rectangle1.setOutlineColor(sf::Color(59, 60, 54)); // С†РІРµС‚ РєРѕРЅС‚СѓСЂР°
+    rectangle2.setOutlineColor(sf::Color(59, 60, 54)); // С†РІРµС‚ РєРѕРЅС‚СѓСЂР°
 
-    sf::Text text(L"Авторизация", font);
-    text.setCharacterSize(46); // Установка размера шрифта
-    text.setFillColor(sf::Color::White); // Установка цвета текста
-    // Установка начального положения текста
-    text.setPosition(88.f, 8.f); // Новые координаты (x, y)
+    sf::Text text(L"РђРІС‚РѕСЂРёР·Р°С†РёСЏ", font);
+    text.setCharacterSize(46); // РЈСЃС‚Р°РЅРѕРІРєР° СЂР°Р·РјРµСЂР° С€СЂРёС„С‚Р°
+    text.setFillColor(sf::Color::White); // РЈСЃС‚Р°РЅРѕРІРєР° С†РІРµС‚Р° С‚РµРєСЃС‚Р°
+    // РЈСЃС‚Р°РЅРѕРІРєР° РЅР°С‡Р°Р»СЊРЅРѕРіРѕ РїРѕР»РѕР¶РµРЅРёСЏ С‚РµРєСЃС‚Р°
+    text.setPosition(88.f, 8.f); // РќРѕРІС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹ (x, y)
 
 
-    sf::Text entrance(L"Войти", font);
-    entrance.setCharacterSize(30); // Установка размера шрифта
-    entrance.setFillColor(sf::Color::White); // Установка цвета текста
-    entrance.setPosition(188.f, 272.f); // Новые координаты (x, y)
+    sf::Text entrance(L"Р’РѕР№С‚Рё", font);
+    entrance.setCharacterSize(30); // РЈСЃС‚Р°РЅРѕРІРєР° СЂР°Р·РјРµСЂР° С€СЂРёС„С‚Р°
+    entrance.setFillColor(sf::Color::White); // РЈСЃС‚Р°РЅРѕРІРєР° С†РІРµС‚Р° С‚РµРєСЃС‚Р°
+    entrance.setPosition(188.f, 272.f); // РќРѕРІС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹ (x, y)
 
-    sf::Text rememberMe(L"Запомнить меня", font);
-    rememberMe.setCharacterSize(14); // Установка размера шрифта
-    rememberMe.setFillColor(sf::Color(59, 60, 54)); // Установка цвета текста
-    rememberMe.setPosition(81.f, 344.f); // Новые координаты (x, y)
+    sf::Text rememberMe(L"Р—Р°РїРѕРјРЅРёС‚СЊ РјРµРЅСЏ", font);
+    rememberMe.setCharacterSize(14); // РЈСЃС‚Р°РЅРѕРІРєР° СЂР°Р·РјРµСЂР° С€СЂРёС„С‚Р°
+    rememberMe.setFillColor(sf::Color(59, 60, 54)); // РЈСЃС‚Р°РЅРѕРІРєР° С†РІРµС‚Р° С‚РµРєСЃС‚Р°
+    rememberMe.setPosition(81.f, 344.f); // РќРѕРІС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹ (x, y)
 
     sf::Text login("", font);
-    login.setCharacterSize(28); // Установка размера шрифта
-    login.setFillColor(sf::Color::White); // Установка цвета текста
-    login.setPosition(110.f, 98.f); // Новые координаты (x, y)
+    login.setCharacterSize(28); // РЈСЃС‚Р°РЅРѕРІРєР° СЂР°Р·РјРµСЂР° С€СЂРёС„С‚Р°
+    login.setFillColor(sf::Color::White); // РЈСЃС‚Р°РЅРѕРІРєР° С†РІРµС‚Р° С‚РµРєСЃС‚Р°
+    login.setPosition(110.f, 98.f); // РќРѕРІС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹ (x, y)
 
     sf::Text password1("", font);
-    password1.setCharacterSize(28); // Установка размера шрифта
-    password1.setFillColor(sf::Color::White); // Установка цвета текста
-    password1.setPosition(110.f, 178.f); // Новые координаты (x, y)
+    password1.setCharacterSize(28); // РЈСЃС‚Р°РЅРѕРІРєР° СЂР°Р·РјРµСЂР° С€СЂРёС„С‚Р°
+    password1.setFillColor(sf::Color::White); // РЈСЃС‚Р°РЅРѕРІРєР° С†РІРµС‚Р° С‚РµРєСЃС‚Р°
+    password1.setPosition(110.f, 178.f); // РќРѕРІС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹ (x, y)
 
     sf::Text password2("", font);
-    password2.setCharacterSize(44); // Установка размера шрифта
-    password2.setFillColor(sf::Color::White); // Установка цвета текста
-    password2.setPosition(110.f, 178.f); // Новые координаты (x, y)
+    password2.setCharacterSize(44); // РЈСЃС‚Р°РЅРѕРІРєР° СЂР°Р·РјРµСЂР° С€СЂРёС„С‚Р°
+    password2.setFillColor(sf::Color::White); // РЈСЃС‚Р°РЅРѕРІРєР° С†РІРµС‚Р° С‚РµРєСЃС‚Р°
+    password2.setPosition(110.f, 178.f); // РќРѕРІС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹ (x, y)
 
-    sf::Text error(L"Неверный логин или пароль!", font);
-    error.setCharacterSize(16); // Установка размера шрифта
-    error.setFillColor(sf::Color::Red); // Установка цвета текста
-    error.setPosition(126.f, 380.f); // Новые координаты (x, y)
+    sf::Text error(L"РќРµРІРµСЂРЅС‹Р№ Р»РѕРіРёРЅ РёР»Рё РїР°СЂРѕР»СЊ!", font);
+    error.setCharacterSize(16); // РЈСЃС‚Р°РЅРѕРІРєР° СЂР°Р·РјРµСЂР° С€СЂРёС„С‚Р°
+    error.setFillColor(sf::Color::Red); // РЈСЃС‚Р°РЅРѕРІРєР° С†РІРµС‚Р° С‚РµРєСЃС‚Р°
+    error.setPosition(126.f, 380.f); // РќРѕРІС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹ (x, y)
 
 
 
-    // Загрузка изображения в текстуру
+    // Р—Р°РіСЂСѓР·РєР° РёР·РѕР±СЂР°Р¶РµРЅРёСЏ РІ С‚РµРєСЃС‚СѓСЂСѓ
     sf::Texture texture1;
     if (!texture1.loadFromFile("user.png")) {
-        // Обработка ошибки загрузки изображения
+        // РћР±СЂР°Р±РѕС‚РєР° РѕС€РёР±РєРё Р·Р°РіСЂСѓР·РєРё РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
         return EXIT_FAILURE;
     }
-    // Загрузка изображения в текстуру
+    // Р—Р°РіСЂСѓР·РєР° РёР·РѕР±СЂР°Р¶РµРЅРёСЏ РІ С‚РµРєСЃС‚СѓСЂСѓ
     sf::Texture texture2;
     if (!texture2.loadFromFile("password1.png")) {
-        // Обработка ошибки загрузки изображения
+        // РћР±СЂР°Р±РѕС‚РєР° РѕС€РёР±РєРё Р·Р°РіСЂСѓР·РєРё РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
         return EXIT_FAILURE;
     }
-    // Загрузка изображения в текстуру
+    // Р—Р°РіСЂСѓР·РєР° РёР·РѕР±СЂР°Р¶РµРЅРёСЏ РІ С‚РµРєСЃС‚СѓСЂСѓ
     sf::Texture texture3;
     if (!texture3.loadFromFile("hide_eye.png")) {
-        // Обработка ошибки загрузки изображения
+        // РћР±СЂР°Р±РѕС‚РєР° РѕС€РёР±РєРё Р·Р°РіСЂСѓР·РєРё РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
         return EXIT_FAILURE;
     }
     sf::Texture texture4;
     if (!texture4.loadFromFile("open_eye.png")) {
-        // Обработка ошибки загрузки изображения
+        // РћР±СЂР°Р±РѕС‚РєР° РѕС€РёР±РєРё Р·Р°РіСЂСѓР·РєРё РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
         return EXIT_FAILURE;
     }
     sf::Texture galka;
     if (!galka.loadFromFile("galka.png")) {
-        // Обработка ошибки загрузки изображения
+        // РћР±СЂР°Р±РѕС‚РєР° РѕС€РёР±РєРё Р·Р°РіСЂСѓР·РєРё РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
         return EXIT_FAILURE;
     }
     sf::Texture krest;
     if (!krest.loadFromFile("krest.png")) {
-        // Обработка ошибки загрузки изображения
+        // РћР±СЂР°Р±РѕС‚РєР° РѕС€РёР±РєРё Р·Р°РіСЂСѓР·РєРё РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
         return EXIT_FAILURE;
     }
 
 
-    // Создание спрайта и установка текстуры
+    // РЎРѕР·РґР°РЅРёРµ СЃРїСЂР°Р№С‚Р° Рё СѓСЃС‚Р°РЅРѕРІРєР° С‚РµРєСЃС‚СѓСЂС‹
     sf::Sprite sprite1(texture1);
     sf::Sprite sprite2(texture2);
     sf::Sprite sprite3(texture3);
@@ -143,7 +143,7 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
     sprite_galka.setScale(1.f / 19.f, 1.f / 19.f);
     sprite_krest.setScale(1.f / 30.f, 1.f / 30.f);
 
-    // Установка начального положения спрайта
+    // РЈСЃС‚Р°РЅРѕРІРєР° РЅР°С‡Р°Р»СЊРЅРѕРіРѕ РїРѕР»РѕР¶РµРЅРёСЏ СЃРїСЂР°Р№С‚Р°
     sprite1.setPosition(42.f, 92.f);
     sprite2.setPosition(43.f, 172.f);
     sprite3.setPosition(416.f, 175.f);
@@ -151,14 +151,14 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
     sprite_galka.setPosition(44.f, 339.f);
     sprite_krest.setPosition(478.f, 6.f);
 
-    // првоерка, какое поле выбрал для ввода
+    // РїСЂРІРѕРµСЂРєР°, РєР°РєРѕРµ РїРѕР»Рµ РІС‹Р±СЂР°Р» РґР»СЏ РІРІРѕРґР°
     bool isRectangle1Clicked = false;
     bool isRectangle2Clicked = false;
     bool isPasswordOpen = false;
     bool isTextPasswordOpen = false;
     bool isRememberMeOn = false;
     bool isIncorrectData = false;
-    // для перемещения окна
+    // РґР»СЏ РїРµСЂРµРјРµС‰РµРЅРёСЏ РѕРєРЅР°
     bool isDragging = false;
     sf::Vector2i clickPosition;
 
@@ -168,7 +168,7 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
         while (window.pollEvent(event))
         {
     
-            // закрытие приложения
+            // Р·Р°РєСЂС‹С‚РёРµ РїСЂРёР»РѕР¶РµРЅРёСЏ
             if (event.type == sf::Event::MouseButtonPressed)
             {
                 if (event.mouseButton.button == sf::Mouse::Left)
@@ -178,7 +178,7 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
                         window.close();
                 }
             }
-            // для закрытия из панели задач
+            // РґР»СЏ Р·Р°РєСЂС‹С‚РёСЏ РёР· РїР°РЅРµР»Рё Р·Р°РґР°С‡
             if (event.type == sf::Event::Closed)
                 window.close();
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
@@ -187,16 +187,16 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
 
             if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
             {
-                // Запоминаем позицию, в которой была нажата кнопка мыши
+                // Р—Р°РїРѕРјРёРЅР°РµРј РїРѕР·РёС†РёСЋ, РІ РєРѕС‚РѕСЂРѕР№ Р±С‹Р»Р° РЅР°Р¶Р°С‚Р° РєРЅРѕРїРєР° РјС‹С€Рё
                 isDragging = true;
                 clickPosition = sf::Mouse::getPosition(window);
             }
             else if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
             {
-                // Когда кнопка мыши отпущена, заканчиваем перетаскивание
+                // РљРѕРіРґР° РєРЅРѕРїРєР° РјС‹С€Рё РѕС‚РїСѓС‰РµРЅР°, Р·Р°РєР°РЅС‡РёРІР°РµРј РїРµСЂРµС‚Р°СЃРєРёРІР°РЅРёРµ
                 isDragging = false;
             }
-            // проверка на поле для ввода
+            // РїСЂРѕРІРµСЂРєР° РЅР° РїРѕР»Рµ РґР»СЏ РІРІРѕРґР°
             if (event.type == sf::Event::MouseButtonPressed)
             {
                 if (event.mouseButton.button == sf::Mouse::Left)
@@ -219,13 +219,13 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
 
             sf::Vector2i mousePos = sf::Mouse::getPosition(window);
             if (rectangle3.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                // Изменение цвета прямоугольника, если курсор находится над ним
+                // РР·РјРµРЅРµРЅРёРµ С†РІРµС‚Р° РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєР°, РµСЃР»Рё РєСѓСЂСЃРѕСЂ РЅР°С…РѕРґРёС‚СЃСЏ РЅР°Рґ РЅРёРј
                 rectangle3.setFillColor(Color(255, 245, 7));
             else
-                // Возвращение к исходному цвету, если курсор не находится над прямоугольником
+                // Р’РѕР·РІСЂР°С‰РµРЅРёРµ Рє РёСЃС…РѕРґРЅРѕРјСѓ С†РІРµС‚Сѓ, РµСЃР»Рё РєСѓСЂСЃРѕСЂ РЅРµ РЅР°С…РѕРґРёС‚СЃСЏ РЅР°Рґ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєРѕРј
                 rectangle3.setFillColor(Color(255, 193, 7));
 
-            // проверка на галочку
+            // РїСЂРѕРІРµСЂРєР° РЅР° РіР°Р»РѕС‡РєСѓ
             if (event.type == sf::Event::MouseButtonPressed)
             {
                 if (event.mouseButton.button == sf::Mouse::Left)
@@ -245,7 +245,7 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
                     }
                 }
             }
-            // ввод текста в поле логин и пароль
+            // РІРІРѕРґ С‚РµРєСЃС‚Р° РІ РїРѕР»Рµ Р»РѕРіРёРЅ Рё РїР°СЂРѕР»СЊ
             if (event.type == sf::Event::TextEntered)
             {
                 if (event.text.unicode < 128)
@@ -262,7 +262,7 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
                     }
                 }
             }
-            // удаление текста
+            // СѓРґР°Р»РµРЅРёРµ С‚РµРєСЃС‚Р°
             if (event.type == sf::Event::MouseButtonPressed) 
             {
                 if (event.mouseButton.button == sf::Mouse::Left) 
@@ -278,7 +278,7 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
                     }
                 }
             }
-            // проверка на нажатие кнопки видимости пароля
+            // РїСЂРѕРІРµСЂРєР° РЅР° РЅР°Р¶Р°С‚РёРµ РєРЅРѕРїРєРё РІРёРґРёРјРѕСЃС‚Рё РїР°СЂРѕР»СЏ
             if (event.type == sf::Event::MouseButtonPressed)
             {
                 if (event.mouseButton.button == sf::Mouse::Left)
@@ -296,7 +296,7 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
                     }
                 }
             }
-            // проверка на правильность введенных данных
+            // РїСЂРѕРІРµСЂРєР° РЅР° РїСЂР°РІРёР»СЊРЅРѕСЃС‚СЊ РІРІРµРґРµРЅРЅС‹С… РґР°РЅРЅС‹С…
             if (event.type == sf::Event::MouseButtonPressed) 
             {
                 if (event.mouseButton.button == sf::Mouse::Left) 
@@ -307,7 +307,7 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
                         std::string password5;
                         login1 = login.getString();
                         password5 = password1.getString();
-                        if (login1 == "pornhub")                       // пасхалка
+                        if (login1 == "pornhub")                       // РїР°СЃС…Р°Р»РєР°
                             openUrl("https://rt.pornhub.com/");
 
                         if (checkDataOfUser(authentication, login1, password5))
@@ -329,11 +329,11 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
         }
         if (isDragging)
         {
-            // Вычисляем разницу между текущей позицией мыши и позицией, где была нажата кнопка мыши
+            // Р’С‹С‡РёСЃР»СЏРµРј СЂР°Р·РЅРёС†Сѓ РјРµР¶РґСѓ С‚РµРєСѓС‰РµР№ РїРѕР·РёС†РёРµР№ РјС‹С€Рё Рё РїРѕР·РёС†РёРµР№, РіРґРµ Р±С‹Р»Р° РЅР°Р¶Р°С‚Р° РєРЅРѕРїРєР° РјС‹С€Рё
             sf::Vector2i delta = sf::Mouse::getPosition(window) - clickPosition;
-            // Получаем текущее положение окна и сдвигаем его на delta
+            // РџРѕР»СѓС‡Р°РµРј С‚РµРєСѓС‰РµРµ РїРѕР»РѕР¶РµРЅРёРµ РѕРєРЅР° Рё СЃРґРІРёРіР°РµРј РµРіРѕ РЅР° delta
             window.setPosition(sf::Vector2i(window.getPosition()) + delta);
-            // Обновляем позицию clickPosition
+            // РћР±РЅРѕРІР»СЏРµРј РїРѕР·РёС†РёСЋ clickPosition
             clickPosition = sf::Mouse::getPosition(window);
         }
 
@@ -368,143 +368,216 @@ void main_menu(std::vector<Employee>& employee)
 
     sf::Font font2;
     if (!font2.loadFromFile("shrift.ttf")) {
-        // Обработка ошибки загрузки шрифта
+        // РћР±СЂР°Р±РѕС‚РєР° РѕС€РёР±РєРё Р·Р°РіСЂСѓР·РєРё С€СЂРёС„С‚Р°
         return;
     }
     sf::Font font;
     if (!font.loadFromFile("shrift2.ttf")) {
-        // Обработка ошибки загрузки шрифта
+        // РћР±СЂР°Р±РѕС‚РєР° РѕС€РёР±РєРё Р·Р°РіСЂСѓР·РєРё С€СЂРёС„С‚Р°
         return;
     }
 
-
-    sf::Texture bg;
-    if (!bg.loadFromFile("bg1.jpg"))
-        return;
-    sf::Sprite background(bg);
-    background.setScale(window.getSize().x / background.getLocalBounds().width, window.getSize().y / background.getLocalBounds().height);
-
-    // Загрузка изображения для иконки окна
+    // Р—Р°РіСЂСѓР·РєР° РёР·РѕР±СЂР°Р¶РµРЅРёСЏ РґР»СЏ РёРєРѕРЅРєРё РѕРєРЅР°
     sf::Image icon;
     if (!icon.loadFromFile("icon.jfif"))
         return;
     window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
 
-    sf::RectangleShape editingMode(Vector2f(600.f, 120.f));
-    sf::RectangleShape proccesingMode(Vector2f(600.f, 120.f));
-    sf::RectangleShape settings(Vector2f(600.f, 120.f));
-    sf::RectangleShape exit(Vector2f(600, 120.f));
-    sf::RectangleShape line1(Vector2f(1920.f, 2.f));
+    // РЎРѕР·РґР°РµРј РјР°СЃСЃРёРІ РІРµСЂС€РёРЅ, РєРѕС‚РѕСЂС‹Р№ Р±СѓРґРµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ С‚СЂРё С‚РѕС‡РєРё
+    sf::VertexArray triangle1(sf::Triangles, 3);
+    sf::VertexArray triangle2(sf::Triangles, 3);
 
-    editingMode.move(668, 250);
-    proccesingMode.move(668, 400);
-    settings.move(668, 550);
-    exit.move(668, 700);
-    line1.move(0, 110);
+    // РћРїСЂРµРґРµР»СЏРµРј РІРµСЂС€РёРЅС‹ С‚СЂРµСѓРіРѕР»СЊРЅРёРєР° Рё РёС… С†РІРµС‚Р°
+    triangle1[0].position = sf::Vector2f(1886, 84);
+    triangle1[1].position = sf::Vector2f(1894, 76);
+    triangle1[2].position = sf::Vector2f(1878, 76);
+    triangle1[0].color = sf::Color::White;
+    triangle1[1].color = sf::Color::White;
+    triangle1[2].color = sf::Color::White;
+    // РћРїСЂРµРґРµР»СЏРµРј РІРµСЂС€РёРЅС‹ С‚СЂРµСѓРіРѕР»СЊРЅРёРєР° Рё РёС… С†РІРµС‚Р°
+    triangle2[0].position = sf::Vector2f(1886, 76);
+    triangle2[1].position = sf::Vector2f(1894, 84);
+    triangle2[2].position = sf::Vector2f(1878, 84);
+    triangle2[0].color = sf::Color::White;
+    triangle2[1].color = sf::Color::White;
+    triangle2[2].color = sf::Color::White;
 
-    editingMode.setFillColor(Color(255, 193, 7));
-    proccesingMode.setFillColor(Color(255, 193, 7));
-    settings.setFillColor(Color(255, 193, 7));
-    exit.setFillColor(Color(255, 193, 7));
-    line1.setFillColor(Color(59, 60, 54));
+    sf::RectangleShape account(Vector2f(240.f, 90.f));
+
+    account.setFillColor(sf::Color(59, 60, 54, 190));
+
+    account.move(1660, 94);
 
 
-    sf::Text name(L"УЧЁТ СТАЖА СОТРУДНИКОВ", font);
-    name.setCharacterSize(66);
+    sf::Text name("Pixel World", font);
+    name.setCharacterSize(34);
     name.setFillColor(sf::Color::White);
-    name.setPosition(406.f, 25.f);
+    name.setPosition(35.f, 20.f);
 
-    sf::Text text_editing(L"Режим редактирования", font2);
-    text_editing.setCharacterSize(44);
+    sf::Text text_editing(L"Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ", font2);
+    text_editing.setCharacterSize(45);
     text_editing.setFillColor(sf::Color::White);
-    text_editing.setPosition(676.f, 280.f);
+    text_editing.setPosition(45.f, 385.f);
 
-    sf::Text text_proccesing(L"Режим обработки", font2);
-    text_proccesing.setCharacterSize(44);
+    sf::Text text_proccesing(L"РћР±СЂР°Р±РѕС‚РєР°", font2);
+    text_proccesing.setCharacterSize(45);
     text_proccesing.setFillColor(sf::Color::White);
-    text_proccesing.setPosition(754.f, 434.f);
+    text_proccesing.setPosition(45.f, 455.f);
 
-    sf::Text text_settings(L"Настройки", font2);
-    text_settings.setCharacterSize(44);
+    sf::Text text_settings(L"РќР°СЃС‚СЂРѕР№РєРё", font2);
+    text_settings.setCharacterSize(45);
     text_settings.setFillColor(sf::Color::White);
-    text_settings.setPosition(846.f, 584.f);
+    text_settings.setPosition(45.f, 525.f);
 
-    sf::Text text_exit(L"Выход", font2);
-    text_exit.setCharacterSize(44);
+    sf::Text text_exit(L"Р’С‹С…РѕРґ", font2);
+    text_exit.setCharacterSize(45);
     text_exit.setFillColor(sf::Color::White);
-    text_exit.setPosition(890.f, 734.f);
+    text_exit.setPosition(45.f, 595.f);
+
+    sf::Text text_account(L"РЈС‡С‘С‚РЅР°СЏ Р·Р°РїРёСЃСЊ", font2);
+    text_account.setCharacterSize(22);
+    text_account.setFillColor(sf::Color::White);
+    text_account.setPosition(1685.f, 106.f);
+
+    sf::Text text_leave_from_acc(L"Р’С‹С…РѕРґ РёР· Р°РєРєР°СѓРЅС‚Р°", font2);
+    text_leave_from_acc.setCharacterSize(22);
+    text_leave_from_acc.setFillColor(sf::Color::White);
+    text_leave_from_acc.setPosition(1662.f, 140.f);
 
 
-    // Загрузка изображения в текстуру
-    sf::Texture logo;
-    if (!logo.loadFromFile("company_name.png"))
+    sf::Texture acc;
+    if (!acc.loadFromFile("acc.png"))
         return;
+    sf::Sprite sprite_acc(acc);
+    sprite_acc.setScale(1.f / 7.f, 1.f / 7.f);
+    sprite_acc.setPosition(1810, 15);
 
-    sf::Sprite sprite_logo(logo);
-    sprite_logo.setScale(0.2, 0.2);
-    sprite_logo.setPosition(1630.f, 890.f);
 
+    bool isAccPressed = false;
 
     while (window.isOpen())
     {
         sf::Event event;
         while (window.pollEvent(event))
         {
-            // закрытие приложения
-            // для закрытия из панели задач
+            // Р·Р°РєСЂС‹С‚РёРµ РїСЂРёР»РѕР¶РµРЅРёСЏ
+            // РґР»СЏ Р·Р°РєСЂС‹С‚РёСЏ РёР· РїР°РЅРµР»Рё Р·Р°РґР°С‡
             if (event.type == sf::Event::Closed)
                 window.close();
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
                 window.close();
-            // закрытие приложения
+            // Р·Р°РєСЂС‹С‚РёРµ РїСЂРёР»РѕР¶РµРЅРёСЏ
             if (event.type == sf::Event::MouseButtonPressed)
             {
                 if (event.mouseButton.button == sf::Mouse::Left)
                 {
                     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (exit.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    if (text_exit.getGlobalBounds().contains(mousePos.x, mousePos.y))
                         window.close();
                 }
             }
 
-            // подсвечивание кнопки при наведении
-            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-            if (editingMode.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                // Изменение цвета прямоугольника, если курсор находится над ним
-                editingMode.setFillColor(Color(255, 245, 7));
-            else
-                // Возвращение к исходному цвету, если курсор не находится над прямоугольником
-                editingMode.setFillColor(Color(255, 193, 7));
-            if (proccesingMode.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                proccesingMode.setFillColor(Color(255, 245, 7));
-            else
-                proccesingMode.setFillColor(Color(255, 193, 7));
-            if (settings.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                settings.setFillColor(Color(255, 245, 7));
-            else
-                settings.setFillColor(Color(255, 193, 7));
-            if (exit.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                exit.setFillColor(Color(255, 245, 7));
-            else
-                exit.setFillColor(Color(255, 193, 7));
 
+            // РїРѕРґСЃРІРµС‡РёРІР°РЅРёРµ РєРЅРѕРїРѕРє РїСЂРё РЅР°РІРµРґРµРЅРёРё РЅР° РЅРёС…
+            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+            if (text_editing.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                // РР·РјРµРЅРµРЅРёРµ С†РІРµС‚Р° РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєР°, РµСЃР»Рё РєСѓСЂСЃРѕСЂ РЅР°С…РѕРґРёС‚СЃСЏ РЅР°Рґ РЅРёРј
+                text_editing.setFillColor(Color(255, 245, 7));
+            else
+                // Р’РѕР·РІСЂР°С‰РµРЅРёРµ Рє РёСЃС…РѕРґРЅРѕРјСѓ С†РІРµС‚Сѓ, РµСЃР»Рё РєСѓСЂСЃРѕСЂ РЅРµ РЅР°С…РѕРґРёС‚СЃСЏ РЅР°Рґ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєРѕРј
+                text_editing.setFillColor(sf::Color::White);
+            if (text_proccesing.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                // РР·РјРµРЅРµРЅРёРµ С†РІРµС‚Р° РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєР°, РµСЃР»Рё РєСѓСЂСЃРѕСЂ РЅР°С…РѕРґРёС‚СЃСЏ РЅР°Рґ РЅРёРј
+                text_proccesing.setFillColor(Color(255, 245, 7));
+            else
+                // Р’РѕР·РІСЂР°С‰РµРЅРёРµ Рє РёСЃС…РѕРґРЅРѕРјСѓ С†РІРµС‚Сѓ, РµСЃР»Рё РєСѓСЂСЃРѕСЂ РЅРµ РЅР°С…РѕРґРёС‚СЃСЏ РЅР°Рґ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєРѕРј
+                text_proccesing.setFillColor(sf::Color::White);
+            if (text_settings.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                // РР·РјРµРЅРµРЅРёРµ С†РІРµС‚Р° РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєР°, РµСЃР»Рё РєСѓСЂСЃРѕСЂ РЅР°С…РѕРґРёС‚СЃСЏ РЅР°Рґ РЅРёРј
+                text_settings.setFillColor(Color(255, 245, 7));
+            else
+                // Р’РѕР·РІСЂР°С‰РµРЅРёРµ Рє РёСЃС…РѕРґРЅРѕРјСѓ С†РІРµС‚Сѓ, РµСЃР»Рё РєСѓСЂСЃРѕСЂ РЅРµ РЅР°С…РѕРґРёС‚СЃСЏ РЅР°Рґ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєРѕРј
+                text_settings.setFillColor(sf::Color::White);
+            if (text_exit.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                // РР·РјРµРЅРµРЅРёРµ С†РІРµС‚Р° РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєР°, РµСЃР»Рё РєСѓСЂСЃРѕСЂ РЅР°С…РѕРґРёС‚СЃСЏ РЅР°Рґ РЅРёРј
+                text_exit.setFillColor(Color(255, 245, 7));
+            else
+                // Р’РѕР·РІСЂР°С‰РµРЅРёРµ Рє РёСЃС…РѕРґРЅРѕРјСѓ С†РІРµС‚Сѓ, РµСЃР»Рё РєСѓСЂСЃРѕСЂ РЅРµ РЅР°С…РѕРґРёС‚СЃСЏ РЅР°Рґ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєРѕРј
+                text_exit.setFillColor(sf::Color::White);
+            if (text_account.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                // РР·РјРµРЅРµРЅРёРµ С†РІРµС‚Р° РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєР°, РµСЃР»Рё РєСѓСЂСЃРѕСЂ РЅР°С…РѕРґРёС‚СЃСЏ РЅР°Рґ РЅРёРј
+                text_account.setFillColor(Color(255, 245, 7));
+            else
+                // Р’РѕР·РІСЂР°С‰РµРЅРёРµ Рє РёСЃС…РѕРґРЅРѕРјСѓ С†РІРµС‚Сѓ, РµСЃР»Рё РєСѓСЂСЃРѕСЂ РЅРµ РЅР°С…РѕРґРёС‚СЃСЏ РЅР°Рґ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєРѕРј
+                text_account.setFillColor(sf::Color::White);
+            if (text_leave_from_acc.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                // РР·РјРµРЅРµРЅРёРµ С†РІРµС‚Р° РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєР°, РµСЃР»Рё РєСѓСЂСЃРѕСЂ РЅР°С…РѕРґРёС‚СЃСЏ РЅР°Рґ РЅРёРј
+                text_leave_from_acc.setFillColor(Color(255, 245, 7));
+            else
+                // Р’РѕР·РІСЂР°С‰РµРЅРёРµ Рє РёСЃС…РѕРґРЅРѕРјСѓ С†РІРµС‚Сѓ, РµСЃР»Рё РєСѓСЂСЃРѕСЂ РЅРµ РЅР°С…РѕРґРёС‚СЃСЏ РЅР°Рґ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєРѕРј
+                text_leave_from_acc.setFillColor(sf::Color::White);
+            if (sprite_acc.getGlobalBounds().contains(mousePos.x, mousePos.y))
+            {
+                triangle1[0].color = sf::Color(255, 245, 7);
+                triangle1[1].color = sf::Color(255, 245, 7);
+                triangle1[2].color = sf::Color(255, 245, 7);
+            }
+            else
+            {
+                triangle1[0].color = sf::Color::White;
+                triangle1[1].color = sf::Color::White;
+                triangle1[2].color = sf::Color::White;
+            }
+            if (sprite_acc.getGlobalBounds().contains(mousePos.x, mousePos.y))
+            {
+                triangle2[0].color = sf::Color(255, 245, 7);
+                triangle2[1].color = sf::Color(255, 245, 7);
+                triangle2[2].color = sf::Color(255, 245, 7);
+            }
+            else
+            {
+                triangle2[0].color = sf::Color::White;
+                triangle2[1].color = sf::Color::White;
+                triangle2[2].color = sf::Color::White;
+            }
+
+
+
+
+            // РїСЂРѕРІРµСЂРєР° РЅР° РЅР°Р¶Р°С‚РёРµ РёРєРѕРЅРєРё РђРљРљРђРЈРќРў
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    if (sprite_acc.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isAccPressed)
+                        isAccPressed = true;
+                    else if (sprite_acc.getGlobalBounds().contains(mousePos.x, mousePos.y) and isAccPressed)
+                        isAccPressed = false;
+                }
+            }
+
+                                                                          
 
         }
 
-        window.clear();
-        window.draw(background);
-        window.draw(line1);
-        window.draw(editingMode);
-        window.draw(proccesingMode);
-        window.draw(settings);
-        window.draw(exit);
+        window.clear(sf::Color(10, 10, 10));
         window.draw(name);
-        window.draw(sprite_logo);
+        window.draw(sprite_acc);
         window.draw(text_editing);
         window.draw(text_proccesing);
         window.draw(text_exit);
         window.draw(text_settings);
+        if (isAccPressed)
+        {
+            window.draw(triangle2);
+            window.draw(account);
+            window.draw(text_account);
+            window.draw(text_leave_from_acc);
+        }
+        else
+            window.draw(triangle1);
         window.display();
     }
 }
