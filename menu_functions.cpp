@@ -404,14 +404,18 @@ void main_menu(std::vector<Employee>& employee)
     triangle2[2].color = sf::Color::White;
 
     sf::RectangleShape account(Vector2f(240.f, 90.f));
+    sf::RectangleShape polosa(Vector2f(1000.f, 1080.f));
 
     account.setFillColor(sf::Color(59, 60, 54, 190));
+    polosa.setFillColor(sf::Color::White);
 
     account.move(1660, 94);
+    polosa.move(530, 0);
+
 
 
     sf::Text name("Pixel World", font);
-    name.setCharacterSize(34);
+    name.setCharacterSize(30);
     name.setFillColor(sf::Color::White);
     name.setPosition(35.f, 20.f);
 
@@ -429,7 +433,7 @@ void main_menu(std::vector<Employee>& employee)
     text_settings.setCharacterSize(45);
     text_settings.setFillColor(sf::Color::White);
     text_settings.setPosition(45.f, 525.f);
-
+    
     sf::Text text_exit(L"Выход", font2);
     text_exit.setCharacterSize(45);
     text_exit.setFillColor(sf::Color::White);
@@ -453,6 +457,14 @@ void main_menu(std::vector<Employee>& employee)
     sprite_acc.setScale(1.f / 7.f, 1.f / 7.f);
     sprite_acc.setPosition(1810, 15);
 
+   
+    sf::Texture logo;
+    if (!logo.loadFromFile("logo2.jpeg"))
+        return;
+    sf::Sprite sprite_logo(logo);
+    sprite_logo.setScale(0.9, 0.9);
+    sprite_logo.setPosition(578, 50);
+                                       
 
     bool isAccPressed = false;
 
@@ -483,45 +495,45 @@ void main_menu(std::vector<Employee>& employee)
             sf::Vector2i mousePos = sf::Mouse::getPosition(window);
             if (text_editing.getGlobalBounds().contains(mousePos.x, mousePos.y))
                 // Изменение цвета прямоугольника, если курсор находится над ним
-                text_editing.setFillColor(Color(255, 245, 7));
+                text_editing.setFillColor(Color(255, 100, 7));
             else
                 // Возвращение к исходному цвету, если курсор не находится над прямоугольником
                 text_editing.setFillColor(sf::Color::White);
             if (text_proccesing.getGlobalBounds().contains(mousePos.x, mousePos.y))
                 // Изменение цвета прямоугольника, если курсор находится над ним
-                text_proccesing.setFillColor(Color(255, 245, 7));
+                text_proccesing.setFillColor(Color(255, 100, 7));
             else
                 // Возвращение к исходному цвету, если курсор не находится над прямоугольником
                 text_proccesing.setFillColor(sf::Color::White);
             if (text_settings.getGlobalBounds().contains(mousePos.x, mousePos.y))
                 // Изменение цвета прямоугольника, если курсор находится над ним
-                text_settings.setFillColor(Color(255, 245, 7));
+                text_settings.setFillColor(Color(255, 100, 7));
             else
                 // Возвращение к исходному цвету, если курсор не находится над прямоугольником
                 text_settings.setFillColor(sf::Color::White);
             if (text_exit.getGlobalBounds().contains(mousePos.x, mousePos.y))
                 // Изменение цвета прямоугольника, если курсор находится над ним
-                text_exit.setFillColor(Color(255, 245, 7));
+                text_exit.setFillColor(Color(255, 100, 7));
             else
                 // Возвращение к исходному цвету, если курсор не находится над прямоугольником
                 text_exit.setFillColor(sf::Color::White);
             if (text_account.getGlobalBounds().contains(mousePos.x, mousePos.y))
                 // Изменение цвета прямоугольника, если курсор находится над ним
-                text_account.setFillColor(Color(255, 245, 7));
+                text_account.setFillColor(Color(255, 100, 7));
             else
                 // Возвращение к исходному цвету, если курсор не находится над прямоугольником
                 text_account.setFillColor(sf::Color::White);
             if (text_leave_from_acc.getGlobalBounds().contains(mousePos.x, mousePos.y))
                 // Изменение цвета прямоугольника, если курсор находится над ним
-                text_leave_from_acc.setFillColor(Color(255, 245, 7));
+                text_leave_from_acc.setFillColor(Color(255, 100, 7));
             else
                 // Возвращение к исходному цвету, если курсор не находится над прямоугольником
                 text_leave_from_acc.setFillColor(sf::Color::White);
             if (sprite_acc.getGlobalBounds().contains(mousePos.x, mousePos.y))
             {
-                triangle1[0].color = sf::Color(255, 245, 7);
-                triangle1[1].color = sf::Color(255, 245, 7);
-                triangle1[2].color = sf::Color(255, 245, 7);
+                triangle1[0].color = sf::Color(255, 100, 7);
+                triangle1[1].color = sf::Color(255, 100, 7);
+                triangle1[2].color = sf::Color(255, 100, 7);
             }
             else
             {
@@ -531,9 +543,9 @@ void main_menu(std::vector<Employee>& employee)
             }
             if (sprite_acc.getGlobalBounds().contains(mousePos.x, mousePos.y))
             {
-                triangle2[0].color = sf::Color(255, 245, 7);
-                triangle2[1].color = sf::Color(255, 245, 7);
-                triangle2[2].color = sf::Color(255, 245, 7);
+                triangle2[0].color = sf::Color(255, 100, 7);
+                triangle2[1].color = sf::Color(255, 100, 7);
+                triangle2[2].color = sf::Color(255, 100, 7);
             }
             else
             {
@@ -562,7 +574,7 @@ void main_menu(std::vector<Employee>& employee)
 
         }
 
-        window.clear(sf::Color(10, 10, 10));
+        window.clear(sf::Color::Black);
         window.draw(name);
         window.draw(sprite_acc);
         window.draw(text_editing);
@@ -578,6 +590,9 @@ void main_menu(std::vector<Employee>& employee)
         }
         else
             window.draw(triangle1);
+        window.draw(polosa);
+        window.draw(sprite_logo);
+
         window.display();
     }
 }
