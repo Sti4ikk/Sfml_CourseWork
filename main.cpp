@@ -24,7 +24,7 @@ int main()
     if (isRememberMePressed)
         auth_menu(authentication, employee, isRememberMePressed);
     else
-        main_menu(employee);
+        main_menu(authentication, employee, isRememberMePressed);
     
 
     return 0;

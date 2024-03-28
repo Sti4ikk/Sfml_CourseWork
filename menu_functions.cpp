@@ -19,14 +19,6 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
         return EXIT_FAILURE;
     }
 
-    // Загрузка изображения для иконки окна
-    sf::Image icon;
-    if (!icon.loadFromFile("icon.jpg")) {
-        // Обработка ошибки загрузки изображения
-        return EXIT_FAILURE;
-    }
-    window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
-
     // Создаем прямоугольник размером 70х100
     sf::RectangleShape rectangle1(Vector2f(430.f, 70.f));
     sf::RectangleShape rectangle2(Vector2f(430.f, 70.f));
@@ -313,7 +305,7 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
                         if (checkDataOfUser(authentication, login1, password5))
                         {
                             window.close();
-                            main_menu(employee);
+                            main_menu(authentication, employee, isRememberMePressed);
                         }
                         else
                         {
@@ -361,7 +353,7 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
     }
 }
 
-void main_menu(std::vector<Employee>& employee)
+void main_menu(std::vector<Authentication>& authentication, std::vector<Employee>& employee, bool& isRememberMePressed)
 {
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     sf::RenderWindow window(sf::VideoMode(1920, 1080), "", sf::Style::None);
@@ -377,17 +369,29 @@ void main_menu(std::vector<Employee>& employee)
         return;
     }
 
-    // Загрузка изображения для иконки окна
-    sf::Image icon;
-    if (!icon.loadFromFile("icon.jfif"))
-        return;
-    window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
-
+   
 
     // Создаем массив вершин, который будет содержать три точки
     sf::VertexArray triangle1(sf::Triangles, 3);
     sf::VertexArray triangle2(sf::Triangles, 3);
+    sf::VertexArray triangle3(sf::Triangles, 3);
+    sf::VertexArray triangle4(sf::Triangles, 3);
 
+    // Определяем вершины треугольника и их цвета
+    triangle4[0].position = sf::Vector2f(1445, 540);
+    triangle4[1].position = sf::Vector2f(1435, 530);
+    triangle4[2].position = sf::Vector2f(1435, 550);
+    triangle4[0].color = sf::Color::White;
+    triangle4[1].color = sf::Color::White;
+    triangle4[2].color = sf::Color::White;
+
+    // Определяем вершины треугольника и их цвета
+    triangle3[0].position = sf::Vector2f(1868, 540);
+    triangle3[1].position = sf::Vector2f(1878, 530);
+    triangle3[2].position = sf::Vector2f(1878, 550);
+    triangle3[0].color = sf::Color::White;
+    triangle3[1].color = sf::Color::White;
+    triangle3[2].color = sf::Color::White;
     // Определяем вершины треугольника и их цвета
     triangle1[0].position = sf::Vector2f(1886, 84);
     triangle1[1].position = sf::Vector2f(1894, 76);
@@ -405,19 +409,22 @@ void main_menu(std::vector<Employee>& employee)
 
     sf::RectangleShape account(Vector2f(240.f, 90.f));
     sf::RectangleShape polosa(Vector2f(1000.f, 1080.f));
+    sf::RectangleShape line1(Vector2f(1.f, 1080.f));
 
     account.setFillColor(sf::Color(59, 60, 54, 190));
     polosa.setFillColor(sf::Color::White);
+    line1.setFillColor(Color(59, 60, 54));
 
+    line1.move(490, 0);
     account.move(1660, 94);
     polosa.move(530, 0);
 
 
 
     sf::Text name("Pixel World", font);
-    name.setCharacterSize(30);
+    name.setCharacterSize(24);
     name.setFillColor(sf::Color::White);
-    name.setPosition(35.f, 20.f);
+    name.setPosition(30.f, 16.f);
 
     sf::Text text_editing(L"Редактирование", font2);
     text_editing.setCharacterSize(45);
@@ -457,16 +464,59 @@ void main_menu(std::vector<Employee>& employee)
     sprite_acc.setScale(1.f / 7.f, 1.f / 7.f);
     sprite_acc.setPosition(1810, 15);
 
+    sf::Texture shtorka;
+    if (!shtorka.loadFromFile("shtorka.png"))
+        return;
+    sf::Sprite sprite_shtorka(shtorka);
+    sprite_shtorka.setScale(0.6, 0.6);
+    sprite_shtorka.setPosition(1888, 386);
+
+
+    sf::Texture shtorka1;
+    if (!shtorka1.loadFromFile("shtorka.png"))
+        return;
+    sf::Sprite sprite_shtorka1(shtorka1);
+    sprite_shtorka1.setScale(0.6, 0.6);
+    sprite_shtorka1.setPosition(1426, 386);
+
+    sf::Texture shtorka_orange1;
+    if (!shtorka_orange1.loadFromFile("shtorka_orange.png"))
+        return;
+    sf::Sprite sprite_shtorka_orange1(shtorka_orange1);
+    sprite_shtorka_orange1.setScale(0.6, 0.6);
+    sprite_shtorka_orange1.setPosition(1426, 386);
+
+
+
+    sf::Texture shtorka_orange;
+    if (!shtorka_orange.loadFromFile("shtorka_orange.png"))
+        return;
+    sf::Sprite sprite_shtorka_orange(shtorka_orange);
+    sprite_shtorka_orange.setScale(0.6, 0.6);
+    sprite_shtorka_orange.setPosition(1888, 386);
+
+    sf::Texture bg_news;
+    if (!bg_news.loadFromFile("bg_news.png"))
+        return;
+    sf::Sprite sprite_bg_news(bg_news);
+    sprite_bg_news.setScale(0.5, 0.5);
+    sprite_bg_news.setPosition(1330, 192);
+
    
     sf::Texture logo;
-    if (!logo.loadFromFile("logo2.jpeg"))
+    if (!logo.loadFromFile("logo10_4.png"))
         return;
     sf::Sprite sprite_logo(logo);
-    sprite_logo.setScale(0.9, 0.9);
-    sprite_logo.setPosition(578, 50);
+    sprite_logo.setScale(0.8, 0.8);
+    sprite_logo.setPosition(570, 130);
                                        
 
     bool isAccPressed = false;
+    bool isMouseOnShtorka = false;
+    bool isMouseOnShtorka1 = false;
+    bool triangleIsMouseOnShtorka1 = false;
+    bool triangleIsMouseOnShtorka = false;
+    bool isNewsOpen = false;
 
     while (window.isOpen())
     {
@@ -490,9 +540,31 @@ void main_menu(std::vector<Employee>& employee)
                 }
             }
 
-
             // подсвечивание кнопок при наведении на них
             sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+            if (sprite_shtorka.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                // Изменение цвета прямоугольника, если курсор находится над ним
+                isMouseOnShtorka = true;
+                triangleIsMouseOnShtorka = true;
+            }
+            else
+            {
+                triangleIsMouseOnShtorka = false;
+                isMouseOnShtorka = false;
+            }
+
+            // проерка на подсвечивание шторки после открытия новостей
+            if (sprite_shtorka1.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                // Изменение цвета прямоугольника, если курсор находится над ним
+                isMouseOnShtorka1 = true;
+                triangleIsMouseOnShtorka1 = true;
+            }
+            else
+            {
+                triangleIsMouseOnShtorka1 = false;
+                isMouseOnShtorka1 = false;
+            }
+
             if (text_editing.getGlobalBounds().contains(mousePos.x, mousePos.y))
                 // Изменение цвета прямоугольника, если курсор находится над ним
                 text_editing.setFillColor(Color(255, 100, 7));
@@ -529,6 +601,7 @@ void main_menu(std::vector<Employee>& employee)
             else
                 // Возвращение к исходному цвету, если курсор не находится над прямоугольником
                 text_leave_from_acc.setFillColor(sf::Color::White);
+
             if (sprite_acc.getGlobalBounds().contains(mousePos.x, mousePos.y))
             {
                 triangle1[0].color = sf::Color(255, 100, 7);
@@ -555,8 +628,6 @@ void main_menu(std::vector<Employee>& employee)
             }
 
 
-
-
             // проверка на нажатие иконки АККАУНТ
             if (event.type == sf::Event::MouseButtonPressed)
             {
@@ -567,6 +638,36 @@ void main_menu(std::vector<Employee>& employee)
                         isAccPressed = true;
                     else if (sprite_acc.getGlobalBounds().contains(mousePos.x, mousePos.y) and isAccPressed)
                         isAccPressed = false;
+                }
+            }
+
+            // проверка на нажатие на новости
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    if (sprite_shtorka_orange.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isNewsOpen)
+                        isNewsOpen = true;
+
+                    else if (sprite_shtorka_orange1.getGlobalBounds().contains(mousePos.x, mousePos.y) and isNewsOpen)
+                        isNewsOpen = false;
+                }
+            }
+
+            // проверка на нажатие на выход из аккаунта
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    if (text_leave_from_acc.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isNewsOpen)
+                    {
+                        isRememberMePressed = 1;
+                        writeInFileIsRememberOn(isRememberMePressed);
+                        window.close();
+                        auth_menu(authentication, employee, isRememberMePressed);
+                    }
                 }
             }
 
@@ -590,9 +691,32 @@ void main_menu(std::vector<Employee>& employee)
         }
         else
             window.draw(triangle1);
-        window.draw(polosa);
-        window.draw(sprite_logo);
 
+        if (triangleIsMouseOnShtorka)
+            window.draw(triangle3);
+
+        if (isMouseOnShtorka and !isNewsOpen)
+            window.draw(sprite_shtorka_orange);
+        else
+            window.draw(sprite_shtorka);
+
+        if (isNewsOpen)
+        {
+            window.draw(sprite_shtorka1);
+            window.draw(sprite_bg_news);
+
+            if (isMouseOnShtorka1)
+                window.draw(sprite_shtorka_orange1);
+            else
+                window.draw(sprite_shtorka1);
+
+            if (triangleIsMouseOnShtorka1)
+                window.draw(triangle4);
+        }
+
+
+        window.draw(sprite_logo);
+        window.draw(line1);
         window.display();
     }
 }
