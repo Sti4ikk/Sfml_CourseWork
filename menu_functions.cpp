@@ -465,7 +465,7 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
     sprite_acc.setPosition(1810, 15);
 
     sf::Texture shtorka;
-    if (!shtorka.loadFromFile("shtorka.png"))
+    if (!shtorka.loadFromFile("shtorka1.png"))
         return;
     sf::Sprite sprite_shtorka(shtorka);
     sprite_shtorka.setScale(0.6, 0.6);
@@ -473,7 +473,7 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
 
 
     sf::Texture shtorka1;
-    if (!shtorka1.loadFromFile("shtorka.png"))
+    if (!shtorka1.loadFromFile("shtorka1.png"))
         return;
     sf::Sprite sprite_shtorka1(shtorka1);
     sprite_shtorka1.setScale(0.6, 0.6);
@@ -496,7 +496,7 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
     sprite_shtorka_orange.setPosition(1888, 386);
 
     sf::Texture bg_news;
-    if (!bg_news.loadFromFile("bg_news.png"))
+    if (!bg_news.loadFromFile("bg_news4.png"))
         return;
     sf::Sprite sprite_bg_news(bg_news);
     sprite_bg_news.setScale(0.5, 0.5);
@@ -729,12 +729,12 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
         else
             window.draw(triangle1);
 
-        if (triangleIsMouseOnShtorka)
+        if (triangleIsMouseOnShtorka and !isNewsOpen)
             window.draw(triangle3);
 
         if (isMouseOnShtorka and !isNewsOpen)
             window.draw(sprite_shtorka_orange);
-        else
+        else if(!isNewsOpen)
             window.draw(sprite_shtorka);
 
         if (isNewsOpen)
