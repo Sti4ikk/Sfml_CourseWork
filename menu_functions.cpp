@@ -509,6 +509,43 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
     sf::Sprite sprite_logo(logo);
     sprite_logo.setScale(0.8, 0.8);
     sprite_logo.setPosition(570, 130);
+
+
+
+    sf::Texture news1;
+    if (!news1.loadFromFile("news\\news1.png"))
+        return;
+    sf::Sprite sprite_news1(news1);
+    sprite_news1.setScale(0.26, 0.26);
+    sprite_news1.setPosition(1485, 150);
+
+    sf::Texture news2;
+    if (!news2.loadFromFile("news\\news2.png"))
+        return;
+    sf::Sprite sprite_news2(news2);
+    sprite_news2.setScale(0.26, 0.26);
+    sprite_news2.setPosition(1485, 280);
+
+    sf::Texture news3;
+    if (!news3.loadFromFile("news\\news3.png"))
+        return;
+    sf::Sprite sprite_news3(news3);
+    sprite_news3.setScale(0.26, 0.26);
+    sprite_news3.setPosition(1485, 420);
+
+    sf::Texture news4;
+    if (!news4.loadFromFile("news\\news4.png"))
+        return;
+    sf::Sprite sprite_news4(news4);
+    sprite_news4.setScale(0.26, 0.26);
+    sprite_news4.setPosition(1485, 540);
+
+    sf::Texture news5;
+    if (!news5.loadFromFile("news\\news5.png"))
+        return;
+    sf::Sprite sprite_news5(news5);
+    sprite_news5.setScale(0.26, 0.26);
+    sprite_news5.setPosition(1485, 670);
                                        
 
     bool isAccPressed = false;
@@ -704,6 +741,12 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
         {
             window.draw(sprite_shtorka1);
             window.draw(sprite_bg_news);
+
+            window.draw(sprite_news1);
+            window.draw(sprite_news2);
+            window.draw(sprite_news3);
+            window.draw(sprite_news4);
+            window.draw(sprite_news5);
 
             if (isMouseOnShtorka1)
                 window.draw(sprite_shtorka_orange1);
