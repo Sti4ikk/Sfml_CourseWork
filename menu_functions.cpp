@@ -1,17 +1,16 @@
 ﻿#include <SFML/Graphics.hpp>
-#include <Windows.h>
+#include <SFML/System.hpp>
 #include <string>
 #include "structs.h"
 #include "enums.h"
-#include "prototypes.h"
-#include <SFML/System.hpp>
+#include "prototypes.h"\
+
+extern sf::RenderWindow window;
 
 using namespace sf;
 
 int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>& employee, bool &isRememberMePressed)
 {
-    sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
-    sf::RenderWindow window(sf::VideoMode(500, 412), "", sf::Style::None);
 
     sf::Font font;
     if (!font.loadFromFile("shrift.ttf")) {
@@ -353,10 +352,10 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
     }
 }
 
+
 void main_menu(std::vector<Authentication>& authentication, std::vector<Employee>& employee, bool& isRememberMePressed)
 {
-    sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
-    sf::RenderWindow window(sf::VideoMode(1920, 1080), "", sf::Style::None);
+    window.create(sf::VideoMode(1920, 1080), "", sf::Style::None);
 
     sf::Font font2;
     if (!font2.loadFromFile("shrift.ttf")) {
@@ -604,46 +603,46 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
 
             if (text_editing.getGlobalBounds().contains(mousePos.x, mousePos.y))
                 // Изменение цвета прямоугольника, если курсор находится над ним
-                text_editing.setFillColor(Color(255, 100, 7));
+                text_editing.setFillColor(Color(255, 51, 6));
             else
                 // Возвращение к исходному цвету, если курсор не находится над прямоугольником
                 text_editing.setFillColor(sf::Color::White);
             if (text_proccesing.getGlobalBounds().contains(mousePos.x, mousePos.y))
                 // Изменение цвета прямоугольника, если курсор находится над ним
-                text_proccesing.setFillColor(Color(255, 100, 7));
+                text_proccesing.setFillColor(Color(255, 51, 6));
             else
                 // Возвращение к исходному цвету, если курсор не находится над прямоугольником
                 text_proccesing.setFillColor(sf::Color::White);
             if (text_settings.getGlobalBounds().contains(mousePos.x, mousePos.y))
                 // Изменение цвета прямоугольника, если курсор находится над ним
-                text_settings.setFillColor(Color(255, 100, 7));
+                text_settings.setFillColor(Color(255, 51, 6));
             else
                 // Возвращение к исходному цвету, если курсор не находится над прямоугольником
                 text_settings.setFillColor(sf::Color::White);
             if (text_exit.getGlobalBounds().contains(mousePos.x, mousePos.y))
                 // Изменение цвета прямоугольника, если курсор находится над ним
-                text_exit.setFillColor(Color(255, 100, 7));
+                text_exit.setFillColor(Color(255, 51, 6));
             else
                 // Возвращение к исходному цвету, если курсор не находится над прямоугольником
                 text_exit.setFillColor(sf::Color::White);
             if (text_account.getGlobalBounds().contains(mousePos.x, mousePos.y))
                 // Изменение цвета прямоугольника, если курсор находится над ним
-                text_account.setFillColor(Color(255, 100, 7));
+                text_account.setFillColor(Color(255, 51, 6));
             else
                 // Возвращение к исходному цвету, если курсор не находится над прямоугольником
                 text_account.setFillColor(sf::Color::White);
             if (text_leave_from_acc.getGlobalBounds().contains(mousePos.x, mousePos.y))
                 // Изменение цвета прямоугольника, если курсор находится над ним
-                text_leave_from_acc.setFillColor(Color(255, 100, 7));
+                text_leave_from_acc.setFillColor(Color(255, 51, 6));
             else
                 // Возвращение к исходному цвету, если курсор не находится над прямоугольником
                 text_leave_from_acc.setFillColor(sf::Color::White);
 
             if (sprite_acc.getGlobalBounds().contains(mousePos.x, mousePos.y))
             {
-                triangle1[0].color = sf::Color(255, 100, 7);
-                triangle1[1].color = sf::Color(255, 100, 7);
-                triangle1[2].color = sf::Color(255, 100, 7);
+                triangle1[0].color = sf::Color(255, 51, 6);
+                triangle1[1].color = sf::Color(255, 51, 6);
+                triangle1[2].color = sf::Color(255, 51, 6);
             }
             else
             {
@@ -653,9 +652,9 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
             }
             if (sprite_acc.getGlobalBounds().contains(mousePos.x, mousePos.y))
             {
-                triangle2[0].color = sf::Color(255, 100, 7);
-                triangle2[1].color = sf::Color(255, 100, 7);
-                triangle2[2].color = sf::Color(255, 100, 7);
+                triangle2[0].color = sf::Color(255, 51, 6);
+                triangle2[1].color = sf::Color(255, 51, 6);
+                triangle2[2].color = sf::Color(255, 51, 6);
             }
             else
             {
@@ -705,6 +704,17 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
                         window.close();
                         auth_menu(authentication, employee, isRememberMePressed);
                     }
+                }
+            }
+
+            // проверка на нажатие на НАСТРОЙКИ
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    if (text_settings.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isNewsOpen)
+                        settings_menu();
                 }
             }
 
@@ -760,6 +770,196 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
 
         window.draw(sprite_logo);
         window.draw(line1);
+        window.display();
+    }
+}
+
+
+void settings_menu()
+{
+    sf::Font font2;
+    if (!font2.loadFromFile("shrift.ttf")) 
+        return;
+
+    /*
+    sf::RectangleShape rectangle_about_company(Vector2f(600.f, 90.f));
+    sf::RectangleShape rectangle_about_app(Vector2f(600.f, 90.f));
+    sf::RectangleShape rectangle_tech_support(Vector2f(600.f, 90.f));
+
+    rectangle_about_company.setFillColor(sf::Color(255, 51, 6));
+    rectangle_about_app.setFillColor(sf::Color(255, 51, 6));
+    rectangle_tech_support.setFillColor(sf::Color(255, 51, 6));
+
+    rectangle_about_company.setPosition(662, 250);
+    rectangle_about_app.setPosition(662, 400);
+    rectangle_tech_support.setPosition(662, 550);        */
+
+
+    sf::Text text_settigns(L"НАСТРОЙКИ", font2);
+    text_settigns.setCharacterSize(64);
+    text_settigns.setFillColor(sf::Color::White);
+    text_settigns.setPosition(730.f, 50.f);
+
+    sf::Text text_about_app(L"О приложении", font2);
+    text_about_app.setCharacterSize(46);
+    text_about_app.setFillColor(sf::Color::Black);
+    text_about_app.setPosition(776.f, 310.f);
+
+    sf::Text text_about_company(L"О компании", font2);
+    text_about_company.setCharacterSize(46);
+    text_about_company.setFillColor(sf::Color::Black);
+    text_about_company.setPosition(800.f, 500.f);
+
+    sf::Text text_tech_support(L"Техподдержка", font2);
+    text_tech_support.setCharacterSize(46);
+    text_tech_support.setFillColor(sf::Color::Black);
+    text_tech_support.setPosition(766.f, 690.f);
+
+
+
+
+    sf::Texture arrow_back_white;
+    if (!arrow_back_white.loadFromFile("arrow_back_white.png"))
+        return;
+    sf::Sprite sprite_arrow_back_white(arrow_back_white);
+    sprite_arrow_back_white.setScale(0.2, 0.2);
+    sprite_arrow_back_white.setPosition(50, 950);
+
+    sf::Texture arrow_back_orange;
+    if (!arrow_back_orange.loadFromFile("arrow_back.png"))
+        return;
+    sf::Sprite sprite_arrow_back_orange(arrow_back_orange);
+    sprite_arrow_back_orange.setScale(0.2, 0.2);
+    sprite_arrow_back_orange.setPosition(50, 950);
+
+    sf::Texture rectangle1;
+    if (!rectangle1.loadFromFile("rectangle.png"))
+        return;
+    sf::Sprite sprite_rectangle1(rectangle1);
+    sprite_rectangle1.setScale(0.6, 0.6);
+    sprite_rectangle1.setPosition(560, 260);
+
+    sf::Texture rectangle2;
+    if (!rectangle2.loadFromFile("rectangle.png"))
+        return;
+    sf::Sprite sprite_rectangle2(rectangle2);
+    sprite_rectangle2.setScale(0.6, 0.6);
+    sprite_rectangle2.setPosition(560, 450);
+
+    sf::Texture rectangle3;
+    if (!rectangle3.loadFromFile("rectangle.png"))
+        return;
+    sf::Sprite sprite_rectangle3(rectangle3);
+    sprite_rectangle3.setScale(0.6, 0.6);
+    sprite_rectangle3.setPosition(560, 640);
+
+    sf::Texture rectangle_orange;
+    if (!rectangle_orange.loadFromFile("rectangle_orange.png"))
+        return;
+    sf::Sprite sprite_rectangle_orange(rectangle_orange);
+    sprite_rectangle_orange.setScale(0.2437, 0.2437);
+
+
+    /*
+    sf::Texture logo;
+    if (!logo.loadFromFile("logo10_5.png"))
+        return;
+    sf::Sprite sprite_logo(logo);
+    sprite_logo.setScale(0.8, 0.8);
+    sprite_logo.setPosition(570, 130);    */
+    
+
+    bool isMouseOnArrow = false;
+    bool isMouseOnRectangle1 = false;
+    bool isMouseOnRectangle2 = false;
+    bool isMouseOnRectangle3 = false;
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            // закрытие приложения
+            // для закрытия из панели задач
+            if (event.type == sf::Event::Closed)
+                window.close();
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+                return;
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    if (sprite_arrow_back_orange.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                        return;
+                }
+            }
+            // подсвечивание
+            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+            if (sprite_arrow_back_white.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                isMouseOnArrow = true;
+            else
+                isMouseOnArrow = false;
+
+            if (sprite_rectangle1.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                isMouseOnRectangle1 = true;
+            else
+                isMouseOnRectangle1 = false;
+            if (sprite_rectangle2.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                isMouseOnRectangle2 = true;
+            else
+                isMouseOnRectangle2 = false;
+            if (sprite_rectangle3.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                isMouseOnRectangle3= true;
+            else
+                isMouseOnRectangle3 = false;
+
+
+           
+        }
+        sprite_rectangle_orange.setPosition(560, 640);
+
+
+
+
+        window.clear(sf::Color::Black);
+        //window.draw(sprite_logo);
+
+        if (isMouseOnArrow)
+            window.draw(sprite_arrow_back_orange);
+        else
+            window.draw(sprite_arrow_back_white);
+
+        if (isMouseOnRectangle1)
+        {
+            sprite_rectangle_orange.setPosition(560, 260);
+            window.draw(sprite_rectangle_orange);
+        }
+        else
+            window.draw(sprite_rectangle1);
+        if (isMouseOnRectangle2)
+        {
+            sprite_rectangle_orange.setPosition(560, 450);
+            window.draw(sprite_rectangle_orange);
+        }
+        else
+            window.draw(sprite_rectangle2);
+        if (isMouseOnRectangle3)
+        {
+            sprite_rectangle_orange.setPosition(560, 640);
+            window.draw(sprite_rectangle_orange);
+        }
+        else
+            window.draw(sprite_rectangle3);
+
+            
+
+        window.draw(text_settigns);
+        window.draw(text_tech_support);
+        window.draw(text_about_app);
+        window.draw(text_about_company);
+        //window.draw(rectangle_about_company);
+        //window.draw(rectangle_about_app);
+        //window.draw(rectangle_tech_support);
         window.display();
     }
 }

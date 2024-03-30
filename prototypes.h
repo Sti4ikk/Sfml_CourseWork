@@ -1,7 +1,11 @@
 #pragma once
 
+
 #include <vector>
 #include "structs.h"
+
+
+
 
 // работа с файлами
 void writingToVectorsFromFileEmployee(std::vector<Employee>& employee);
@@ -13,6 +17,9 @@ void writeInFileIsRememberOn(bool& isRememberMePressed);
 int checkDataOfUser(std::vector<Authentication>& authentication, std::string login, std::string password);
 
 // функцию меню
-int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>& employee, bool &isRememberMePressed);
 void main_menu(std::vector<Authentication>& authentication, std::vector<Employee>& employee, bool& isRememberMePressed);
+int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>& employee, bool& isRememberMePressed);
+void settings_menu();
+
+
 void openUrl(const std::string& url);

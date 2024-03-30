@@ -1,14 +1,14 @@
-#include <Windows.h>
+#include <SFML/Graphics.hpp>
 #include <string>
 #include "structs.h"
 #include "enums.h"
 #include "prototypes.h"
 
+sf::RenderWindow window(sf::VideoMode(500, 412), "", sf::Style::None);
+
 
 int main()
 {
-    SetConsoleCP(1251);
-    SetConsoleOutputCP(1251);
 
     std::vector<Employee> employee;;
     std::vector<Authentication> authentication;
@@ -20,6 +20,8 @@ int main()
     writingToVectorsFromFileAuth(authentication);
     writingToVectorsFromFileEmployee(employee); 
     wrtiteIsRememberMeOn(isRememberMePressed);
+
+
 
     if (isRememberMePressed)
         auth_menu(authentication, employee, isRememberMePressed);
