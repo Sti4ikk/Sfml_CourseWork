@@ -3,7 +3,8 @@
 #include <string>
 #include "structs.h"
 #include "enums.h"
-#include "prototypes.h"\
+#include "prototypes.h"
+#include <iostream>
 
 extern sf::RenderWindow window;
 
@@ -11,6 +12,7 @@ using namespace sf;
 
 int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>& employee, bool &isRememberMePressed)
 {
+    window.create(sf::VideoMode(500, 412), "", sf::Style::None);
 
     sf::Font font;
     if (!font.loadFromFile("shrift.ttf")) {
@@ -158,7 +160,6 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
         sf::Event event;
         while (window.pollEvent(event))
         {
-    
             // закрытие приложения
             if (event.type == sf::Event::MouseButtonPressed)
             {
@@ -236,6 +237,18 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
                     }
                 }
             }
+            /*
+            if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::Backspace) {
+                    // Удаление предыдущего символа из текстового поля
+                    std::string currentText = login.getString();
+                    if (!currentText.empty()) {
+                        currentText.pop_back();
+                        login.setString(currentText);
+                    }
+                }
+            }                                  */
+
             // ввод текста в поле логин и пароль
             if (event.type == sf::Event::TextEntered)
             {
@@ -269,6 +282,10 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
                     }
                 }
             }
+
+            
+
+
             // проверка на нажатие кнопки видимости пароля
             if (event.type == sf::Event::MouseButtonPressed)
             {
@@ -576,6 +593,7 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
                 }
             }
 
+
             // подсвечивание кнопок при наведении на них
             sf::Vector2i mousePos = sf::Mouse::getPosition(window);
             if (sprite_shtorka.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
@@ -701,7 +719,6 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
                     {
                         isRememberMePressed = 1;
                         writeInFileIsRememberOn(isRememberMePressed);
-                        window.close();
                         auth_menu(authentication, employee, isRememberMePressed);
                     }
                 }
@@ -781,19 +798,6 @@ void settings_menu()
     if (!font2.loadFromFile("shrift.ttf")) 
         return;
 
-    /*
-    sf::RectangleShape rectangle_about_company(Vector2f(600.f, 90.f));
-    sf::RectangleShape rectangle_about_app(Vector2f(600.f, 90.f));
-    sf::RectangleShape rectangle_tech_support(Vector2f(600.f, 90.f));
-
-    rectangle_about_company.setFillColor(sf::Color(255, 51, 6));
-    rectangle_about_app.setFillColor(sf::Color(255, 51, 6));
-    rectangle_tech_support.setFillColor(sf::Color(255, 51, 6));
-
-    rectangle_about_company.setPosition(662, 250);
-    rectangle_about_app.setPosition(662, 400);
-    rectangle_tech_support.setPosition(662, 550);        */
-
 
     sf::Text text_settigns(L"НАСТРОЙКИ", font2);
     text_settigns.setCharacterSize(64);
@@ -859,14 +863,6 @@ void settings_menu()
     sf::Sprite sprite_rectangle_orange(rectangle_orange);
     sprite_rectangle_orange.setScale(0.2437, 0.2437);
 
-
-    /*
-    sf::Texture logo;
-    if (!logo.loadFromFile("logo10_5.png"))
-        return;
-    sf::Sprite sprite_logo(logo);
-    sprite_logo.setScale(0.8, 0.8);
-    sprite_logo.setPosition(570, 130);    */
     
 
     bool isMouseOnArrow = false;
@@ -913,7 +909,25 @@ void settings_menu()
             else
                 isMouseOnRectangle3 = false;
 
-
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    if (sprite_rectangle1.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                        aboutApp();
+                }
+            }
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    if (sprite_rectangle2.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                        aboutCompany();
+                }
+            }
+            
            
         }
         sprite_rectangle_orange.setPosition(560, 640);
@@ -957,9 +971,331 @@ void settings_menu()
         window.draw(text_tech_support);
         window.draw(text_about_app);
         window.draw(text_about_company);
-        //window.draw(rectangle_about_company);
-        //window.draw(rectangle_about_app);
-        //window.draw(rectangle_tech_support);
+        window.display();
+    }
+}
+
+void aboutApp()
+{
+    sf::Font font2;              
+    if (!font2.loadFromFile("shrift.ttf"))
+        return;
+
+
+    sf::Text text_name_Of_app(L"Название приложения : Учет стажа сотрудников", font2);
+    text_name_Of_app.setCharacterSize(34);
+    text_name_Of_app.setFillColor(sf::Color::White);
+    text_name_Of_app.setPosition(500.f, 200.f);
+
+    sf::Text text_description_Of_app1(L"Описание: Наше приложение предназначено для учета и отслеживания стажа работы ", font2);
+    text_description_Of_app1.setCharacterSize(34);
+    text_description_Of_app1.setFillColor(sf::Color::White);
+    text_description_Of_app1.setPosition(130.f, 320.f);
+
+    sf::Text text_description_Of_app2(L"сотрудников на предприятии. Оно поможет вам следить за датами приема на работу,", font2);
+    text_description_Of_app2.setCharacterSize(34);
+    text_description_Of_app2.setFillColor(sf::Color::White);
+    text_description_Of_app2.setPosition(128.f, 390.f);
+
+    sf::Text text_description_Of_app3(L"периодами отпусков и другими важными событиями в трудовой биографии сотрудников.", font2);
+    text_description_Of_app3.setCharacterSize(34);
+    text_description_Of_app3.setFillColor(sf::Color::White);
+    text_description_Of_app3.setPosition(100.f, 460.f);
+
+    sf::Text text_contacts1(L"Контакты: Если у вас есть вопросы или предложения, свяжитесь с нами по адресу", font2);
+    text_contacts1.setCharacterSize(34);
+    text_contacts1.setFillColor(sf::Color::White);
+    text_contacts1.setPosition(160.f, 580.f);
+
+    sf::Text text_contacts2(L"support@companytracker.com", font2);
+    text_contacts2.setCharacterSize(34);
+    text_contacts2.setFillColor(sf::Color::White);
+    text_contacts2.setPosition(660.f, 650.f);
+
+    sf::Text text_license(L"Лицензия и авторские права: © 2024 Учет стажа сотрудников", font2);
+    text_license.setCharacterSize(26);
+    text_license.setFillColor(sf::Color::White);
+    text_license.setPosition(500.f, 1020.f);
+
+
+
+    sf::Texture arrow_back_white;
+    if (!arrow_back_white.loadFromFile("arrow_back_white.png"))
+        return;
+    sf::Sprite sprite_arrow_back_white(arrow_back_white);
+    sprite_arrow_back_white.setScale(0.2, 0.2);
+    sprite_arrow_back_white.setPosition(50, 950);
+
+    sf::Texture arrow_back_orange;
+    if (!arrow_back_orange.loadFromFile("arrow_back.png"))
+        return;
+    sf::Sprite sprite_arrow_back_orange(arrow_back_orange);
+    sprite_arrow_back_orange.setScale(0.2, 0.2);
+    sprite_arrow_back_orange.setPosition(50, 950);
+
+
+    bool isMouseOnArrow = false;
+    while (window.isOpen())
+    {
+        
+
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            // закрытие приложения
+            // для закрытия из панели задач
+            if (event.type == sf::Event::Closed)
+                window.close();
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+                return;
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    if (sprite_arrow_back_orange.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                        return;
+                }
+            }
+
+            // подсвечивание
+            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+            if (sprite_arrow_back_white.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                isMouseOnArrow = true;
+            else
+                isMouseOnArrow = false;
+
+
+        }
+
+        window.clear(sf::Color::Black);
+
+        if (isMouseOnArrow)
+            window.draw(sprite_arrow_back_orange);
+        else
+            window.draw(sprite_arrow_back_white);
+
+        window.draw(text_description_Of_app1);
+        window.draw(text_description_Of_app2);
+        window.draw(text_description_Of_app3);
+        window.draw(text_contacts1);
+        window.draw(text_contacts2);
+        window.draw(text_name_Of_app);
+        window.draw(text_license);
+        window.display();
+    }
+}
+
+void aboutCompany()
+{
+    float scrollPosition = 0.0f;
+
+    sf::Font font2;
+    if (!font2.loadFromFile("shrift.ttf"))
+        return;
+    sf::Font font;
+    if (!font.loadFromFile("shrift2.ttf"))
+        return;
+
+
+    sf::Text text_name_Of_company(L"Pixel World", font);
+    text_name_Of_company.setCharacterSize(64);
+    text_name_Of_company.setFillColor(sf::Color::White);
+
+    sf::Text text_history1(L"“Pixel World” была основана в 2010 году группой энтузиастов, объединенных общей страстью", font2);
+    text_history1.setCharacterSize(34);
+    text_history1.setFillColor(sf::Color::White);
+
+    sf::Text text_history2(L"к видеоиграм. От скромных начинаний в гараже мы выросли в успешную компанию", font2);
+    text_history2.setCharacterSize(34);
+    text_history2.setFillColor(sf::Color::White);
+
+    sf::Text text_history3(L"с международным признанием.", font2);
+    text_history3.setCharacterSize(34);
+    text_history3.setFillColor(sf::Color::White);
+
+    sf::Text text_mission1(L"Мы стремимся создавать увлекательные, креативные и инновационные игры,", font2);
+    text_mission1.setCharacterSize(34);
+    text_mission1.setFillColor(sf::Color::White);
+
+    sf::Text text_mission2(L"которые приносят радость и развлечение нашим игрокам.", font2);
+    text_mission2.setCharacterSize(34);
+    text_mission2.setFillColor(sf::Color::White);
+    
+    sf::Text text_games1(L"Наша компания специализируется на создании игр для различных платформ, ", font2);
+    text_games1.setCharacterSize(34);
+    text_games1.setFillColor(sf::Color::White);
+
+    sf::Text text_games2(L"включая мобильные устройства, ПК и консоли.", font2);
+    text_games2.setCharacterSize(34);
+    text_games2.setFillColor(sf::Color::White);
+
+    sf::Text text_type(L"Разрабатываем игры в разных жанрах: от аркад и головоломок до RPG и симуляторов.", font2);
+    text_type.setCharacterSize(34);
+    text_type.setFillColor(sf::Color::White);
+
+    sf::Text text_advantages1(L"Конкурентные преимущества:", font2);
+    text_advantages1.setCharacterSize(34);
+    text_advantages1.setFillColor(sf::Color::White);
+
+    sf::Text text_advantages2(L"Уникальный стиль: Наша команда талантливых художников и дизайнеров создает", font2);
+    text_advantages2.setCharacterSize(34);
+    text_advantages2.setFillColor(sf::Color::White);
+
+    sf::Text text_advantages3(L"узнаваемый пиксельный стиль, который отличает наши игры от других.", font2);
+    text_advantages3.setCharacterSize(34);
+    text_advantages3.setFillColor(sf::Color::White);
+
+    sf::Text text_advantages4(L"Геймплей и сюжет: Уделяем особое внимание интересному геймплею и захватывающим сюжетам.", font2);
+    text_advantages4.setCharacterSize(34);
+    text_advantages4.setFillColor(sf::Color::White);
+
+    sf::Text text_partners1(L"Мы сотрудничаем с издателями, платформами и другими игровыми компаниями, такими как", font2);
+    text_partners1.setCharacterSize(34);
+    text_partners1.setFillColor(sf::Color::White);
+
+    sf::Text text_partners2(L"Windows, Apple, Steam, EpicGames и другими.", font2);
+    text_partners2.setCharacterSize(34);
+    text_partners2.setFillColor(sf::Color::White);
+
+    sf::Text text_contact_info(L"Контактная информация:", font2);
+    text_contact_info.setCharacterSize(34);
+    text_contact_info.setFillColor(sf::Color::White);
+
+    sf::Text text_contact_info1(L"Адрес: г. Минск, ул. Геймплейная, 42", font2);
+    text_contact_info1.setCharacterSize(30);
+    text_contact_info1.setFillColor(sf::Color::White);
+
+    sf::Text text_contact_info2(L"Телефон: +375 29 123 4567", font2);
+    text_contact_info2.setCharacterSize(30);
+    text_contact_info2.setFillColor(sf::Color::White);
+
+    sf::Text text_contact_info3(L"Электронная почта: info@pixelworldgames.com", font2);
+    text_contact_info3.setCharacterSize(30);
+    text_contact_info3.setFillColor(sf::Color::White);
+
+    sf::Text text_end(L"Мы гордимся нашей командой и продуктами, и с нетерпением ждем новых вызовов и возможностей в мире игр!", font2);
+    text_end.setCharacterSize(28);
+    text_end.setFillColor(sf::Color::White);
+
+    
+
+
+    sf::Texture ofice;
+    if (!ofice.loadFromFile("ofice.jpg"))
+        return;
+    sf::Sprite sprite_ofice(ofice);
+    sprite_ofice.setScale(0.6, 0.6);
+    
+
+
+    while (window.isOpen())
+    {
+
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            // закрытие приложения
+            // для закрытия из панели задач
+            if (event.type == sf::Event::Closed)
+                window.close();
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+                return;
+
+
+            if (event.type == sf::Event::MouseWheelScrolled)
+            {
+                // Обработка прокрутки колесика мыши
+                if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
+                {
+                    // Проверяем, выходит ли текст за границы окна
+                    float lastTextBottom = text_end.getPosition().y + text_end.getLocalBounds().height + 1604.f;
+                    float windowHeight = window.getSize().y;
+                    if (lastTextBottom > windowHeight || lastTextBottom < windowHeight) // Добавлена проверка на случай, если текст не заполняет окно полностью
+                    {
+                        // Прокрутка вниз
+                        if (event.mouseWheelScroll.delta > 0)
+                        {
+                            scrollPosition += event.mouseWheelScroll.delta * 25.0f;
+                            // Проверяем, чтобы scrollPosition не выходил за границы
+                            if (scrollPosition >= 0)
+                                scrollPosition = 0;
+                            if (scrollPosition > 0) // Прокрутка вниз недоступна, если текст уже полностью виден
+                                scrollPosition = 0;
+                        }
+                        // Прокрутка вверх
+                        else if (event.mouseWheelScroll.delta < 0 or lastTextBottom < windowHeight) // Добавлена проверка, чтобы позволить прокрутку вверх, если текст не заполняет окно полностью
+                        {
+                            scrollPosition += event.mouseWheelScroll.delta * 25.0f;
+                            // Проверяем, чтобы scrollPosition не выходил за границы
+                            float minScrollPosition = windowHeight - lastTextBottom;
+                            if (scrollPosition > 0)
+                                scrollPosition = 0;
+                            if (scrollPosition < minScrollPosition) // Прокрутка вверх недоступна, если достигнут конец текста
+                                scrollPosition = minScrollPosition;
+                        }
+                    }
+                }
+            }
+
+
+
+
+
+
+
+        }
+        text_name_Of_company.setPosition(700.f, 50 + scrollPosition);
+        text_history1.setPosition(60.f, 200 + scrollPosition);
+        text_history2.setPosition(126.f, 270 + scrollPosition);
+        text_history3.setPosition(676.f, 340 + scrollPosition);
+        text_mission1.setPosition(200.f, 460 + scrollPosition);
+        text_mission2.setPosition(410.f, 530 + scrollPosition);
+        text_games1.setPosition(216.f, 650 + scrollPosition);
+        text_games2.setPosition(520.f, 720 + scrollPosition);
+        text_type.setPosition(120.f,790 + scrollPosition);
+        text_advantages1.setPosition(660.f, 910 + scrollPosition);
+        text_advantages2.setPosition(170.f, 980 + scrollPosition);
+        text_advantages3.setPosition(270.f, 1050 + scrollPosition);
+        text_advantages4.setPosition(20.f, 1120 + scrollPosition);
+        text_partners1.setPosition(66.f, 1240 + scrollPosition);
+        text_partners2.setPosition(520.f, 1310 + scrollPosition);
+
+        sprite_ofice.setPosition(390, 1460 + scrollPosition);
+
+        text_contact_info.setPosition(160.f, 2280 + scrollPosition);
+        text_contact_info1.setPosition(220.f, 2350 + scrollPosition);
+        text_contact_info2.setPosition(220.f, 2420 + scrollPosition);
+        text_contact_info3.setPosition(220.f, 2490 + scrollPosition);
+        text_end.setPosition(60.f, 2600 + scrollPosition);
+
+
+
+
+        window.clear(sf::Color::Black);
+        window.draw(text_name_Of_company);
+        window.draw(text_history1);
+        window.draw(text_history2);
+        window.draw(text_history3);
+        window.draw(text_mission1);
+        window.draw(text_mission2);
+        window.draw(text_games1);
+        window.draw(text_games2);
+        window.draw(text_type);
+        window.draw(text_advantages1);
+        window.draw(text_advantages2);
+        window.draw(text_advantages3);
+        window.draw(text_advantages4);
+        window.draw(text_partners1);
+        window.draw(text_partners2);
+        window.draw(sprite_ofice);
+        window.draw(text_contact_info);
+        window.draw(text_contact_info1);
+        window.draw(text_contact_info2);
+        window.draw(text_contact_info3);
+        window.draw(text_end);
+
+
         window.display();
     }
 }
