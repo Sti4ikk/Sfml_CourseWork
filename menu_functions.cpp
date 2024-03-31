@@ -431,7 +431,7 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
     polosa.setFillColor(sf::Color::White);
     line1.setFillColor(Color(59, 60, 54));
 
-    line1.move(490, 0);
+
     account.move(1660, 94);
     polosa.move(530, 0);
 
@@ -471,6 +471,32 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
     text_leave_from_acc.setCharacterSize(22);
     text_leave_from_acc.setFillColor(sf::Color::White);
     text_leave_from_acc.setPosition(1662.f, 140.f);
+
+
+    sf::Text text_print_all(L"Список сотрудников", font2);
+    text_print_all.setCharacterSize(40);
+    text_print_all.setFillColor(sf::Color::White);
+    text_print_all.setPosition(25.f, 385.f);
+
+    sf::Text text_add_employee(L"Добавить сотрудника", font2);
+    text_add_employee.setCharacterSize(40);
+    text_add_employee.setFillColor(sf::Color::White);
+    text_add_employee.setPosition(25.f, 455.f);
+
+    sf::Text text_edit_info(L"Редактировать данные", font2);
+    text_edit_info.setCharacterSize(40);
+    text_edit_info.setFillColor(sf::Color::White);
+    text_edit_info.setPosition(25.f, 525.f);
+
+    sf::Text text_delete_employee(L"Удалить сотрудника", font2);
+    text_delete_employee.setCharacterSize(40);
+    text_delete_employee.setFillColor(sf::Color::White);
+    text_delete_employee.setPosition(25.f, 595.f);
+
+    sf::Text text_get_back(L"Назад", font2);
+    text_get_back.setCharacterSize(40);
+    text_get_back.setFillColor(sf::Color::White);
+    text_get_back.setPosition(25.f, 665.f);
 
 
     sf::Texture acc;
@@ -570,6 +596,7 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
     bool triangleIsMouseOnShtorka1 = false;
     bool triangleIsMouseOnShtorka = false;
     bool isNewsOpen = false;
+    bool editingMode = false;
 
     while (window.isOpen())
     {
@@ -588,7 +615,7 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
                 if (event.mouseButton.button == sf::Mouse::Left)
                 {
                     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (text_exit.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    if (text_exit.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isNewsOpen and !editingMode)
                         window.close();
                 }
             }
@@ -680,7 +707,38 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
                 triangle2[1].color = sf::Color::White;
                 triangle2[2].color = sf::Color::White;
             }
+            if (text_print_all.getGlobalBounds().contains(mousePos.x, mousePos.y) and editingMode)
+                text_print_all.setFillColor(Color(255, 51, 6));
+            else
+                text_print_all.setFillColor(sf::Color::White);
+            if (text_add_employee.getGlobalBounds().contains(mousePos.x, mousePos.y) and editingMode)
+                text_add_employee.setFillColor(Color(255, 51, 6));
+            else
+                text_add_employee.setFillColor(sf::Color::White);
+            if (text_edit_info.getGlobalBounds().contains(mousePos.x, mousePos.y) and editingMode)
+                text_edit_info.setFillColor(Color(255, 51, 6));
+            else
+                text_edit_info.setFillColor(sf::Color::White);
+            if (text_delete_employee.getGlobalBounds().contains(mousePos.x, mousePos.y) and editingMode)
+                text_delete_employee.setFillColor(Color(255, 51, 6));
+            else
+                text_delete_employee.setFillColor(sf::Color::White);
+            if (text_get_back.getGlobalBounds().contains(mousePos.x, mousePos.y) and editingMode)
+                text_get_back.setFillColor(Color(255, 51, 6));
+            else
+                text_get_back.setFillColor(sf::Color::White);
+            
+            // проверка на кнопку НАЗАД
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    if (text_get_back.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isAccPressed)
+                        editingMode = false;
 
+                }
+            }
 
             // проверка на нажатие иконки АККАУНТ
             if (event.type == sf::Event::MouseButtonPressed)
@@ -715,7 +773,7 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
                 if (event.mouseButton.button == sf::Mouse::Left)
                 {
                     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (text_leave_from_acc.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isNewsOpen)
+                    if (text_leave_from_acc.getGlobalBounds().contains(mousePos.x, mousePos.y))  // тут убрал !isNewsOpen
                     {
                         isRememberMePressed = 1;
                         writeInFileIsRememberOn(isRememberMePressed);
@@ -730,10 +788,22 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
                 if (event.mouseButton.button == sf::Mouse::Left)
                 {
                     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (text_settings.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isNewsOpen)
+                    if (text_settings.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isNewsOpen and !editingMode)
                         settings_menu();
                 }
             }
+
+            // проверка на нажатие на РЕДАКТИРОВАНИЕ
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    if (text_editing.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isNewsOpen and !editingMode)
+                        editingMode = true;
+                }
+            }
+
 
                                                                           
 
@@ -742,10 +812,24 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
         window.clear(sf::Color::Black);
         window.draw(name);
         window.draw(sprite_acc);
-        window.draw(text_editing);
-        window.draw(text_proccesing);
-        window.draw(text_exit);
-        window.draw(text_settings);
+        if (!editingMode)
+        {
+            line1.setPosition(490, 0);
+            window.draw(text_editing);
+            window.draw(text_proccesing);
+            window.draw(text_exit);
+            window.draw(text_settings);
+        }
+        else
+        {
+            line1.setPosition(560, 0);
+            window.draw(text_print_all);
+            window.draw(text_add_employee);
+            window.draw(text_edit_info);
+            window.draw(text_delete_employee);
+            window.draw(text_get_back);
+        }
+
         if (isAccPressed)
         {
             window.draw(triangle2);
