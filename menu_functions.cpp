@@ -749,6 +749,23 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
                 text_get_back.setFillColor(Color(255, 51, 6));
             else
                 text_get_back.setFillColor(sf::Color::White);
+
+            if (text_search.getGlobalBounds().contains(mousePos.x, mousePos.y) and proccesingMode)
+                text_search.setFillColor(Color(255, 51, 6));
+            else
+                text_search.setFillColor(sf::Color::White);
+            if (text_sorting.getGlobalBounds().contains(mousePos.x, mousePos.y) and proccesingMode)
+                text_sorting.setFillColor(Color(255, 51, 6));
+            else
+                text_sorting.setFillColor(sf::Color::White);
+            if (text_search1.getGlobalBounds().contains(mousePos.x, mousePos.y) and proccesingMode)
+                text_search1.setFillColor(Color(255, 51, 6));
+            else
+                text_search1.setFillColor(sf::Color::White);
+            if (text_get_back1.getGlobalBounds().contains(mousePos.x, mousePos.y) and proccesingMode)
+                text_get_back1.setFillColor(Color(255, 51, 6));
+            else
+                text_get_back1.setFillColor(sf::Color::White);
             
             // проверка на кнопку НАЗАД
             if (event.type == sf::Event::MouseButtonPressed)
@@ -877,7 +894,7 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
 
         else if (proccesingMode and !editingMode)
         {
-            line1.setPosition(300, 0);
+            line1.setPosition(320, 0);
             window.draw(text_search);
             window.draw(text_sorting);
             window.draw(text_search1);
