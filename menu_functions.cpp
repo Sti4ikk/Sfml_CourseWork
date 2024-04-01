@@ -499,6 +499,27 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
     text_get_back.setPosition(25.f, 665.f);
 
 
+    sf::Text text_search(L"Поиск", font2);
+    text_search.setCharacterSize(40);
+    text_search.setFillColor(sf::Color::White);
+    text_search.setPosition(25.f, 385.f);
+
+    sf::Text text_sorting(L"Сортировка", font2);
+    text_sorting.setCharacterSize(40);
+    text_sorting.setFillColor(sf::Color::White);
+    text_sorting.setPosition(25.f, 455.f);
+
+    sf::Text text_search1(L"Поиск СПВ", font2);
+    text_search1.setCharacterSize(40);
+    text_search1.setFillColor(sf::Color::White);
+    text_search1.setPosition(25.f, 595.f);
+
+    sf::Text text_get_back1(L"Назад", font2);
+    text_get_back1.setCharacterSize(40);
+    text_get_back1.setFillColor(sf::Color::White);
+    text_get_back1.setPosition(25.f, 665.f);
+
+
     sf::Texture acc;
     if (!acc.loadFromFile("acc.png"))
         return;
@@ -597,6 +618,7 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
     bool triangleIsMouseOnShtorka = false;
     bool isNewsOpen = false;
     bool editingMode = false;
+    bool proccesingMode = false;
 
     while (window.isOpen())
     {
@@ -615,7 +637,7 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
                 if (event.mouseButton.button == sf::Mouse::Left)
                 {
                     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (text_exit.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isNewsOpen and !editingMode)
+                    if (text_exit.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isNewsOpen and !editingMode and !proccesingMode)
                         window.close();
                 }
             }
@@ -734,8 +756,20 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
                 if (event.mouseButton.button == sf::Mouse::Left)
                 {
                     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (text_get_back.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isAccPressed)
+                    if (text_get_back.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isAccPressed and !proccesingMode)
                         editingMode = false;
+
+                }
+            }
+
+            // проверка на кнопку НАЗАД
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    if (text_get_back1.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isAccPressed and !editingMode)
+                        proccesingMode = false;
 
                 }
             }
@@ -788,7 +822,7 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
                 if (event.mouseButton.button == sf::Mouse::Left)
                 {
                     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (text_settings.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isNewsOpen and !editingMode)
+                    if (text_settings.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isNewsOpen and !editingMode and !proccesingMode)
                         settings_menu();
                 }
             }
@@ -799,8 +833,19 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
                 if (event.mouseButton.button == sf::Mouse::Left)
                 {
                     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (text_editing.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isNewsOpen and !editingMode)
+                    if (text_editing.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isNewsOpen and !editingMode and !proccesingMode)
                         editingMode = true;
+                }
+            }
+
+            // проверка на нажатие на ОБРАБОТКА
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    if (text_proccesing.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isNewsOpen and !proccesingMode and !editingMode)
+                        proccesingMode = true;
                 }
             }
 
@@ -812,7 +857,7 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
         window.clear(sf::Color::Black);
         window.draw(name);
         window.draw(sprite_acc);
-        if (!editingMode)
+        if (!editingMode and !proccesingMode)
         {
             line1.setPosition(490, 0);
             window.draw(text_editing);
@@ -820,7 +865,7 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
             window.draw(text_exit);
             window.draw(text_settings);
         }
-        else
+        else if(!proccesingMode and editingMode)
         {
             line1.setPosition(560, 0);
             window.draw(text_print_all);
@@ -828,6 +873,15 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
             window.draw(text_edit_info);
             window.draw(text_delete_employee);
             window.draw(text_get_back);
+        }
+
+        else if (proccesingMode and !editingMode)
+        {
+            line1.setPosition(300, 0);
+            window.draw(text_search);
+            window.draw(text_sorting);
+            window.draw(text_search1);
+            window.draw(text_get_back1);
         }
 
         if (isAccPressed)
@@ -1321,10 +1375,6 @@ void aboutCompany()
                     }
                 }
             }
-
-
-
-
 
 
 
