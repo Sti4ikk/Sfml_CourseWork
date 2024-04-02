@@ -7,7 +7,6 @@
 #include <iostream>
 
 extern sf::RenderWindow window;
-
 using namespace sf;
 
 int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>& employee, bool &isRememberMePressed)
@@ -779,6 +778,17 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
                 }
             }
 
+            // проверка на кнопку ВЫВЕСТИ ВСЕХ
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    if (text_print_all.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isAccPressed and editingMode)
+                        printAllEmployees_menu(employee);
+                }
+            }
+
             // проверка на кнопку НАЗАД
             if (event.type == sf::Event::MouseButtonPressed)
             {
@@ -1329,7 +1339,7 @@ void aboutCompany()
     text_contact_info3.setCharacterSize(30);
     text_contact_info3.setFillColor(sf::Color::White);
 
-    sf::Text text_end(L"Мы гордимся нашей командой и продуктами, и с нетерпением ждем новых вызовов и возможностей в мире игр!", font2);
+    sf::Text text_end(L"Мы гордимся нашей командой и продуктами и с нетерпением ждем новых вызовов и возможностей в мире игр!", font2);
     text_end.setCharacterSize(28);
     text_end.setFillColor(sf::Color::White);
 
@@ -1449,4 +1459,108 @@ void aboutCompany()
 
         window.display();
     }
+}
+
+void printAllEmployees_menu(std::vector<Employee>& employee)
+{
+    float scrollPosition = 0.0f;
+    float y = 0.0f;
+
+    while (window.isOpen())
+    {
+
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            // закрытие приложения
+            // для закрытия из панели задач
+            if (event.type == sf::Event::Closed)
+                window.close();
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+                return;
+
+            if (event.type == sf::Event::MouseWheelScrolled)
+            {
+                // Обработка прокрутки колесика мыши
+                if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
+                {
+                    // Проверяем, выходит ли текст за границы окна
+                    float lastTextBottom = y + 32;
+                    float windowHeight = window.getSize().y;
+                    if (lastTextBottom > windowHeight || lastTextBottom < windowHeight) // Добавлена проверка на случай, если текст не заполняет окно полностью
+                    {
+                        // Прокрутка вниз
+                        if (event.mouseWheelScroll.delta > 0)
+                        {
+                            scrollPosition += event.mouseWheelScroll.delta * 25.0f;
+                            // Проверяем, чтобы scrollPosition не выходил за границы
+                            if (scrollPosition >= 0)
+                                scrollPosition = 0;
+                            if (scrollPosition > 0) // Прокрутка вниз недоступна, если текст уже полностью виден
+                                scrollPosition = 0;
+                        }
+                        // Прокрутка вверх
+                        else if (event.mouseWheelScroll.delta < 0 or lastTextBottom < windowHeight) // Добавлена проверка, чтобы позволить прокрутку вверх, если текст не заполняет окно полностью
+                        {
+                            scrollPosition += event.mouseWheelScroll.delta * 25.0f;
+                            // Проверяем, чтобы scrollPosition не выходил за границы
+                            float minScrollPosition = windowHeight - lastTextBottom;
+                            if (scrollPosition > 0)
+                                scrollPosition = 0;
+                            if (scrollPosition < minScrollPosition) // Прокрутка вверх недоступна, если достигнут конец текста
+                                scrollPosition = minScrollPosition;
+                        }
+                    }
+                }
+            }
+
+        }
+     
+
+        window.clear(sf::Color::Black);
+        y = printAllEmployees(employee, scrollPosition);
+        window.display();
+    }
+}
+
+float printAllEmployees(std::vector<Employee>& employee, float scrollPosition)
+{
+    sf::Font font2;
+    if (!font2.loadFromFile("shrift.ttf"))
+        return 0.0;
+
+
+    sf::Text employee1(L"", font2);
+    employee1.setCharacterSize(32);
+    employee1.setFillColor(sf::Color::White);
+    employee1.setPosition(30.f, 30.f);
+
+    float x = 120.0;
+    float y = 30.0f;
+    std::string currentEmployee;
+
+    for (int i = 0; i < employee.size(); i++)
+    {
+        employee1.setPosition(x, y);
+        currentEmployee = std::to_string(i + 1) + ((i < 9) ? ".   " : ".  ") + employee.at(i).surName + " " + employee.at(i).name + " " + employee.at(i).patronymic + " " + employee.at(i).gender + " " + employee.at(i).dateOfBirthday
+            + " " + employee.at(i).departmentName + " " + employee.at(i).startDate;
+        employee1.setString(currentEmployee);
+
+        // Проверяем, виден ли текст на экране
+        if (y + scrollPosition >= 0 && y + scrollPosition < window.getSize().y)
+        {
+            // Устанавливаем позицию текста только если он виден
+            employee1.setPosition(x, y + scrollPosition);
+            window.draw(employee1);
+        }
+
+        // Обновляем позицию для следующего текста
+        y += 50;
+
+        // Если достигнут нижний предел прокрутки, прерываем цикл
+        if (y + scrollPosition >= window.getSize().y)
+            break;
+    }
+
+    return y;   // Возвращаем текущую позицию, которая будет использоваться в следующем вызове
 }

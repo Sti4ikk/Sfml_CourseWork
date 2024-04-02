@@ -22,6 +22,8 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
 void settings_menu();
 void aboutApp();
 void aboutCompany();
+void printAllEmployees_menu(std::vector<Employee>& employee);
+float printAllEmployees(std::vector<Employee>& employee, float scrollPosition);
 
 
 void openUrl(const std::string& url);
