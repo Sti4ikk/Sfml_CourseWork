@@ -5,6 +5,7 @@
 #include "enums.h"
 #include "prototypes.h"
 #include <iostream>
+#include <array>
 
 extern sf::RenderWindow window;
 using namespace sf;
@@ -153,6 +154,9 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
     // для перемещения окна
     bool isDragging = false;
     sf::Vector2i clickPosition;
+    std::string str_login;
+    std::string str_password;
+    std::string str_password_close;
 
     while (window.isOpen())
     {
@@ -253,37 +257,34 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
             {
                 if (event.text.unicode < 128)
                 {
-                    if (isRectangle1Clicked and login.getString().getSize() < 12)
-                    {
-                        login.setString(login.getString() + static_cast<char>(event.text.unicode));
-
+                    if (event.text.unicode == 8 and isRectangle1Clicked)
+                    { // Backspace
+                        if (!str_login.empty()) 
+                            str_login.pop_back();
                     }
-                    if (isRectangle2Clicked and password1.getString().getSize() < 12)
+                    else if (isRectangle1Clicked and login.getString().getSize() < 12)
+                        str_login += static_cast<char>(event.text.unicode);
+
+
+                    if (event.text.unicode == 8 and isRectangle2Clicked)
+                    { // Backspace
+                        if (!str_password.empty())
+                        {
+                            str_password.pop_back();
+                            str_password_close.pop_back();
+                        }
+                    }
+                    else if (isRectangle2Clicked and password1.getString().getSize() < 12)
                     {
-                        password1.setString(password1.getString() + static_cast<char>(event.text.unicode));
-                        password2.setString(password2.getString() + '*');
+                        str_password += static_cast<char>(event.text.unicode);
+                        str_password_close += "*";
                     }
                 }
+                login.setString(str_login);
+                password1.setString(str_password);
+                password2.setString(str_password_close);
             }
-            // удаление текста
-            if (event.type == sf::Event::MouseButtonPressed) 
-            {
-                if (event.mouseButton.button == sf::Mouse::Left) 
-                {
-                    if (login.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) 
-                    {
-                        login.setString("");
-                    }
-                    if (password2.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) 
-                    {
-                        password2.setString("");
-                        password1.setString("");
-                    }
-                }
-            }
-
             
-
 
             // проверка на нажатие кнопки видимости пароля
             if (event.type == sf::Event::MouseButtonPressed)
@@ -334,7 +335,7 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
                 }
             }
         }
-        if (isDragging)
+       /*if (isDragging)
         {
             // Вычисляем разницу между текущей позицией мыши и позицией, где была нажата кнопка мыши
             sf::Vector2i delta = sf::Mouse::getPosition(window) - clickPosition;
@@ -342,7 +343,7 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
             window.setPosition(sf::Vector2i(window.getPosition()) + delta);
             // Обновляем позицию clickPosition
             clickPosition = sf::Mouse::getPosition(window);
-        }
+        }      */
 
         window.clear(sf::Color(10, 10, 10));
         window.draw(rectangle1);
@@ -508,15 +509,20 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
     text_sorting.setFillColor(sf::Color::White);
     text_sorting.setPosition(25.f, 455.f);
 
-    sf::Text text_search1(L"Поиск СПВ", font2);
+    sf::Text text_search1(L"Поиск сотрудников", font2);
     text_search1.setCharacterSize(40);
     text_search1.setFillColor(sf::Color::White);
-    text_search1.setPosition(25.f, 595.f);
+    text_search1.setPosition(25.f, 525.f);
+
+    sf::Text text_search2(L"пенсионного возраста", font2);
+    text_search2.setCharacterSize(40);
+    text_search2.setFillColor(sf::Color::White);
+    text_search2.setPosition(25.f, 570.f);
 
     sf::Text text_get_back1(L"Назад", font2);
     text_get_back1.setCharacterSize(40);
     text_get_back1.setFillColor(sf::Color::White);
-    text_get_back1.setPosition(25.f, 665.f);
+    text_get_back1.setPosition(25.f, 640.f);
 
 
     sf::Texture acc;
@@ -574,40 +580,67 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
 
 
 
+    int count = 0;                                                   //СДЕЛАТЬ ФУНКЦИ
+    int number;
+    int index = 0;
+    // массив случайных чисел для отображения случайных новостей
+    std::vector<int>numbers;
+    numbers.reserve(5);
+    for (int i = 0; numbers.size() != 5; i++)
+    {
+        number = rand() % 9 + 1;
+
+        for (int j = 0; j < numbers.size(); j++)
+        {
+            if (numbers.at(j) == number)
+                count++;
+        }
+
+        if (!count)
+        {
+            numbers.push_back(number);
+            index++;
+        }
+
+
+        count = 0;
+    }
+
     sf::Texture news1;
-    if (!news1.loadFromFile("news\\news1.png"))
+    if (!news1.loadFromFile("news\\news" + std::to_string(numbers.at(0)) + ".png"))
         return;
     sf::Sprite sprite_news1(news1);
     sprite_news1.setScale(0.26, 0.26);
     sprite_news1.setPosition(1485, 150);
 
     sf::Texture news2;
-    if (!news2.loadFromFile("news\\news2.png"))
+    if (!news2.loadFromFile("news\\news" + std::to_string(numbers.at(1)) + ".png"))
         return;
     sf::Sprite sprite_news2(news2);
     sprite_news2.setScale(0.26, 0.26);
     sprite_news2.setPosition(1485, 280);
 
     sf::Texture news3;
-    if (!news3.loadFromFile("news\\news3.png"))
+    if (!news3.loadFromFile("news\\news" + std::to_string(numbers.at(2)) + ".png"))
         return;
     sf::Sprite sprite_news3(news3);
     sprite_news3.setScale(0.26, 0.26);
     sprite_news3.setPosition(1485, 420);
 
     sf::Texture news4;
-    if (!news4.loadFromFile("news\\news4.png"))
+    if (!news4.loadFromFile("news\\news" + std::to_string(numbers.at(3)) + ".png"))
         return;
     sf::Sprite sprite_news4(news4);
     sprite_news4.setScale(0.26, 0.26);
     sprite_news4.setPosition(1485, 540);
 
     sf::Texture news5;
-    if (!news5.loadFromFile("news\\news5.png"))
+    if (!news5.loadFromFile("news\\news" + std::to_string(numbers.at(4)) + ".png"))
         return;
     sf::Sprite sprite_news5(news5);
     sprite_news5.setScale(0.26, 0.26);
     sprite_news5.setPosition(1485, 670);
+
                                        
 
     bool isAccPressed = false;
@@ -757,10 +790,18 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
                 text_sorting.setFillColor(Color(255, 51, 6));
             else
                 text_sorting.setFillColor(sf::Color::White);
-            if (text_search1.getGlobalBounds().contains(mousePos.x, mousePos.y) and proccesingMode)
+            if ((text_search1.getGlobalBounds().contains(mousePos.x, mousePos.y) or text_search2.getGlobalBounds().contains(mousePos.x, mousePos.y)) and proccesingMode)
+            {
                 text_search1.setFillColor(Color(255, 51, 6));
+                text_search2.setFillColor(Color(255, 51, 6));
+            }
             else
+            {
                 text_search1.setFillColor(sf::Color::White);
+                text_search2.setFillColor(sf::Color::White);
+            }
+
+            
             if (text_get_back1.getGlobalBounds().contains(mousePos.x, mousePos.y) and proccesingMode)
                 text_get_back1.setFillColor(Color(255, 51, 6));
             else
@@ -904,10 +945,11 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
 
         else if (proccesingMode and !editingMode)
         {
-            line1.setPosition(320, 0);
+            line1.setPosition(540, 0);
             window.draw(text_search);
             window.draw(text_sorting);
             window.draw(text_search1);
+            window.draw(text_search2);
             window.draw(text_get_back1);
         }
 

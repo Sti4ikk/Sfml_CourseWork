@@ -3,12 +3,14 @@
 #include "structs.h"
 #include "enums.h"
 #include "prototypes.h"
+#include <ctime>
 
 sf::RenderWindow window(sf::VideoMode(500, 412), "", sf::Style::None);
 
 
 int main()
 {
+    srand(time(NULL));
 
     std::vector<Employee> employee;;
     std::vector<Authentication> authentication;
