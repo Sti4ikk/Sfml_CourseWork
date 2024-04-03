@@ -24,6 +24,7 @@ void aboutApp();
 void aboutCompany();
 void printAllEmployees_menu(std::vector<Employee>& employee);
 float printAllEmployees(std::vector<Employee>& employee, float scrollPosition);
+void addNewEmployee_menu(std::vector<Employee>& employee);
 //void printNews(int num1, int num2, int num3, int num4, int num5);
 
 void openUrl(const std::string& url);

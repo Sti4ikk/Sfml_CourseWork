@@ -369,21 +369,18 @@ int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>
     }
 }
 
-
 void main_menu(std::vector<Authentication>& authentication, std::vector<Employee>& employee, bool& isRememberMePressed)
 {
     window.create(sf::VideoMode(1920, 1080), "", sf::Style::None);
 
     sf::Font font2;
-    if (!font2.loadFromFile("shrift.ttf")) {
-        // Обработка ошибки загрузки шрифта
+    if (!font2.loadFromFile("shrift.ttf"))
         return;
-    }
+
     sf::Font font;
-    if (!font.loadFromFile("shrift2.ttf")) {
-        // Обработка ошибки загрузки шрифта
+    if (!font.loadFromFile("shrift2.ttf"))
         return;
-    }
+
 
    
 
@@ -830,6 +827,17 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
                 }
             }
 
+            // проверка на кнопку ДОБАВЛЕНИЕ
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    if (text_add_employee.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isAccPressed and editingMode)
+                        addNewEmployee_menu(employee);
+                }
+            }
+
             // проверка на кнопку НАЗАД
             if (event.type == sf::Event::MouseButtonPressed)
             {
@@ -997,7 +1005,6 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
         window.display();
     }
 }
-
 
 void settings_menu()
 {
@@ -1605,4 +1612,467 @@ float printAllEmployees(std::vector<Employee>& employee, float scrollPosition)
     }
 
     return y;   // Возвращаем текущую позицию, которая будет использоваться в следующем вызове
+}
+
+void addNewEmployee_menu(std::vector<Employee>& employee)
+{
+
+    sf::Font font2;
+    if (!font2.loadFromFile("shrift.ttf"))
+        return;
+
+
+    sf::Text text_add_employee(L"Добавление сотрудника", font2);
+    text_add_employee.setCharacterSize(64);
+    text_add_employee.setFillColor(sf::Color::White);
+    text_add_employee.setPosition(520.f, 30.f);
+
+    sf::Text text_surName(L"Фамилия", font2);
+    text_surName.setCharacterSize(42);
+    text_surName.setFillColor(sf::Color::White);
+    text_surName.setPosition(420.f, 164.f);
+
+    sf::Text text_name(L"Имя", font2);
+    text_name.setCharacterSize(42);
+    text_name.setFillColor(sf::Color::White);
+    text_name.setPosition(480.f, 360.f);
+
+    sf::Text text_patronymic(L"Отчество", font2);
+    text_patronymic.setCharacterSize(42);
+    text_patronymic.setFillColor(sf::Color::White);
+    text_patronymic.setPosition(420.f, 550.f);
+
+    sf::Text text_gender(L"Пол", font2);
+    text_gender.setCharacterSize(42);
+    text_gender.setFillColor(sf::Color::White);
+    text_gender.setPosition(480.f, 740.f);
+
+    sf::Text text_DOB(L"Дата рождения", font2);
+    text_DOB.setCharacterSize(42);
+    text_DOB.setFillColor(sf::Color::White);
+    text_DOB.setPosition(1160.f, 164.f);
+
+    sf::Text text_departmentName(L"Название отдела", font2);
+    text_departmentName.setCharacterSize(42);
+    text_departmentName.setFillColor(sf::Color::White);
+    text_departmentName.setPosition(1150.f, 360.f);
+
+    sf::Text text_post(L"Должность", font2);
+    text_post.setCharacterSize(42);
+    text_post.setFillColor(sf::Color::White);
+    text_post.setPosition(1200.f, 550.f);
+
+    sf::Text text_startDate(L"Дата начала работы", font2);
+    text_startDate.setCharacterSize(42);
+    text_startDate.setFillColor(sf::Color::White);
+    text_startDate.setPosition(1100.f, 740.f);
+
+    sf::Text text_add(L"Добавить", font2);
+    text_add.setCharacterSize(50);
+    text_add.setFillColor(sf::Color::White);
+    text_add.setPosition(1620.f, 970.f);
+
+
+
+    std::string str_surName;
+    std::string str_name;
+    std::string str_patronymic;
+    std::string str_startDate;
+    std::string str_gender;
+    std::string str_date_of_birth;
+    std::string str_departmentName;
+    std::string str_post;
+  
+    sf::Text surName("", font2);
+    surName.setCharacterSize(38);
+    surName.setFillColor(sf::Color::Black);
+    surName.setPosition(270.f, 256.f);
+
+    sf::Text name("", font2);
+    name.setCharacterSize(38);
+    name.setFillColor(sf::Color::Black);
+    name.setPosition(270.f, 446.f);
+
+    sf::Text startDate("", font2);
+    startDate.setCharacterSize(38);
+    startDate.setFillColor(sf::Color::Black);
+    startDate.setPosition(1070.f, 826.f);
+
+    sf::Text patronymic("", font2);
+    patronymic.setCharacterSize(38);
+    patronymic.setFillColor(sf::Color::Black);
+    patronymic.setPosition(270.f, 636.f);
+
+    sf::Text gender("", font2);
+    gender.setCharacterSize(38);
+    gender.setFillColor(sf::Color::Black);
+    gender.setPosition(270.f, 826.f);
+
+    sf::Text date_of_birth("", font2);
+    date_of_birth.setCharacterSize(38);
+    date_of_birth.setFillColor(sf::Color::Black);
+    date_of_birth.setPosition(1070.f, 256.f);
+
+    sf::Text departmentName("", font2);
+    departmentName.setCharacterSize(38);
+    departmentName.setFillColor(sf::Color::Black);
+    departmentName.setPosition(1070.f, 446.f);
+
+    sf::Text post("", font2);
+    post.setCharacterSize(38);
+    post.setFillColor(sf::Color::Black);
+    post.setPosition(1070.f, 636.f);
+
+
+
+    sf::Texture rectangle1;
+    if (!rectangle1.loadFromFile("rectangle.png"))
+        return;
+    sf::Sprite sprite_surName(rectangle1);
+    sprite_surName.setScale(0.5, 0.5);
+    sprite_surName.setPosition(200, 210);
+
+    sf::Texture rectangle2;
+    if (!rectangle2.loadFromFile("rectangle.png"))
+        return;
+    sf::Sprite sprite_name(rectangle2);
+    sprite_name.setScale(0.5, 0.5);
+    sprite_name.setPosition(200, 400);
+
+    sf::Texture rectangle3;
+    if (!rectangle3.loadFromFile("rectangle.png"))
+        return;
+    sf::Sprite sprite_patronymic(rectangle3);
+    sprite_patronymic.setScale(0.5, 0.5);
+    sprite_patronymic.setPosition(200, 590);
+
+    sf::Texture rectangle4;
+    if (!rectangle4.loadFromFile("rectangle.png"))
+        return;
+    sf::Sprite sprite_gender(rectangle4);
+    sprite_gender.setScale(0.5, 0.5);
+    sprite_gender.setPosition(200, 780);
+
+    sf::Texture rectangle5;
+    if (!rectangle5.loadFromFile("rectangle.png"))
+        return;
+    sf::Sprite sprite_date_of_birth(rectangle5);
+    sprite_date_of_birth.setScale(0.5, 0.5);
+    sprite_date_of_birth.setPosition(1000, 210);
+
+    sf::Texture rectangle6;
+    if (!rectangle6.loadFromFile("rectangle.png"))
+        return;
+    sf::Sprite sprite_department_name(rectangle6);
+    sprite_department_name.setScale(0.5, 0.5);
+    sprite_department_name.setPosition(1000, 400);
+
+    sf::Texture rectangle7;
+    if (!rectangle7.loadFromFile("rectangle.png"))
+        return;
+    sf::Sprite sprite_post(rectangle7);
+    sprite_post.setScale(0.5, 0.5);
+    sprite_post.setPosition(1000, 590);
+
+    sf::Texture rectangle8;
+    if (!rectangle8.loadFromFile("rectangle.png"))
+        return;
+    sf::Sprite sprite_startDate(rectangle8);
+    sprite_startDate.setScale(0.5, 0.5);
+    sprite_startDate.setPosition(1000, 780);
+
+
+    sf::Texture arrow_back_white;
+    if (!arrow_back_white.loadFromFile("arrow_back_white.png"))
+        return;
+    sf::Sprite sprite_arrow_back_white(arrow_back_white);
+    sprite_arrow_back_white.setScale(0.2, 0.2);
+    sprite_arrow_back_white.setPosition(50, 950);
+
+    sf::Texture arrow_back_orange;
+    if (!arrow_back_orange.loadFromFile("arrow_back.png"))
+        return;
+    sf::Sprite sprite_arrow_back_orange(arrow_back_orange);
+    sprite_arrow_back_orange.setScale(0.2, 0.2);
+    sprite_arrow_back_orange.setPosition(50, 950);
+
+
+    bool isMouseOnArrow = false;
+    bool isMouseOnTextAdd = false;
+
+    bool sprite_surNameClicked = false;
+    bool sprite_nameClicked = false;
+    bool sprite_patronymicClicked = false;
+    bool sprite_genderClicked = false;
+    bool sprite_date_of_birthClicked = false;
+    bool sprite_department_nameClicked = false;
+    bool sprite_postClicked = false;
+    bool sprite_startDateClicked = false;
+
+    while (window.isOpen())
+    {
+
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            // закрытие приложения
+            // для закрытия из панели задач
+            if (event.type == sf::Event::Closed)
+                window.close();
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+                return;
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    if (sprite_arrow_back_orange.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                        return;
+                }
+            }
+
+            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+            if (sprite_arrow_back_white.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                isMouseOnArrow = true;
+            else
+                isMouseOnArrow = false;
+            if (text_add.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                isMouseOnTextAdd = true;
+            else
+                isMouseOnTextAdd = false;
+
+            // проверка на поле для ввода
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    if (sprite_surName.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    {
+                        sprite_surNameClicked = true;
+                        sprite_nameClicked = false;
+                        sprite_patronymicClicked = false;
+                        sprite_genderClicked = false;
+                        sprite_date_of_birthClicked = false;
+                        sprite_department_nameClicked = false;
+                        sprite_postClicked = false;
+                        sprite_startDateClicked = false;
+
+                    }
+                    else if (sprite_name.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    {
+                        sprite_nameClicked = true;
+                        sprite_surNameClicked = false;
+                        sprite_patronymicClicked = false;
+                        sprite_genderClicked = false;
+                        sprite_date_of_birthClicked = false;
+                        sprite_department_nameClicked = false;
+                        sprite_postClicked = false;
+                        sprite_startDateClicked = false;
+
+                    }
+                    else if (sprite_patronymic.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    {
+                        sprite_patronymicClicked = true;
+                        sprite_nameClicked = false;
+                        sprite_surNameClicked = false;
+                        sprite_genderClicked = false;
+                        sprite_date_of_birthClicked = false;
+                        sprite_department_nameClicked = false;
+                        sprite_postClicked = false;
+                        sprite_startDateClicked = false;
+
+                    }
+                    else if (sprite_gender.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    {
+                        sprite_genderClicked = true;
+                        sprite_nameClicked = false;
+                        sprite_patronymicClicked = false;
+                        sprite_surNameClicked = false;
+                        sprite_date_of_birthClicked = false;
+                        sprite_department_nameClicked = false;
+                        sprite_postClicked = false;
+                        sprite_startDateClicked = false;
+
+                    }
+                    else if (sprite_date_of_birth.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    {
+                        sprite_date_of_birthClicked = true;
+                        sprite_nameClicked = false;
+                        sprite_patronymicClicked = false;
+                        sprite_genderClicked = false;
+                        sprite_surNameClicked = false;
+                        sprite_department_nameClicked = false;
+                        sprite_postClicked = false;
+                        sprite_startDateClicked = false;
+
+                    }
+                    else if (sprite_department_name.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    {
+                        sprite_department_nameClicked = true;
+                        sprite_nameClicked = false;
+                        sprite_patronymicClicked = false;
+                        sprite_genderClicked = false;
+                        sprite_date_of_birthClicked = false;
+                        sprite_surNameClicked = false;
+                        sprite_postClicked = false;
+                        sprite_startDateClicked = false;
+
+                    }
+                    else if (sprite_post.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    {
+                        sprite_postClicked = true;
+                        sprite_nameClicked = false;
+                        sprite_patronymicClicked = false;
+                        sprite_genderClicked = false;
+                        sprite_date_of_birthClicked = false;
+                        sprite_department_nameClicked = false;
+                        sprite_surNameClicked = false;
+                        sprite_startDateClicked = false;
+
+                    }
+                    else if (sprite_startDate.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    {
+                        sprite_startDateClicked = true;
+                        sprite_nameClicked = false;
+                        sprite_patronymicClicked = false;
+                        sprite_genderClicked = false;
+                        sprite_date_of_birthClicked = false;
+                        sprite_department_nameClicked = false;
+                        sprite_postClicked = false;
+                        sprite_surNameClicked = false;
+
+                    }
+                }
+            }
+
+
+            // ввод текста в поле логин и пароль
+            if (event.type == sf::Event::TextEntered)
+            {
+                if (event.text.unicode < 128)
+                {
+                    if (event.text.unicode == 8 and sprite_surNameClicked)
+                    { // Backspace
+                        if (!str_surName.empty())
+                            str_surName.pop_back();
+                    }
+                    else if (sprite_surNameClicked and surName.getString().getSize() < 15)
+                        str_surName += static_cast<char>(event.text.unicode);
+
+                    if (event.text.unicode == 8 and sprite_nameClicked)
+                    { // Backspace
+                        if (!str_name.empty())
+                            str_name.pop_back();
+                    }
+                    else if (sprite_nameClicked and name.getString().getSize() < 15)
+                        str_name += static_cast<char>(event.text.unicode);
+
+                    if (event.text.unicode == 8 and sprite_patronymicClicked)
+                    { // Backspace
+                        if (!str_patronymic.empty())
+                            str_patronymic.pop_back();
+                    }
+                    else if (sprite_patronymicClicked and patronymic.getString().getSize() < 15)
+                        str_patronymic += static_cast<char>(event.text.unicode);
+
+                    if (event.text.unicode == 8 and sprite_genderClicked)
+                    { // Backspace
+                        if (!str_gender.empty())
+                            str_gender.pop_back();
+                    }
+                    else if (sprite_genderClicked and gender.getString().getSize() < 15)
+                        str_gender += static_cast<char>(event.text.unicode);
+
+                    if (event.text.unicode == 8 and sprite_date_of_birthClicked)
+                    { // Backspace
+                        if (!str_date_of_birth.empty())
+                            str_date_of_birth.pop_back();
+                    }
+                    else if (sprite_date_of_birthClicked and date_of_birth.getString().getSize() < 15)
+                        str_date_of_birth += static_cast<char>(event.text.unicode);
+
+                    if (event.text.unicode == 8 and sprite_department_nameClicked)
+                    { // Backspace
+                        if (!str_departmentName.empty())
+                            str_departmentName.pop_back();
+                    }
+                    else if (sprite_department_nameClicked and departmentName.getString().getSize() < 15)
+                        str_departmentName += static_cast<char>(event.text.unicode);
+
+                    if (event.text.unicode == 8 and sprite_postClicked)
+                    { // Backspace
+                        if (!str_post.empty())
+                            str_post.pop_back();
+                    }
+                    else if (sprite_postClicked and post.getString().getSize() < 15)
+                        str_post += static_cast<char>(event.text.unicode);
+
+                    if (event.text.unicode == 8 and sprite_startDateClicked)
+                    { // Backspace
+                        if (!str_startDate.empty())
+                            str_startDate.pop_back();
+                    }
+                    else if (sprite_startDateClicked and startDate.getString().getSize() < 15)
+                        str_startDate += static_cast<char>(event.text.unicode);
+                }
+                surName.setString(str_surName);
+                name.setString(str_name);
+                patronymic.setString(str_patronymic);
+                gender.setString(str_gender);
+                date_of_birth.setString(str_date_of_birth);
+                departmentName.setString(str_departmentName);
+                post.setString(str_post);
+                startDate.setString(str_startDate);
+            }
+
+        }
+
+
+        window.clear(sf::Color::Black);
+        window.draw(text_add_employee);
+        window.draw(text_surName);
+        window.draw(text_name);
+        window.draw(text_patronymic);
+        window.draw(text_DOB);
+        window.draw(text_departmentName);
+        window.draw(text_gender);
+        window.draw(text_post);
+        window.draw(text_startDate);
+        if (isMouseOnTextAdd)
+        {
+            text_add.setFillColor(sf::Color(255, 51, 6));
+            window.draw(text_add);
+        }          
+        else
+        {
+            text_add.setFillColor(sf::Color::White);
+            window.draw(text_add);
+        }
+
+        window.draw(sprite_surName);
+        window.draw(sprite_name);
+        window.draw(sprite_patronymic);
+        window.draw(sprite_gender);
+        window.draw(sprite_date_of_birth);
+        window.draw(sprite_department_name);
+        window.draw(sprite_post);
+        window.draw(sprite_startDate);
+
+
+        window.draw(surName);
+        window.draw(name);
+        window.draw(patronymic);
+        window.draw(gender);
+        window.draw(date_of_birth);
+        window.draw(departmentName);
+        window.draw(post);
+        window.draw(startDate);
+        
+        if (isMouseOnArrow)
+            window.draw(sprite_arrow_back_orange);
+        else
+            window.draw(sprite_arrow_back_white);
+        window.display();
+    }
 }
