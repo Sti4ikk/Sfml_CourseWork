@@ -838,6 +838,17 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
                 }
             }
 
+            // проверка на кнопку РЕДАКТИРОВАНИЕ
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    if (text_edit_info.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isAccPressed and editingMode)
+                        editInfoOfEmployee_menu(employee);
+                }
+            }
+
             // проверка на кнопку НАЗАД
             if (event.type == sf::Event::MouseButtonPressed)
             {
@@ -1515,6 +1526,12 @@ void printAllEmployees_menu(std::vector<Employee>& employee)
     float scrollPosition = 0.0f;
     float y = 0.0f;
 
+    sf::Font font2;
+    if (!font2.loadFromFile("shrift.ttf"))
+        return;
+
+
+
     while (window.isOpen())
     {
 
@@ -1564,7 +1581,7 @@ void printAllEmployees_menu(std::vector<Employee>& employee)
             }
 
         }
-     
+
 
         window.clear(sf::Color::Black);
         y = printAllEmployees(employee, scrollPosition);
@@ -1579,13 +1596,20 @@ float printAllEmployees(std::vector<Employee>& employee, float scrollPosition)
         return 0.0;
 
 
+
+    sf::Text text_listOfEmployees(L"Список сотрудников", font2);
+    text_listOfEmployees.setCharacterSize(64);
+    text_listOfEmployees.setFillColor(sf::Color::White);
+
+
     sf::Text employee1(L"", font2);
     employee1.setCharacterSize(32);
     employee1.setFillColor(sf::Color::White);
     employee1.setPosition(30.f, 30.f);
 
+
     float x = 120.0;
-    float y = 30.0f;
+    float y = 120.0f;
     std::string currentEmployee;
 
     for (int i = 0; i < employee.size(); i++)
@@ -1600,6 +1624,8 @@ float printAllEmployees(std::vector<Employee>& employee, float scrollPosition)
         {
             // Устанавливаем позицию текста только если он виден
             employee1.setPosition(x, y + scrollPosition);
+            text_listOfEmployees.setPosition(570.f, 10.f + scrollPosition);
+            window.draw(text_listOfEmployees);
             window.draw(employee1);
         }
 
@@ -2026,6 +2052,21 @@ void addNewEmployee_menu(std::vector<Employee>& employee)
                 startDate.setString(str_startDate);
             }
 
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    if (text_add.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    {
+                        addNewEmployee(employee, str_surName, str_name, str_patronymic, str_gender, str_date_of_birth, str_departmentName, str_post, str_startDate);
+                        return;
+                    }
+
+                }
+            }
+
+
         }
 
 
@@ -2075,4 +2116,178 @@ void addNewEmployee_menu(std::vector<Employee>& employee)
             window.draw(sprite_arrow_back_white);
         window.display();
     }
+}
+
+void editInfoOfEmployee_menu(std::vector<Employee>& employee)
+{
+    float scrollPosition = 0.0f;
+    float y = 0.0f;
+
+    sf::Font font2;
+    if (!font2.loadFromFile("shrift.ttf"))
+        return;
+
+    sf::RectangleShape line(Vector2f(140.f, 2.f));
+    sf::RectangleShape rectangle(Vector2f(90.f, 46.f));
+    line.setFillColor(sf::Color::White);
+    rectangle.setFillColor(sf::Color(0, 0, 0, 255));
+
+
+    sf::Text text_choose_number(L"Выберите номер сотрудника из списка, чьи данные вы хотите отредактировать: ", font2);
+    text_choose_number.setCharacterSize(32);
+    text_choose_number.setFillColor(sf::Color::White);
+
+
+    sf::Text text_edit_info(L"Редактирование", font2);
+    text_edit_info.setCharacterSize(64);
+    text_edit_info.setFillColor(sf::Color::White);
+
+
+    sf::Text text_number(L"", font2);
+    text_number.setCharacterSize(45);
+    text_number.setFillColor(sf::Color::White);
+
+
+    std::string str_number;
+    bool isRectangleClicked = false;
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            // закрытие приложения
+            // для закрытия из панели задач
+            if (event.type == sf::Event::Closed)
+                window.close();
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+                return;
+
+
+            if (event.type == sf::Event::MouseWheelScrolled)
+            {
+                // Обработка прокрутки колесика мыши
+                if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
+                {
+                    // Проверяем, выходит ли текст за границы окна
+                    float lastTextBottom = y + 32;
+                    float windowHeight = window.getSize().y;
+                    if (lastTextBottom > windowHeight || lastTextBottom < windowHeight) // Добавлена проверка на случай, если текст не заполняет окно полностью
+                    {
+                        // Прокрутка вниз
+                        if (event.mouseWheelScroll.delta > 0)
+                        {
+                            scrollPosition += event.mouseWheelScroll.delta * 25.0f;
+                            // Проверяем, чтобы scrollPosition не выходил за границы
+                            if (scrollPosition >= 0)
+                                scrollPosition = 0;
+                            if (scrollPosition > 0) // Прокрутка вниз недоступна, если текст уже полностью виден
+                                scrollPosition = 0;
+                        }
+                        // Прокрутка вверх
+                        else if (event.mouseWheelScroll.delta < 0 or lastTextBottom < windowHeight) // Добавлена проверка, чтобы позволить прокрутку вверх, если текст не заполняет окно полностью
+                        {
+                            scrollPosition += event.mouseWheelScroll.delta * 25.0f;
+                            // Проверяем, чтобы scrollPosition не выходил за границы
+                            float minScrollPosition = windowHeight - lastTextBottom;
+                            if (scrollPosition > 0)
+                                scrollPosition = 0;
+                            if (scrollPosition < minScrollPosition) // Прокрутка вверх недоступна, если достигнут конец текста
+                                scrollPosition = minScrollPosition;
+                        }
+                    }
+                }
+            }
+
+            // проверка на поле для ввода
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    if (rectangle.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                        isRectangleClicked = true;
+                }
+            }
+
+            // ввод текста в поле цифры
+            if (event.type == sf::Event::TextEntered)
+            {
+                if (event.text.unicode < 128)
+                {
+                    if (event.text.unicode == 8 and isRectangleClicked)
+                    { // Backspace
+                        if (!str_number.empty())
+                            str_number.pop_back();
+                    }
+                    else if (isRectangleClicked and text_number.getString().getSize() < 4)
+                        str_number += static_cast<char>(event.text.unicode);
+                }
+                text_number.setString(str_number);
+
+            }
+
+
+        }
+        text_choose_number.setPosition(20.f, 180.f + scrollPosition);
+        text_edit_info.setPosition(660.f, 30.f + scrollPosition);
+        text_number.setPosition(1484.f, 170.f + scrollPosition);
+        line.setPosition(1480.f, 226.f + scrollPosition);
+        rectangle.setPosition(1474, 180 + scrollPosition);
+
+
+        window.clear(sf::Color::Black);
+        y = printAllEmployeesForEditingAndDeleting(employee, scrollPosition);
+
+        window.draw(text_edit_info);
+        window.draw(text_choose_number);
+        window.draw(rectangle);
+        window.draw(line);
+        window.draw(text_number);
+
+        window.display();
+    }
+}
+
+
+float printAllEmployeesForEditingAndDeleting(std::vector<Employee>& employee, float scrollPosition)
+{
+    sf::Font font2;
+    if (!font2.loadFromFile("shrift.ttf"))
+        return 0.0;
+
+
+    sf::Text employee1(L"", font2);
+    employee1.setCharacterSize(32);
+    employee1.setFillColor(sf::Color::White);
+    employee1.setPosition(30.f, 30.f);
+
+
+    float x = 120.0;
+    float y = 310.0f;
+    std::string currentEmployee;
+
+    for (int i = 0; i < employee.size(); i++)
+    {
+        employee1.setPosition(x, y);
+        currentEmployee = std::to_string(i + 1) + ((i < 9) ? ".   " : ".  ") + employee.at(i).surName + " " + employee.at(i).name + " " + employee.at(i).patronymic + " " + employee.at(i).gender + " " + employee.at(i).dateOfBirthday
+            + " " + employee.at(i).departmentName + " " + employee.at(i).startDate;
+        employee1.setString(currentEmployee);
+
+        // Проверяем, виден ли текст на экране
+        if (y + scrollPosition >= 0 && y + scrollPosition < window.getSize().y)
+        {
+            // Устанавливаем позицию текста только если он виден
+            employee1.setPosition(x, y + scrollPosition);
+            window.draw(employee1);
+        }
+
+        // Обновляем позицию для следующего текста
+        y += 50;
+
+        // Если достигнут нижний предел прокрутки, прерываем цикл
+        if (y + scrollPosition >= window.getSize().y)
+            break;
+    }
+
+    return y;   // Возвращаем текущую позицию, которая будет использоваться в следующем вызове
 }
