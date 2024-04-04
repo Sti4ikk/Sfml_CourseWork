@@ -1434,13 +1434,16 @@ void aboutCompany()
                 if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
                 {
                     // Проверяем, выходит ли текст за границы окна
-                    float lastTextBottom = text_end.getPosition().y + text_end.getLocalBounds().height + 1604.f;
+                    float lastTextBottom = 2600 + text_end.getLocalBounds().height + 15;
                     float windowHeight = window.getSize().y;
+
+
                     if (lastTextBottom > windowHeight || lastTextBottom < windowHeight) // Добавлена проверка на случай, если текст не заполняет окно полностью
                     {
                         // Прокрутка вниз
                         if (event.mouseWheelScroll.delta > 0)
                         {
+
                             scrollPosition += event.mouseWheelScroll.delta * 25.0f;
                             // Проверяем, чтобы scrollPosition не выходил за границы
                             if (scrollPosition >= 0)
