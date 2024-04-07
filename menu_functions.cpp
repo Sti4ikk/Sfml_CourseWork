@@ -2262,7 +2262,7 @@ void editInfoOfEmployee_menu(std::vector<Employee>& employee)
                     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
                     if (text_accept.getGlobalBounds().contains(mousePos.x, mousePos.y) and !str_number.empty())
                     {
-                        editMode(employee);
+                        editMode(employee, str_number);
                     }
 
                 }
@@ -2319,7 +2319,7 @@ void editInfoOfEmployee_menu(std::vector<Employee>& employee)
     }
 }
 
-void editMode(std::vector<Employee> &employee)
+void editMode(std::vector<Employee> &employee, std::string str_number)
 {
     sf::Font font2;
     if (!font2.loadFromFile("shrift.ttf"))
@@ -2463,6 +2463,7 @@ void editMode(std::vector<Employee> &employee)
     bool isMouseOnRectangle7 = false;
     bool isMouseOnRectangle8 = false;
 
+    int kindOfFIeld;
     while (window.isOpen())
     {
         sf::Event event;
@@ -2490,13 +2491,25 @@ void editMode(std::vector<Employee> &employee)
                 if (event.mouseButton.button == sf::Mouse::Left)
                 {
                     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (sprite_surName.getGlobalBounds().contains(mousePos.x, mousePos.y) or sprite_name.getGlobalBounds().contains(mousePos.x, mousePos.y) or 
-                        sprite_patronymic.getGlobalBounds().contains(mousePos.x, mousePos.y) or sprite_gender.getGlobalBounds().contains(mousePos.x, mousePos.y) or
-                        sprite_date_of_birth.getGlobalBounds().contains(mousePos.x, mousePos.y) or sprite_startDate.getGlobalBounds().contains(mousePos.x, mousePos.y) or
-                        sprite_department_name.getGlobalBounds().contains(mousePos.x, mousePos.y) or sprite_post.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    if (sprite_surName.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                        kindOfFIeld = 1;
 
-                        enterNewInfo_editMode();
+                    else if (sprite_name.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                        kindOfFIeld = 2;
+                    else if (sprite_patronymic.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                        kindOfFIeld = 3;
+                    else if (sprite_gender.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                        kindOfFIeld = 4;
+                    else if (sprite_date_of_birth.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                        kindOfFIeld = 5;
+                    else if (sprite_department_name.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                        kindOfFIeld = 6;
+                    else if (sprite_post.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                        kindOfFIeld = 7;
+                    else if (sprite_startDate.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                        kindOfFIeld = 8;
                 }
+                enterNewInfo_editMode(employee, str_number, kindOfFIeld);
             }
 
 
@@ -2620,25 +2633,37 @@ void editMode(std::vector<Employee> &employee)
     }
 }
 
-void enterNewInfo_editMode(std::vector<Employee>& employee, )
+void enterNewInfo_editMode(std::vector<Employee>& employee, std::string str_number, int kindOfField)
 {
     sf::Font font2;
     if (!font2.loadFromFile("shrift.ttf"))
         return;
 
 
-    sf::Text text_newInfo(L"", font2);
-    text_newInfo.setCharacterSize(46);
-    text_newInfo.setFillColor(sf::Color::White);
-    text_newInfo.setPosition(450.f, 30.f);
+    std::string str_newInfo;
+
+    sf::Text text_newInfo("", font2);
+    text_newInfo.setCharacterSize(48);
+    text_newInfo.setFillColor(sf::Color::Black);
+    text_newInfo.setPosition(638.f, 450.f);
+
+    sf::Text text_enterNewInfo(L"Введите новую информацию", font2);
+    text_enterNewInfo.setCharacterSize(52);
+    text_enterNewInfo.setFillColor(sf::Color::White);
+    text_enterNewInfo.setPosition(560.f, 50.f);
+
+    sf::Text text_edit(L"Изменить", font2);
+    text_edit.setCharacterSize(50);
+    text_edit.setFillColor(sf::Color::White);
+    text_edit.setPosition(1620.f, 970.f);
 
 
     sf::Texture rectangle;
     if (!rectangle.loadFromFile("rectangle.png"))
         return;
     sf::Sprite sprite_rectangle(rectangle);
-    sprite_rectangle.setScale(0.5, 0.5);
-    sprite_rectangle.setPosition(1000, 780);
+    sprite_rectangle.setScale(0.6, 0.6);
+    sprite_rectangle.setPosition(570, 400);
 
     sf::Texture arrow_back_white;
     if (!arrow_back_white.loadFromFile("arrow_back_white.png"))
@@ -2654,6 +2679,9 @@ void enterNewInfo_editMode(std::vector<Employee>& employee, )
     sprite_arrow_back_orange.setScale(0.2, 0.2);
     sprite_arrow_back_orange.setPosition(50, 950);
 
+
+    bool isMouseOnArrow = false;
+    bool isRectangleClicked = false;
     while (window.isOpen())
     {
         sf::Event event;
@@ -2675,9 +2703,73 @@ void enterNewInfo_editMode(std::vector<Employee>& employee, )
                 }
             }
 
+            // подсвечивание
+            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+            if (sprite_arrow_back_white.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                isMouseOnArrow = true;
+            else
+                isMouseOnArrow = false;
+            if (text_edit.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                text_edit.setFillColor(sf::Color(255, 51, 6));
+            else
+                text_edit.setFillColor(sf::Color::White);
+
+            // проверка на поле для ввода
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    if (sprite_rectangle.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                        isRectangleClicked = true;
+                }
+            }
+
+            // проверка на поле ИЗМЕНИТЬ
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    if (text_edit.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    {
+                        editEmployee(employee, str_newInfo, str_number, kindOfField); // получает новую инфо,номер сотдурника и номер поля для изменения
+                        return;
+                    }
+                        
+                }
+            }
+
+            // ввод текста в поле логин и пароль
+            if (event.type == sf::Event::TextEntered)
+            {
+                if (event.text.unicode < 128)
+                {
+                    if (event.text.unicode == 8 and isRectangleClicked)
+                    { // Backspace
+                        if (!str_newInfo.empty())
+                            str_newInfo.pop_back();
+                    }
+                    else if (text_newInfo.getString().getSize() < 15 and isRectangleClicked)
+                        str_newInfo += static_cast<char>(event.text.unicode);
+                }
+                text_newInfo.setString(str_newInfo);
+            }
+
+
+
         }
 
         window.clear(sf::Color::Black);
+
+        window.draw(sprite_rectangle);
+        if (isMouseOnArrow)
+            window.draw(sprite_arrow_back_orange);
+        else
+            window.draw(sprite_arrow_back_white);
+        window.draw(text_enterNewInfo);
+        window.draw(text_edit);
+        window.draw(text_newInfo);
 
         window.display();
     }

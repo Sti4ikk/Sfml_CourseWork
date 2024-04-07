@@ -34,12 +34,63 @@ void addNewEmployee(std::vector<Employee>& employee, std::string str_surName, st
 
 }
 
-void editEmployee(std::vector<Employee>& employee)
+void editEmployee(std::vector<Employee>& employee, std::string  str_newInfo, std::string str_number, int kindOfField)
 {
-	std::string newInfo;
-	newInfo = "";
+	switch (kindOfField)
+	{
+	case(1): employee.at(std::stoi(str_number) - 1).surName = str_newInfo; break;
+	case(2): employee.at(std::stoi(str_number) - 1).name = str_newInfo; break;
+	case(3): employee.at(std::stoi(str_number) - 1).patronymic = str_newInfo; break;
+	case(4): employee.at(std::stoi(str_number) - 1).gender = str_newInfo; break;
+	case(5): employee.at(std::stoi(str_number) - 1).dateOfBirthday = str_newInfo; break;
+	case(6): employee.at(std::stoi(str_number) - 1).departmentName = str_newInfo; break;
+	case(7):
+	{
+		if (str_newInfo == "Junior")
+		{
+			employee.at(std::stoi(str_number) - 1).post = Post::JUNIOR;
+			break;
+		}
+		else if (str_newInfo == "Middle")
+		{
+			employee.at(std::stoi(str_number) - 1).post = Post::MIDDLE;
+			break;
+		}
+		else if (str_newInfo == "Senior")
+		{
+			employee.at(std::stoi(str_number) - 1).post = Post::SENIOR;
+			break;
+		}
+		else if (str_newInfo == "Team_leader")
+		{
+			employee.at(std::stoi(str_number) - 1).post = Post::TEAM_LEADER;
+			break;
+		}
+		else if (str_newInfo == "Project_manager")
+		{
+			employee.at(std::stoi(str_number) - 1).post = Post::PROJECT_MANAGER;
+			break;
+		}
+		else if (str_newInfo == "Director_of_department")
+		{
+			employee.at(std::stoi(str_number) - 1).post = Post::DIRECTOR_OF_DEPARTMENT;
+			break;
+		}
+		else if (str_newInfo == "Deputy_general_director")
+		{
+			employee.at(std::stoi(str_number) - 1).post = Post::DEPUTY_GENERAL_DIRECTOR;
+			break;
+		}
+		else if (str_newInfo == "General_director")
+		{
+			employee.at(std::stoi(str_number) - 1).post = Post::GENERAL_DIRECTOR;
+			break;
+		}
+	}
+	case(8): employee.at(std::stoi(str_number)).startDate = str_newInfo; break;
+	}
 
-	
+	writeInToFileAfterDeleteEmployee(employee);
 }
 
 
@@ -89,6 +140,43 @@ void writeInfoOfNewEmployeeInFile(std::vector<Employee>& employee, std::string s
 	empl << str_departmentName << " ";
 	empl << str_post << " ";
 	empl << str_startDate;
+
+	empl.close();
+}
+
+void writeInToFileAfterDeleteEmployee(std::vector<Employee>& employee)
+{
+	std::ofstream empl("Employee_Data.txt");
+
+	for (int i = 0; i < employee.size(); i++)
+	{
+		empl << employee.at(i).surName << " ";
+		empl << employee.at(i).name << " ";
+		empl << employee.at(i).patronymic << " ";
+		empl << employee.at(i).gender << " ";
+		empl << employee.at(i).dateOfBirthday << " ";
+		empl << employee.at(i).departmentName << " ";
+
+		if (static_cast<int>(employee.at(i).post) == 1)
+			empl << "Junior ";
+		else if (static_cast<int>(employee.at(i).post) == 2)
+			empl << "Middle ";
+		else if (static_cast<int>(employee.at(i).post) == 3)
+			empl << "Senior ";
+		else if (static_cast<int>(employee.at(i).post) == 4)
+			empl << "Team_leader ";
+		else if (static_cast<int>(employee.at(i).post) == 5)
+			empl << "Project_manager ";
+		else if (static_cast<int>(employee.at(i).post) == 6)
+			empl << "Director_of_department ";
+		else if (static_cast<int>(employee.at(i).post) == 7)
+			empl << "Deputy_general_diretor ";
+		else if (static_cast<int>(employee.at(i).post) == 8)
+			empl << "General_director ";
+
+		empl << employee.at(i).startDate << std::endl;
+
+	}
 
 	empl.close();
 }
