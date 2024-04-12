@@ -46,4 +46,12 @@ void deleteEmployee_menu(std::vector<Employee>& employee);
 int areYouSure();
 void deleteEmployee(std::vector<Employee>& employee, std::string str_number);
 
-void printSearchingEmployees(std::vector<Employee>& employee, std::string str_surName, bool isSurnameChanging);
+void printSearchingEmployeesWithSurname(std::vector<Employee>& employee, std::string str_surName, bool isSurnameChanging);
+
+void printEmployeesLoopPost(std::vector<int>& indexes, std::vector<Employee>& employee);
+void printSearchingEmployeesWithPost(std::vector<Employee>& employee, std::string str_surName, bool isSurnameChanging);
+void searchWithPost(std::vector<Employee>& employee, std::string str_post, std::vector<int>& indexes);
+
+void printEmployeesLoopYear(std::vector<int>& indexes, std::vector<Employee>& employee);
+void printSearchingEmployeesWithYear(std::vector<Employee>& employee, std::string str_year, bool isYearChanging);
+void searchWithYear(std::vector<Employee>& employee, std::string str_year, std::vector<int>& indexes);

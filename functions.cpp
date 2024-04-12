@@ -183,12 +183,54 @@ void writeInToFileAfterDeleteEmployee(std::vector<Employee>& employee)
 	empl.close();
 }
 
-// ПОИСК
+// ПОИСК ПО ФАМИЛИИ
 void searchWithSurname(std::vector<Employee>& employee, std::string str_surName, std::vector<int> &indexes)
 {
 	for (int i = 0; i < employee.size(); i++)
 	{
 		if (employee[i].surName == str_surName)
+			indexes.push_back(i);
+	}
+}
+
+// ПОИСК ПО ДОЛЖНОСТИ
+void searchWithPost(std::vector<Employee>& employee, std::string str_post, std::vector<int>& indexes)
+{
+	int post1;
+
+	if (str_post == "Junior")
+		post1 = static_cast<int>(Post::JUNIOR);
+	else if (str_post == "Middle")
+		post1 = static_cast<int>(Post::MIDDLE);
+	else if (str_post == "Senior")
+		post1 = static_cast<int>(Post::SENIOR);
+	else if (str_post == "Team_leader")
+		post1 = static_cast<int>(Post::TEAM_LEADER);
+	else if (str_post == "Project_manager")
+		post1 = static_cast<int>(Post::PROJECT_MANAGER);
+	else if (str_post == "Director_of_department")
+		post1 = static_cast<int>(Post::DIRECTOR_OF_DEPARTMENT);
+	else if (str_post == "Deputy_general_director")
+		post1 = static_cast<int>(Post::DEPUTY_GENERAL_DIRECTOR);
+	else if (str_post == "General_director")
+		post1 = static_cast<int>(Post::GENERAL_DIRECTOR);
+	else
+		// чтобы не было ошибки "переменная не инициализирована"
+		post1 = -1;
+
+	for (int i = 0; i < employee.size(); i++)
+	{
+		if (static_cast<int>(employee.at(i).post) == post1)
+			indexes.push_back(i);
+	}
+}
+
+// ПОИСК ПО ГОДУ НАЧАЛА РАБОТЫ
+void searchWithYear(std::vector<Employee>& employee, std::string str_year, std::vector<int>& indexes)
+{
+	for (int i = 0; i < employee.size(); i++)
+	{
+		if (std::stoi(employee.at(i).startDate.substr(6)) == std::stoi(str_year))
 			indexes.push_back(i);
 	}
 }
