@@ -182,3 +182,13 @@ void writeInToFileAfterDeleteEmployee(std::vector<Employee>& employee)
 
 	empl.close();
 }
+
+// œŒ»— 
+void searchWithSurname(std::vector<Employee>& employee, std::string str_surName, std::vector<int> &indexes)
+{
+	for (int i = 0; i < employee.size(); i++)
+	{
+		if (employee[i].surName == str_surName)
+			indexes.push_back(i);
+	}
+}

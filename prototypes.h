@@ -17,6 +17,8 @@ int checkDataOfUser(std::vector<Authentication>& authentication, std::string log
 void addNewEmployee(std::vector<Employee>& employee, std::string str_surName, std::string str_name, std::string str_patronymic, std::string str_gender, std::string str_date_of_birth, std::string str_departmentName, std::string str_post, std::string str_startDate);
 void writeEmployeeIntoVector(std::vector<Employee>& employee, std::string str_surName, std::string str_name, std::string str_patronymic, std::string str_gender, std::string str_date_of_birth, std::string str_departmentName, std::string str_post, std::string str_startDate);
 void editEmployee(std::vector<Employee>& employee, std::string  str_newInfo, std::string str_number, int kindOfField);
+void searchWithSurname(std::vector<Employee>& employee, std::string str_surName, std::vector<int> &indexes);
+
 
 
 // функцию меню
@@ -36,9 +38,12 @@ void searchEmployeeWithSurname_menu(std::vector<Employee>& employee);
 void searchEmployeeWithPost_menu(std::vector<Employee>& employee);
 void searchEmployeeWithStartYear_menu(std::vector<Employee>& employee);
 
+
 float printAllEmployeesForEditingAndDeleting(std::vector<Employee>& employee, float scrollPosition);
 
 void deleteEmployee_menu(std::vector<Employee>& employee);
 
 int areYouSure();
 void deleteEmployee(std::vector<Employee>& employee, std::string str_number);
+
+void printSearchingEmployees(std::vector<Employee>& employee, std::string str_surName, bool isSurnameChanging);

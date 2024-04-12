@@ -7,6 +7,7 @@
 #include <iostream>
 #include <array>
 
+void printEmployeesLoop(std::vector<int>& indexes, std::vector<Employee>& employee);
 extern sf::RenderWindow window;
 using namespace sf;
 
@@ -3264,12 +3265,17 @@ void searchEmployeeWithSurname_menu(std::vector<Employee>& employee)
     text_search.setFillColor(sf::Color::White);
     text_search.setPosition(1700.f, 970.f);
 
+    sf::Text text_empty(L"Введите хотя бы один символ", font2);
+    text_empty.setCharacterSize(30);
+    text_empty.setFillColor(sf::Color::Red);
+    text_empty.setPosition(692.f, 574.f);
+
     sf::Text text_newInfo("", font2);
     text_newInfo.setCharacterSize(48);
     text_newInfo.setFillColor(sf::Color::Black);
     text_newInfo.setPosition(638.f, 450.f);
 
-    std::string str_newInfo;
+    std::string str_surName;
 
     sf::Texture rectangle;
     if (!rectangle.loadFromFile("rectangle.png"))
@@ -3296,6 +3302,9 @@ void searchEmployeeWithSurname_menu(std::vector<Employee>& employee)
 
     bool isMouseOnArrow = false;
     bool isRectangleClicked = false;
+    bool isSurnameChanging = false;
+    bool isTextEmpty = true;
+    bool isButtonClicked = false;
     while (window.isOpen())
     {
         sf::Event event;
@@ -3317,17 +3326,30 @@ void searchEmployeeWithSurname_menu(std::vector<Employee>& employee)
                 }
             }
 
-
             // подсвечивание
             sf::Vector2i mousePos = sf::Mouse::getPosition(window);
             if (sprite_arrow_back_white.getGlobalBounds().contains(mousePos.x, mousePos.y))
                 isMouseOnArrow = true;
             else
                 isMouseOnArrow = false;
+
             if (text_search.getGlobalBounds().contains(mousePos.x, mousePos.y))
                 text_search.setFillColor(sf::Color(255, 51, 6));
             else
                 text_search.setFillColor(sf::Color::White);
+
+
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    if (text_search.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                        isButtonClicked = true;
+                    if (text_search.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isTextEmpty)
+                        printSearchingEmployees(employee, str_surName, isSurnameChanging);
+                }
+            }
 
             // проверка на поле для ввода
             if (event.type == sf::Event::MouseButtonPressed)
@@ -3348,13 +3370,20 @@ void searchEmployeeWithSurname_menu(std::vector<Employee>& employee)
                 {
                     if (event.text.unicode == 8 and isRectangleClicked)
                     { // Backspace
-                        if (!str_newInfo.empty())
-                            str_newInfo.pop_back();
+                        if (!str_surName.empty())
+                            str_surName.pop_back();
                     }
                     else if (text_newInfo.getString().getSize() < 15 and isRectangleClicked)
-                        str_newInfo += static_cast<char>(event.text.unicode);
+                        str_surName += static_cast<char>(event.text.unicode);
                 }
-                text_newInfo.setString(str_newInfo);
+                text_newInfo.setString(str_surName);
+
+                if (str_surName.empty())
+                    isTextEmpty = true;
+                else
+                    isTextEmpty = false;
+
+                isSurnameChanging = false;
             }
         }
 
@@ -3364,6 +3393,9 @@ void searchEmployeeWithSurname_menu(std::vector<Employee>& employee)
         window.draw(text_enterSurname);
         window.draw(text_search);
         window.draw(text_newInfo);
+
+        if (isTextEmpty and isButtonClicked)
+            window.draw(text_empty);
 
         if (isMouseOnArrow)
             window.draw(sprite_arrow_back_orange);
@@ -3550,6 +3582,7 @@ void searchEmployeeWithStartYear_menu(std::vector<Employee> &employee)
 
     bool isMouseOnArrow = false;
     bool isRectangleClicked = false;
+    bool isSurnameChanging = false;
     while (window.isOpen())
     {
         sf::Event event;
@@ -3628,4 +3661,128 @@ void searchEmployeeWithStartYear_menu(std::vector<Employee> &employee)
     }
 }
 
+void printSearchingEmployees(std::vector<Employee>& employee, std::string str_surName, bool isSurnameChanging)
+{
+    sf::Font font2;
+    if (!font2.loadFromFile("shrift.ttf"))
+        return;
+
+
+    sf::Text text_searchEmployees(L"Найденные сотрудники", font2);
+    text_searchEmployees.setCharacterSize(46);
+    text_searchEmployees.setFillColor(sf::Color::White);
+    text_searchEmployees.setPosition(670.f, 30.f);
+
+    sf::Text text_currentEmployeeNo(L"Сотрудников с такой фамилией не найдено!", font2);
+    text_currentEmployeeNo.setCharacterSize(46);
+    text_currentEmployeeNo.setFillColor(sf::Color::White);
+    text_currentEmployeeNo.setPosition(420.f, 500.f);
+
+
+    sf::Texture arrow_back_white;
+    if (!arrow_back_white.loadFromFile("arrow_back_white.png"))
+        return;
+    sf::Sprite sprite_arrow_back_white(arrow_back_white);
+    sprite_arrow_back_white.setScale(0.2, 0.2);
+    sprite_arrow_back_white.setPosition(50, 950);
+
+    sf::Texture arrow_back_orange;
+    if (!arrow_back_orange.loadFromFile("arrow_back.png"))
+        return;
+    sf::Sprite sprite_arrow_back_orange(arrow_back_orange);
+    sprite_arrow_back_orange.setScale(0.2, 0.2);
+    sprite_arrow_back_orange.setPosition(50, 950);
+
+
+    std::vector<int> indexes;
+    indexes.reserve(10);
+
+    bool isMouseOnArrow = false;
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+
+            // закрытие приложения
+            // для закрытия из панели задач
+            if (event.type == sf::Event::Closed)
+                window.close();
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+                return;
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    if (sprite_arrow_back_orange.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                        return;
+                }
+            }
+
+          
+            // подсвечивание
+            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+            if (sprite_arrow_back_white.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                isMouseOnArrow = true;
+            else
+                isMouseOnArrow = false;
+            
+        }
+
+        window.clear(sf::Color::Black);
+
+
+
+        if (!isSurnameChanging)
+        {
+            searchWithSurname(employee, str_surName, indexes);
+            isSurnameChanging = true;
+        }
+        printEmployeesLoop(indexes, employee);
+        window.draw(text_searchEmployees);
+
+        if (indexes.empty())
+            window.draw(text_currentEmployeeNo);
+
+        if (isMouseOnArrow)
+            window.draw(sprite_arrow_back_orange);
+        else
+            window.draw(sprite_arrow_back_white);
+
+
+        window.display();
+    }
+}
+
+void printEmployeesLoop(std::vector<int>& indexes, std::vector<Employee> &employee)
+{
+
+    sf::Font font2;
+    if (!font2.loadFromFile("shrift.ttf"))
+        return;
+
+
+    sf::Text text_currentEmployee("", font2);
+    text_currentEmployee.setCharacterSize(32);
+    text_currentEmployee.setFillColor(sf::Color::White);
+
+    std::string str_currentEmployee;
+
+    float x = 120.0;
+    float y = 120.0f;
+    int count = 0;
+    for (int i = 0; i < indexes.size(); i++)
+    {
+        text_currentEmployee.setPosition(x, y);
+        str_currentEmployee = std::to_string(i + 1) + ((i < 9) ? ".   " : ".  ") + employee.at(indexes.at(count)).surName + " " +
+            employee.at(indexes.at(count)).name + " " + employee.at(indexes.at(count)).patronymic + " " + employee.at(indexes.at(count)).gender +
+            " " + employee.at(indexes.at(count)).dateOfBirthday + " " + employee.at(indexes.at(count)).departmentName + " " + employee.at(indexes.at(count)).startDate;
+        text_currentEmployee.setString(str_currentEmployee);
+
+        y += 50;
+        count++;
+        window.draw(text_currentEmployee);
+    }
+}
 // СООРТИРОВКА
