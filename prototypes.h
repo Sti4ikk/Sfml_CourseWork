@@ -1,9 +1,6 @@
 #pragma once
-
-
 #include <vector>
 #include "structs.h"
-
 
 
 
@@ -35,8 +32,13 @@ void addNewEmployee_menu(std::vector<Employee>& employee);
 void editInfoOfEmployee_menu(std::vector<Employee>& employee);
 void editMode(std::vector<Employee>& employee, std::string str_number);
 void enterNewInfo_editMode(std::vector<Employee>& employee, std::string str_number, int kindOfField);
+void searchEmployeeWithSurname_menu(std::vector<Employee>& employee);
+void searchEmployeeWithPost_menu(std::vector<Employee>& employee);
+void searchEmployeeWithStartYear_menu(std::vector<Employee>& employee);
 
 float printAllEmployeesForEditingAndDeleting(std::vector<Employee>& employee, float scrollPosition);
-//void printNews(int num1, int num2, int num3, int num4, int num5);
 
-void openUrl(const std::string& url);
+void deleteEmployee_menu(std::vector<Employee>& employee);
+
+int areYouSure();
+void deleteEmployee(std::vector<Employee>& employee, std::string str_number);

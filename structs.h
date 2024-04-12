@@ -23,7 +23,7 @@ struct Date
 	int years;
 };
 
-// данные для аутентификации
+// данные для авторизации
 struct Authentication
 {
 	std::string login;
