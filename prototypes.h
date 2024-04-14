@@ -55,3 +55,7 @@ void searchWithPost(std::vector<Employee>& employee, std::string str_post, std::
 void printEmployeesLoopYear(std::vector<int>& indexes, std::vector<Employee>& employee);
 void printSearchingEmployeesWithYear(std::vector<Employee>& employee, std::string str_year, bool isYearChanging);
 void searchWithYear(std::vector<Employee>& employee, std::string str_year, std::vector<int>& indexes);
+
+// —Œ–“»–Œ¬ »
+void sortingEmpoyeesWithSurname_menu(std::vector<Employee>& employee);
+void printEmployeesLoop(std::vector<int>& indexes, std::vector<Employee>& employee);
