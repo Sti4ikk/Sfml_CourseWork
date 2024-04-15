@@ -1,3 +1,5 @@
+#include "prototypes.h"
+
 #include <string>
 #include <vector>
 #include "enums.h"
@@ -5,7 +7,7 @@
 #include "structs.h"
 #include <Windows.h>
 #include <fstream>
-#include "prototypes.h"
+
 
 int checkDataOfUser(std::vector<Authentication>& authentication, std::string login, std::string password)
 {
@@ -96,92 +98,6 @@ void deleteEmployee(std::vector<Employee>& employee, std::string str_number)
 	writeInToFileAfterDeleteEmployee(employee);
 }
 
-// добавление сотрудника в вектор после добавлени€ нового сотрудника
-void writeEmployeeIntoVector(std::vector<Employee>& employee, std::string str_surName, std::string str_name, std::string str_patronymic, std::string str_gender, std::string str_date_of_birth, std::string str_departmentName, std::string str_post, std::string str_startDate)
-{
-	Employee emp;
-	emp.surName = str_surName;
-	emp.name = str_name;
-	emp.patronymic = str_patronymic;
-	emp.gender = str_gender;
-	emp.dateOfBirthday = str_date_of_birth;
-	emp.departmentName = str_departmentName;
-
-	if (str_post == "Junior")
-		emp.post = Post::JUNIOR;
-	else if (str_post == "Middle")
-		emp.post = Post::MIDDLE;
-	else if (str_post == "Senior")
-		emp.post = Post::SENIOR;
-	else if (str_post == "Team_leader")
-		emp.post = Post::TEAM_LEADER;
-	else if (str_post == "Project_manager")
-		emp.post = Post::PROJECT_MANAGER;
-	else if (str_post == "Director_of_department")
-		emp.post = Post::DIRECTOR_OF_DEPARTMENT;
-	else if (str_post == "Deputy_general_director")
-		emp.post = Post::DEPUTY_GENERAL_DIRECTOR;
-	else if (str_post == "General_director")
-		emp.post = Post::GENERAL_DIRECTOR;
-
-	emp.startDate = str_startDate;
-
-	employee.push_back(emp);
-}
-
-// запись в файл нового сотрудника
-void writeInfoOfNewEmployeeInFile(std::vector<Employee>& employee, std::string str_surName, std::string str_name, std::string str_patronymic, std::string str_gender, std::string str_date_of_birth, std::string str_departmentName, std::string str_post, std::string str_startDate)
-{
-	std::ofstream empl("Employee_Data.txt", std::ios::app);
-	empl << "\n";
-	empl << str_surName << " ";
-	empl << str_name << " ";
-	empl << str_patronymic << " ";
-	empl << str_gender << " ";
-	empl << str_date_of_birth << " ";
-	empl << str_departmentName << " ";
-	empl << str_post << " ";
-	empl << str_startDate;
-
-	empl.close();
-}
-
-void writeInToFileAfterDeleteEmployee(std::vector<Employee>& employee)
-{
-	std::ofstream empl("Employee_Data.txt");
-
-	for (int i = 0; i < employee.size(); i++)
-	{
-		empl << employee.at(i).surName << " ";
-		empl << employee.at(i).name << " ";
-		empl << employee.at(i).patronymic << " ";
-		empl << employee.at(i).gender << " ";
-		empl << employee.at(i).dateOfBirthday << " ";
-		empl << employee.at(i).departmentName << " ";
-
-		if (static_cast<int>(employee.at(i).post) == 1)
-			empl << "Junior ";
-		else if (static_cast<int>(employee.at(i).post) == 2)
-			empl << "Middle ";
-		else if (static_cast<int>(employee.at(i).post) == 3)
-			empl << "Senior ";
-		else if (static_cast<int>(employee.at(i).post) == 4)
-			empl << "Team_leader ";
-		else if (static_cast<int>(employee.at(i).post) == 5)
-			empl << "Project_manager ";
-		else if (static_cast<int>(employee.at(i).post) == 6)
-			empl << "Director_of_department ";
-		else if (static_cast<int>(employee.at(i).post) == 7)
-			empl << "Deputy_general_diretor ";
-		else if (static_cast<int>(employee.at(i).post) == 8)
-			empl << "General_director ";
-
-		empl << employee.at(i).startDate << std::endl;
-
-	}
-
-	empl.close();
-}
 
 // ѕќ»—  ѕќ ‘јћ»Ћ»»
 void searchWithSurname(std::vector<Employee>& employee, std::string str_surName, std::vector<int> &indexes)
@@ -234,3 +150,187 @@ void searchWithYear(std::vector<Employee>& employee, std::string str_year, std::
 			indexes.push_back(i);
 	}
 }
+
+// заполнение массива случайными числами дл€ отображени€ случайных новосте1
+void initArrOfRandomNumbers(std::vector<int> &numbers)
+{
+	int count = 0;
+	int number;
+	int index = 0;
+
+	numbers.reserve(5);
+	for (int i = 0; numbers.size() != 5; i++)
+	{
+		number = rand() % 9 + 1;
+
+		for (int j = 0; j < numbers.size(); j++)
+		{
+			if (numbers.at(j) == number)
+				count++;
+		}
+
+		if (!count)
+		{
+			numbers.push_back(number);
+			index++;
+		}
+
+		count = 0;
+	}
+}
+
+// сортировка по ‘амилии в пор€дке убывани€(пузырьком)
+void sortWithSurnameDown(std::vector<Employee>& employee)
+{
+	for (int i = 0; i < employee.size() - 1; i++)
+	{
+		bool swapped = false;
+		int endOfArr = employee.size() - i;
+		for (int j = 0; j < endOfArr - 1; j++)
+		{
+
+			if (employee.at(j).surName < employee.at(j + 1).surName)
+			{
+				std::swap(employee.at(j), employee.at(j + 1));
+				swapped = true;
+			}
+		}
+
+		if (!swapped)
+			break;
+	}
+}
+
+// сортировка по ‘амилии в пор€дке возрастани€(пузырьком)
+void sortWithSurnameUp(std::vector<Employee>& employee)
+{
+	for (int i = 0; i < employee.size() - 1; i++)
+	{
+		bool swapped = false;
+		int endOfArr = employee.size() - i;
+		for (int j = 0; j < endOfArr - 1; j++)
+		{
+			if (employee.at(j).surName > employee.at(j + 1).surName)
+			{
+				std::swap(employee.at(j), employee.at(j + 1));
+				swapped = true;
+			}
+		}
+
+		if (!swapped)
+		{
+			break;
+		}
+	}
+}
+
+// поиск наименьшего элемента дл€ сортировки выбором
+int findSmallestPosition(std::vector<Employee>& employee, int startPosition)
+{
+	int smallestPosition = startPosition;
+
+	for (int i = startPosition; i < employee.size(); i++)
+	{
+		if (employee.at(i).post < employee.at(smallestPosition).post)
+			smallestPosition = i;
+	}
+	return smallestPosition;
+}
+
+// сортировка по должности в пор€дке возрастани€(методом выбора)
+void sortWithPostUp(std::vector<Employee>& employee)
+{
+	for (int i = 0; i < employee.size(); i++)
+	{
+		int smallestPosition = findSmallestPosition(employee, i);
+		std::swap(employee.at(i), employee.at(smallestPosition));
+	}
+}
+
+// поиск наибольшего элемента дл€ сортировки выбором
+int findBiggestPosition(std::vector<Employee>& employee, int startPosition)
+{
+	int biggestPosition = startPosition;
+
+	for (int i = startPosition; i < employee.size(); i++)
+	{
+		if (employee.at(i).post > employee.at(biggestPosition).post)
+			biggestPosition = i;
+	}
+	return biggestPosition;
+}
+
+// сортировка по должности в пор€дке убывани€(методом выбора)
+void sortWithPostDown(std::vector<Employee>& employee)
+{
+	for (int i = 0; i < employee.size(); i++)
+	{
+		int biggestPosition = findBiggestPosition(employee, i);
+		std::swap(employee.at(i), employee.at(biggestPosition));
+	}
+}
+
+// функци€ возвращает целое число типа годћес€цƒень
+int getNumber(std::vector<Employee>& employee, int index)
+{
+	std::string number;
+	int result;
+
+	// добавил год к number
+	number += employee.at(index).startDate.substr(6);
+	// добавил мес€ц
+	number += employee.at(index).startDate.substr(3, 2);
+	// добавил день
+	number += employee.at(index).startDate.substr(0, 2);
+	// c_str ¬озвращает указатель на массив, содержащий последовательность символов, завершающуюс€ нулем("\0)
+	result = atoi(number.c_str());
+
+	return result;
+}
+
+// сортировка по стажу в пор€дке убывани€
+void sortWithExperienceDown(std::vector<Employee>& employee)
+{
+	for (int i = 0; i < employee.size() - 1; i++)
+	{
+		bool swapped = false;
+		int endOfArr = employee.size() - i;
+		for (int j = 0; j < endOfArr - 1; j++)
+		{
+			int exp1 = getNumber(employee, j);
+			int exp2 = getNumber(employee, j + 1);
+			if (exp1 > exp2)
+			{
+				std::swap(employee.at(j), employee.at(j + 1));
+				swapped = true;
+			}
+		}
+
+		if (!swapped)
+			break;
+	}
+}
+
+// сортировка по стажу в пор€дке возрастани€
+void sortWithExperienceUp(std::vector<Employee>& employee)
+{
+	for (int i = 0; i < employee.size() - 1; i++)
+	{
+		bool swapped = false;
+		int endOfArr = employee.size() - i;
+		for (int j = 0; j < endOfArr - 1; j++)
+		{
+
+			if (getNumber(employee, j) < getNumber(employee, j + 1))
+			{
+				std::swap(employee.at(j), employee.at(j + 1));
+				swapped = true;
+			}
+		}
+
+		if (!swapped)
+			break;
+	}
+}
+
+

@@ -139,6 +139,7 @@ sfml-network-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
   <ItemGroup>
     <ClCompile Include="file_functions.cpp" />
     <ClCompile Include="functions.cpp" />
+    <ClCompile Include="functions_sfml.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu_functions.cpp" />
   </ItemGroup>

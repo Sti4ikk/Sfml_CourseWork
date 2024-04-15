@@ -1,6 +1,7 @@
 #pragma once
-#include <vector>
+
 #include "structs.h"
+#include <vector>
 
 
 
@@ -23,7 +24,7 @@ void searchWithSurname(std::vector<Employee>& employee, std::string str_surName,
 
 // функцию меню
 void main_menu(std::vector<Authentication>& authentication, std::vector<Employee>& employee, bool& isRememberMePressed);
-int auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>& employee, bool& isRememberMePressed);
+void auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>& employee, bool& isRememberMePressed);
 void settings_menu();
 void aboutApp();
 void aboutCompany();
@@ -59,3 +60,41 @@ void searchWithYear(std::vector<Employee>& employee, std::string str_year, std::
 // —ќ–“»–ќ¬ »
 void sortingEmpoyeesWithSurname_menu(std::vector<Employee>& employee);
 void printEmployeesLoop(std::vector<int>& indexes, std::vector<Employee>& employee);
+
+
+
+void initArrOfRandomNumbers(std::vector<int>& numbers);
+
+// сортировки
+void successOfSorting_menu(int kindOfSort, int sortUpOrDown, std::vector<Employee>& employee);
+void sortWithSurnameDown(std::vector<Employee>& employee);
+void sortWithSurnameUp(std::vector<Employee>& employee);
+
+// поиск наименьшего элемента дл€ сортировки выбором
+int findSmallestPosition(std::vector<Employee>& employee, int startPosition);
+
+
+// сортировка по должности в пор€дке возрастани€(методом выбора)
+void sortWithPostUp(std::vector<Employee>& employee);
+
+// поиск наибольшего элемента дл€ сортировки выбором
+int findBiggestPosition(std::vector<Employee>& employee, int startPosition);
+
+
+// сортировка по должности в пор€дке убывани€(методом выбора)
+void sortWithPostDown(std::vector<Employee>& employee);
+
+
+// функци€ возвращает целое число типа годћес€цƒень
+int getNumber(std::vector<Employee>& employee, int index);
+
+
+// сортировка по стажу в пор€дке убывани€
+void sortWithExperienceDown(std::vector<Employee>& employee);
+
+
+// сортировка по стажу в пор€дке возрастани€
+void sortWithExperienceUp(std::vector<Employee>& employee);
+
+
+void successOfAdding_menu();
