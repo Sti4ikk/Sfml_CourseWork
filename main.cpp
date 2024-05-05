@@ -1,7 +1,6 @@
 #include "structs.h"
 #include "enums.h"
 #include "prototypes.h"
-
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <ctime>

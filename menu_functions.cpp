@@ -1,20 +1,23 @@
 ﻿#include "structs.h"
 #include "enums.h"
 #include "prototypes.h"
-
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <string>
 #include <iostream>
 #include <array>
 
+
+bool loadFont(sf::Font& font, const std::string& filePath);
 bool loadTexture(const std::string& filePath, sf::Texture& texture);
 void createSprite(sf::Sprite& sprite, const sf::Texture& texture, const float x, const float y, const sf::Vector2f& position);
 void createText(sf::Text& text, unsigned int characterSize, const sf::Color& color, const sf::Vector2f& position);
 void createRectangle(sf::RectangleShape& rectangle, const sf::Vector2f& size, const sf::Vector2f& position, const sf::Color& color, const float outlineThickness = 0, const sf::Color outlineColor = sf::Color(0, 0, 0, 255));
-bool loadFont(sf::Font& font, const std::string& filePath);
+
+
 extern sf::RenderWindow window;
 using namespace sf;
+
 
 void auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>& employee, bool &isRememberMePressed)
 {
@@ -308,6 +311,8 @@ void auth_menu(std::vector<Authentication>& authentication, std::vector<Employee
     }
 }
 
+
+// ОСНОВНЫЕ ФУНКЦИИ МЕНЮ
 void main_menu(std::vector<Authentication>& authentication, std::vector<Employee>& employee, bool& isRememberMePressed)
 {
     window.create(sf::VideoMode(1920, 1080), "", sf::Style::None);
@@ -610,34 +615,24 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
                 // Возвращение к исходному цвету, если курсор не находится над прямоугольником
                 text_editing.setFillColor(sf::Color::White);
             if (text_proccesing.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                // Изменение цвета прямоугольника, если курсор находится над ним
                 text_proccesing.setFillColor(Color(255, 51, 6));
             else
-                // Возвращение к исходному цвету, если курсор не находится над прямоугольником
                 text_proccesing.setFillColor(sf::Color::White);
             if (text_settings.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                // Изменение цвета прямоугольника, если курсор находится над ним
                 text_settings.setFillColor(Color(255, 51, 6));
             else
-                // Возвращение к исходному цвету, если курсор не находится над прямоугольником
                 text_settings.setFillColor(sf::Color::White);
             if (text_exit.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                // Изменение цвета прямоугольника, если курсор находится над ним
                 text_exit.setFillColor(Color(255, 51, 6));
             else
-                // Возвращение к исходному цвету, если курсор не находится над прямоугольником
                 text_exit.setFillColor(sf::Color::White);
             if (text_account.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                // Изменение цвета прямоугольника, если курсор находится над ним
                 text_account.setFillColor(Color(255, 51, 6));
             else
-                // Возвращение к исходному цвету, если курсор не находится над прямоугольником
                 text_account.setFillColor(sf::Color::White);
             if (text_leave_from_acc.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                // Изменение цвета прямоугольника, если курсор находится над ним
                 text_leave_from_acc.setFillColor(Color(255, 51, 6));
             else
-                // Возвращение к исходному цвету, если курсор не находится над прямоугольником
                 text_leave_from_acc.setFillColor(sf::Color::White);
 
             if (sprite_acc.getGlobalBounds().contains(mousePos.x, mousePos.y))
@@ -897,9 +892,6 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
 
   
 
-
-
-
                                                         // РЕДАКТИРОВАНИЕ
             // проверка на кнопку ВЫВЕСТИ ВСЕХ
             if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
@@ -1098,7 +1090,6 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
         window.display();
     }
 }
-
 void settings_menu()
 {
     // Загрузка шрифтов
@@ -1271,7 +1262,6 @@ void settings_menu()
         window.display();
     }
 }
-
 void aboutApp()
 {
     // Загрузка шрифтов
@@ -1371,7 +1361,6 @@ void aboutApp()
         window.display();
     }
 }
-
 void aboutCompany()
 {
     float scrollPosition = 0.0f;
@@ -1630,7 +1619,6 @@ void printAllEmployees_menu(std::vector<Employee>& employee)
         window.display();
     }
 }
-
 float printAllEmployees(std::vector<Employee>& employee, float scrollPosition)
 {
     // Загрузка шрифтов
@@ -1652,8 +1640,27 @@ float printAllEmployees(std::vector<Employee>& employee, float scrollPosition)
     for (int i = 0; i < employee.size(); i++)
     {
         employee1.setPosition(x, y);
+
+        std::string post;
+        if (employee.at(i).post == Post::JUNIOR)
+            post = "Junior";
+        else if (employee.at(i).post == Post::MIDDLE)
+            post = "Middle";
+        else if (employee.at(i).post == Post::SENIOR)
+            post = "Senior";
+        else if (employee.at(i).post == Post::TEAM_LEADER)
+            post = "Team leader";
+        else if (employee.at(i).post == Post::PROJECT_MANAGER)
+            post = "Project manager";
+        else if (employee.at(i).post == Post::DIRECTOR_OF_DEPARTMENT)
+            post = "Director of department";
+        else if (employee.at(i).post == Post::DEPUTY_GENERAL_DIRECTOR)
+            post = "Deputy general director";
+        else if (employee.at(i).post == Post::GENERAL_DIRECTOR)
+            post = "General director";
+
         currentEmployee = std::to_string(i + 1) + ((i < 9) ? ".   " : ".  ") + employee.at(i).surName + " " + employee.at(i).name + " " + employee.at(i).patronymic + " " + employee.at(i).gender + " " + employee.at(i).dateOfBirthday
-            + " " + employee.at(i).departmentName + " " + employee.at(i).startDate;
+            + " " + employee.at(i).departmentName + " " + post + " " + employee.at(i).startDate;
         employee1.setString(currentEmployee);
 
         // Проверяем, виден ли текст на экране
@@ -1676,6 +1683,71 @@ float printAllEmployees(std::vector<Employee>& employee, float scrollPosition)
 
     return y;   // Возвращаем текущую позицию, которая будет использоваться в следующем вызове
 }
+float printAllEmployeesForEditingAndDeleting(std::vector<Employee>& employee, float scrollPosition)
+{
+    sf::Font font2;
+    if (!font2.loadFromFile("shrift.ttf"))
+        return 0.0;
+
+
+    sf::Text employee1(L"", font2);
+    employee1.setCharacterSize(32);
+    employee1.setFillColor(sf::Color::White);
+    employee1.setPosition(30.f, 30.f);
+
+
+    float x = 120.0;
+    float y = 310.0f;
+    std::string currentEmployee;
+
+    for (int i = 0; i < employee.size(); i++)
+    {
+        employee1.setPosition(x, y);
+
+        std::string post;
+        if (employee.at(i).post == Post::JUNIOR)
+            post = "Junior";
+        else if (employee.at(i).post == Post::MIDDLE)
+            post = "Middle";
+        else if (employee.at(i).post == Post::SENIOR)
+            post = "Senior";
+        else if (employee.at(i).post == Post::TEAM_LEADER)
+            post = "Team leader";
+        else if (employee.at(i).post == Post::PROJECT_MANAGER)
+            post = "Project manager";
+        else if (employee.at(i).post == Post::DIRECTOR_OF_DEPARTMENT)
+            post = "Director of department";
+        else if (employee.at(i).post == Post::DEPUTY_GENERAL_DIRECTOR)
+            post = "Deputy general director";
+        else if (employee.at(i).post == Post::GENERAL_DIRECTOR)
+            post = "General director";
+
+        currentEmployee = std::to_string(i + 1) + ((i < 9) ? ".   " : ".  ") + employee.at(i).surName + " " + employee.at(i).name + " " + employee.at(i).patronymic + " " + employee.at(i).gender + " " + employee.at(i).dateOfBirthday
+            + " " + employee.at(i).departmentName + " " + post + " " + employee.at(i).startDate;
+        employee1.setString(currentEmployee);
+
+        // Проверяем, виден ли текст на экране
+        if (y + scrollPosition >= 0 && y + scrollPosition < window.getSize().y)
+        {
+            // Устанавливаем позицию текста только если он виден
+            employee1.setPosition(x, y + scrollPosition);
+            window.draw(employee1);
+        }
+
+        // Обновляем позицию для следующего текста
+        y += 50;
+
+        // Если достигнут нижний предел прокрутки, прерываем цикл
+        if (y + scrollPosition >= window.getSize().y)
+            break;
+    }
+
+    return y;   // Возвращаем текущую позицию, которая будет использоваться в следующем вызове
+}
+
+
+
+
 
 void addNewEmployee_menu(std::vector<Employee>& employee)
 {
@@ -2023,7 +2095,7 @@ void addNewEmployee_menu(std::vector<Employee>& employee)
                 post.setString(str_post);
                 startDate.setString(str_startDate);
             }
-           //обработка кнопки добавить
+            //обработка кнопки добавить
             if (event.type == sf::Event::MouseButtonPressed)
             {
                 if (event.mouseButton.button == sf::Mouse::Left)
@@ -2033,11 +2105,9 @@ void addNewEmployee_menu(std::vector<Employee>& employee)
                     {
                         addNewEmployee(employee, str_surName, str_name, str_patronymic, str_gender, str_date_of_birth, str_departmentName, str_post, str_startDate);
 
-                        successOfAdding_menu();
-
-
+                        if (successOfAdding_menu() == 1)
+                            return;
                     }
-
                 }
             }
 
@@ -2092,6 +2162,10 @@ void addNewEmployee_menu(std::vector<Employee>& employee)
         window.display();
     }
 }
+
+
+
+
 
 void editInfoOfEmployee_menu(std::vector<Employee>& employee)
 {
@@ -2194,10 +2268,7 @@ void editInfoOfEmployee_menu(std::vector<Employee>& employee)
                 {
                     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
                     if (text_accept.getGlobalBounds().contains(mousePos.x, mousePos.y) and !str_number.empty())
-                    {
                         editMode(employee, str_number);
-                    }
-
                 }
             }
 
@@ -2215,8 +2286,11 @@ void editInfoOfEmployee_menu(std::vector<Employee>& employee)
                         str_number += static_cast<char>(event.text.unicode);
                 }
                 text_number.setString(str_number);
-
             }
+
+
+
+
 
             // ПОДСВЕЧИВАНИЕ КНОПКИ ПРИНЯТЬ
             sf::Vector2i mousePos = sf::Mouse::getPosition(window);
@@ -2251,7 +2325,6 @@ void editInfoOfEmployee_menu(std::vector<Employee>& employee)
         window.display();
     }
 }
-
 void editMode(std::vector<Employee> &employee, std::string str_number)
 {
     // Загрузка шрифтов
@@ -2395,7 +2468,8 @@ void editMode(std::vector<Employee> &employee, std::string str_number)
                     else if (sprite_startDate.getGlobalBounds().contains(mousePos.x, mousePos.y))
                         kindOfFIeld = 8;
                 }
-                enterNewInfo_editMode(employee, str_number, kindOfFIeld);
+                if (enterNewInfo_editMode(employee, str_number, kindOfFIeld) == 1)
+                    return;
             }
 
 
@@ -2518,8 +2592,7 @@ void editMode(std::vector<Employee> &employee, std::string str_number)
         window.display();
     }
 }
-
-void enterNewInfo_editMode(std::vector<Employee>& employee, std::string str_number, int kindOfField)
+int enterNewInfo_editMode(std::vector<Employee>& employee, std::string str_number, int kindOfField)
 {
     // Загрузка шрифтов
     sf::Font font2;
@@ -2574,12 +2647,12 @@ void enterNewInfo_editMode(std::vector<Employee>& employee, std::string str_numb
             if (event.type == sf::Event::Closed)
                 window.close();
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
-                return;
+                return 0;
             if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
             {
                 sf::Vector2i mousePos = sf::Mouse::getPosition(window);
                 if (sprite_arrow_back_orange.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                    return;
+                    return 0;
             }
 
             // подсвечивание
@@ -2608,7 +2681,8 @@ void enterNewInfo_editMode(std::vector<Employee>& employee, std::string str_numb
                 if (text_edit.getGlobalBounds().contains(mousePos.x, mousePos.y))
                 {
                     editEmployee(employee, str_newInfo, str_number, kindOfField); // получает новую инфо,номер сотдурника и номер поля для изменения
-                    return;
+                    if (successOfEdit_menu() == 1)
+                        return 1;
                 }
             }
 
@@ -2640,49 +2714,6 @@ void enterNewInfo_editMode(std::vector<Employee>& employee, std::string str_numb
 
         window.display();
     }
-}
-
-float printAllEmployeesForEditingAndDeleting(std::vector<Employee>& employee, float scrollPosition)
-{
-    sf::Font font2;
-    if (!font2.loadFromFile("shrift.ttf"))
-        return 0.0;
-
-
-    sf::Text employee1(L"", font2);
-    employee1.setCharacterSize(32);
-    employee1.setFillColor(sf::Color::White);
-    employee1.setPosition(30.f, 30.f);
-
-
-    float x = 120.0;
-    float y = 310.0f;
-    std::string currentEmployee;
-
-    for (int i = 0; i < employee.size(); i++)
-    {
-        employee1.setPosition(x, y);
-        currentEmployee = std::to_string(i + 1) + ((i < 9) ? ".   " : ".  ") + employee.at(i).surName + " " + employee.at(i).name + " " + employee.at(i).patronymic + " " + employee.at(i).gender + " " + employee.at(i).dateOfBirthday
-            + " " + employee.at(i).departmentName + " " + employee.at(i).startDate;
-        employee1.setString(currentEmployee);
-
-        // Проверяем, виден ли текст на экране
-        if (y + scrollPosition >= 0 && y + scrollPosition < window.getSize().y)
-        {
-            // Устанавливаем позицию текста только если он виден
-            employee1.setPosition(x, y + scrollPosition);
-            window.draw(employee1);
-        }
-
-        // Обновляем позицию для следующего текста
-        y += 50;
-
-        // Если достигнут нижний предел прокрутки, прерываем цикл
-        if (y + scrollPosition >= window.getSize().y)
-            break;
-    }
-
-    return y;   // Возвращаем текущую позицию, которая будет использоваться в следующем вызове
 }
 
 void deleteEmployee_menu(std::vector<Employee>& employee)
@@ -2789,8 +2820,11 @@ void deleteEmployee_menu(std::vector<Employee>& employee)
                 {
                     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
                     if (text_accept.getGlobalBounds().contains(mousePos.x, mousePos.y) and !str_number.empty())
-                        if (areYouSure())
+                        if (areYouSure() == 1)
+                        {
                             deleteEmployee(employee, str_number);
+                            return;
+                        }
 
 
                 }
@@ -2846,85 +2880,46 @@ void deleteEmployee_menu(std::vector<Employee>& employee)
         window.display();
     }
 }
-
 int areYouSure()
 {
-    sf::Font font2;
-    if (!font2.loadFromFile("shrift.ttf"))
-        return -1;
+    sf::Texture success;
+    loadTexture("AreYouSure1.png", success);
 
 
-    sf::RectangleShape rectangle(Vector2f(400.f, 200.f));
-    rectangle.setFillColor(sf::Color::Black);
-    rectangle.setPosition(760, 400);
+    // Создание спрайтов
+    sf::Sprite sprite_success;
+    createSprite(sprite_success, success, 0.6, 0.6, sf::Vector2f(680.f, 350.f));
 
-    sf::Text text_yes(L"Да", font2);
-    text_yes.setCharacterSize(36);
-    text_yes.setFillColor(sf::Color::White);
-    text_yes.setPosition(790, 560);
+    // Создание прямоугольников
+    sf::RectangleShape yes(Vector2f(240.f, 90.f));
+    createRectangle(yes, Vector2f(267.f, 100.f), Vector2f(680.f, 596.f), sf::Color(59, 60, 54, 190));
 
-    sf::Text text_no(L"Отмена", font2);
-    text_no.setCharacterSize(36);
-    text_no.setFillColor(sf::Color::White);
-    text_no.setPosition(1000, 560);
+    // Создание прямоугольников
+    sf::RectangleShape no(Vector2f(240.f, 90.f));
+    createRectangle(no, Vector2f(267.f, 100.f), Vector2f(947.f, 596.f), sf::Color(59, 60, 54, 190));
 
-    sf::Text text_areYouSure(L"Вы уверены?", font2);
-    text_areYouSure.setCharacterSize(44);
-    text_areYouSure.setFillColor(sf::Color::White);
-    text_areYouSure.setPosition(804, 420);
 
-    
     while (window.isOpen())
     {
         sf::Event event;
         while (window.pollEvent(event))
         {
-            // закрытие приложения
-            // для закрытия из панели задач
-            if (event.type == sf::Event::Closed)
-                window.close();
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
-                return -1;
-            
-            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-            if (text_yes.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                text_yes.setFillColor(Color(255, 51, 6));
-            else
-                text_yes.setFillColor(sf::Color::White);
-            if (text_no.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                text_no.setFillColor(Color(255, 51, 6));
-            else
-                text_no.setFillColor(sf::Color::White);
-
-
-            // проверка на поле для ДА
-            if (event.type == sf::Event::MouseButtonPressed)
+            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
             {
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (text_yes.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                        return 1;
-                }
+                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                if (yes.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    return 1;
             }
 
-            // проверка на поле для НЕТ
-            if (event.type == sf::Event::MouseButtonPressed)
+            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
             {
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (text_no.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                        return 0;
-                }
+                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                if (no.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    return 0;
             }
-
         }
 
-        window.draw(rectangle);
-        window.draw(text_yes);
-        window.draw(text_no);
-        window.draw(text_areYouSure);
+        window.draw(sprite_success);
         window.display();
     }
 }
@@ -2932,7 +2927,7 @@ int areYouSure()
 
 // ПОИСК
 
-// ПО ФАМИЛИИ
+// по фамилии
 void searchEmployeeWithSurname_menu(std::vector<Employee>& employee)
 {
     sf::Font font2;
@@ -3035,6 +3030,8 @@ void searchEmployeeWithSurname_menu(std::vector<Employee>& employee)
                         printSearchingEmployeesWithSurname(employee, str_surName, isSurnameChanging);
                 }
             }
+            else if (event.type == sf::Event::KeyPressed and event.mouseButton.button == sf::Keyboard::Enter)
+                printSearchingEmployeesWithSurname(employee, str_surName, isSurnameChanging);
 
             // проверка на поле для ввода
             if (event.type == sf::Event::MouseButtonPressed)
@@ -3214,7 +3211,7 @@ void printEmployeesLoop(std::vector<int>& indexes, std::vector<Employee>& employ
     }
 }
 
-// ПО ДОЛЖНОСТИ
+// по должности
 void searchEmployeeWithPost_menu(std::vector<Employee>& employee)
 {
     sf::Font font2;
@@ -3306,17 +3303,16 @@ void searchEmployeeWithPost_menu(std::vector<Employee>& employee)
                 text_search.setFillColor(sf::Color::White);
 
 
-            if (event.type == sf::Event::MouseButtonPressed)
+            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
             {
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (text_search.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                        isButtonClicked = true;
-                    if (text_search.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isTextEmpty)
-                        printSearchingEmployeesWithPost(employee, str_post, isPostChanging);
-                }
+                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                if (text_search.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    isButtonClicked = true;
+                if (text_search.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isTextEmpty)
+                    printSearchingEmployeesWithPost(employee, str_post, isPostChanging);
             }
+            else if (event.type == sf::Event::KeyPressed and event.mouseButton.button == sf::Keyboard::Enter)
+                printSearchingEmployeesWithPost(employee, str_post, isPostChanging);
 
             // проверка на поле для ввода
             if (event.type == sf::Event::MouseButtonPressed)
@@ -3496,7 +3492,7 @@ void printEmployeesLoopPost(std::vector<int>& indexes, std::vector<Employee>& em
     }
 }
 
-
+// по дате начала работы
 void searchEmployeeWithStartYear_menu(std::vector<Employee> &employee)
 {
     sf::Font font2;
@@ -3599,6 +3595,8 @@ void searchEmployeeWithStartYear_menu(std::vector<Employee> &employee)
                         printSearchingEmployeesWithYear(employee, str_year, isYearChanging);
                 }
             }
+            else if (event.type == sf::Event::KeyPressed and event.mouseButton.button == sf::Keyboard::Enter)
+                printSearchingEmployeesWithYear(employee, str_year, isYearChanging);
 
             // проверка на поле для ввода
             if (event.type == sf::Event::MouseButtonPressed)
@@ -3779,9 +3777,8 @@ void printEmployeesLoopYear(std::vector<int>& indexes, std::vector<Employee>& em
 }
 
 
-
-// сортировка по Фамилии в порядке возрастания(пузырьком)
-void successOfSorting_menu(int kindOfSort, int sortUpOrDown, std::vector<Employee>& employee)
+//  ВСПЛЫВАЮЩИЕ ОКНА О СОСТОЯНИИ
+int successOfSorting_menu(int kindOfSort, int sortUpOrDown, std::vector<Employee>& employee)
 {
     if (kindOfSort == 1 and sortUpOrDown == 1)
         sortWithSurnameUp(employee);
@@ -3798,22 +3795,17 @@ void successOfSorting_menu(int kindOfSort, int sortUpOrDown, std::vector<Employe
 
     writeInToFileAfterDeleteEmployee(employee);
 
-    // Загрузка шрифтов
-    sf::Font font2;
-    loadFont(font2, "shrift.ttf");
+    sf::Texture success;
+    loadTexture("SuccessSort.png", success);
 
+
+    // Создание спрайтов
+    sf::Sprite sprite_success;
+    createSprite(sprite_success, success, 0.6, 0.6, sf::Vector2f(680.f, 350.f));
 
     // Создание прямоугольников
-    sf::RectangleShape message;
-    createRectangle(message, Vector2f(400.f, 200.f), Vector2f(760, 400), sf::Color(59, 60, 54, 190));
-
-
-    // Создание текста
-    sf::Text text_success(L"Сортировка выполнена успешно!", font2);
-    createText(text_success, 20, sf::Color::White, sf::Vector2f(770.f, 420.f));
-
-    sf::Text text_ok(L"Окей", font2);
-    createText(text_ok, 36, sf::Color::White, sf::Vector2f(900.f, 540.f));
+    sf::RectangleShape yes(Vector2f(240.f, 90.f));
+    createRectangle(yes, Vector2f(535.f, 100.f), Vector2f(680.f, 596.f), sf::Color(59, 60, 54, 190));
 
 
     while (window.isOpen())
@@ -3821,74 +3813,79 @@ void successOfSorting_menu(int kindOfSort, int sortUpOrDown, std::vector<Employe
         sf::Event event;
         while (window.pollEvent(event))
         {
-            // закрытие приложения
-            // для закрытия из панели задач
-            if (event.type == sf::Event::Closed)
-                window.close();
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
-                return;
-
-            if (event.type == sf::Event::MouseButtonPressed)
+            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
             {
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (text_ok.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                        return;
-                }
+                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                if (yes.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    return 1;
             }
-            
         }
 
-        window.draw(message);
-        window.draw(text_success);
-        window.draw(text_ok);
-       
+        window.draw(sprite_success);
         window.display();
     }
 }
-
-void successOfAdding_menu()
+int successOfAdding_menu()
 {
-    // Загрузка шрифта
-    sf::Font font2;
-    loadFont(font2, "shrift.ttf");
+    sf::Texture success;
+    loadTexture("Success1.png", success);
 
+
+    // Создание спрайтов
+    sf::Sprite sprite_success;
+    createSprite(sprite_success, success, 0.6, 0.6, sf::Vector2f(680.f, 350.f));
 
     // Создание прямоугольников
-    sf::RectangleShape message;
-    createRectangle(message, Vector2f(400.f, 200.f), Vector2f(760, 400), sf::Color(59, 60, 54, 190));
+    sf::RectangleShape yes(Vector2f(240.f, 90.f));
+    createRectangle(yes, Vector2f(535.f, 100.f), Vector2f(680.f, 596.f), sf::Color(59, 60, 54, 190));
 
-
-    // Создание текстов
-    sf::Text text_success(L"Запись данных прошла успешно!", font2);
-    createText(text_success, 20, sf::Color::White, sf::Vector2f(770.f, 420.f));
-
-    sf::Text text_exit(L"Окей", font2);
-    createText(text_exit, 24, sf::Color::White, sf::Vector2f(880.f, 550.f));
 
     while (window.isOpen())
     {
         sf::Event event;
         while (window.pollEvent(event))
         {
-            if (event.type == sf::Event::MouseButtonPressed)
+            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
             {
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (text_exit.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                    {
-                        return;
-
-                    }
-                }
+                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                if (yes.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    return 1;
             }
         }
 
-        window.draw(message);
-        window.draw(text_exit);
-        window.draw(text_success);
+        window.draw(sprite_success);
+        window.display();
+    }
+}
+int successOfEdit_menu()
+{
+    sf::Texture success;
+    loadTexture("SuccessEdit.png", success);
+
+
+    // Создание спрайтов
+    sf::Sprite sprite_success;
+    createSprite(sprite_success, success, 0.6, 0.6, sf::Vector2f(680.f, 350.f));
+
+    // Создание прямоугольников
+    sf::RectangleShape yes(Vector2f(240.f, 90.f));
+    createRectangle(yes, Vector2f(535.f, 100.f), Vector2f(680.f, 596.f), sf::Color(59, 60, 54, 190));
+
+
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
+            {
+                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                if (yes.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    return 1;
+            }
+        }
+
+        window.draw(sprite_success);
         window.display();
     }
 }

@@ -137,6 +137,7 @@ sfml-network-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="afa.cpp" />
     <ClCompile Include="file_functions.cpp" />
     <ClCompile Include="functions.cpp" />
     <ClCompile Include="functions_sfml.cpp" />

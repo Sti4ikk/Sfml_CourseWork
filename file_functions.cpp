@@ -6,6 +6,7 @@
 #include <vector>
 #include <fstream>
 
+
 void writingToVectorsFromFileAuth(std::vector<Authentication>& authentication)
 {
 	std::ifstream auth("Authentication_Data.txt");

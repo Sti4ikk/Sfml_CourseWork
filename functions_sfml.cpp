@@ -14,7 +14,6 @@ bool loadTexture(const std::string& filePath, sf::Texture& texture)
     return true;
 }
 
-
 // Функция для создания спрайта с заданной текстурой
 void createSprite(sf::Sprite& sprite, const sf::Texture& texture, const float x, const float y, const sf::Vector2f& position)
 {

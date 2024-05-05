@@ -1,5 +1,4 @@
 #include "prototypes.h"
-
 #include <string>
 #include <vector>
 #include "enums.h"
@@ -23,14 +22,15 @@ int checkDataOfUser(std::vector<Authentication>& authentication, std::string log
 		return 0;
 }
 
-void addNewEmployee(std::vector<Employee>& employee, std::string str_surName, std::string str_name, std::string str_patronymic, std::string str_gender, std::string str_date_of_birth, std::string str_departmentName, std::string str_post, std::string str_startDate)
+
+void addNewEmployee(std::vector<Employee>& employee, std::string str_surName, std::string str_name, 
+	std::string str_patronymic, std::string str_gender, std::string str_date_of_birth, std::string str_departmentName, std::string str_post, std::string str_startDate)
 {
 
 	writeInfoOfNewEmployeeInFile(employee, str_surName, str_name, str_patronymic, str_gender, str_date_of_birth, str_departmentName, str_post, str_startDate);
 	writeEmployeeIntoVector(employee, str_surName, str_name, str_patronymic, str_gender, str_date_of_birth, str_departmentName, str_post, str_startDate);
 
 }
-
 void editEmployee(std::vector<Employee>& employee, std::string  str_newInfo, std::string str_number, int kindOfField)
 {
 	switch (kindOfField)
@@ -89,7 +89,6 @@ void editEmployee(std::vector<Employee>& employee, std::string  str_newInfo, std
 
 	writeInToFileAfterDeleteEmployee(employee);
 }
-
 // удаление сотруника из вектора и запись новых даных в файл
 void deleteEmployee(std::vector<Employee>& employee, std::string str_number)
 {
@@ -151,7 +150,8 @@ void searchWithYear(std::vector<Employee>& employee, std::string str_year, std::
 	}
 }
 
-// заполнение массива случайными числами для отображения случайных новосте1
+
+// заполнение массива случайными числами для отображения случайных новостей
 void initArrOfRandomNumbers(std::vector<int> &numbers)
 {
 	int count = 0;
@@ -332,5 +332,3 @@ void sortWithExperienceUp(std::vector<Employee>& employee)
 			break;
 	}
 }
-
-
