@@ -1,8 +1,8 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
 #include "enums.h"
 #include <string>
+
 
 // Информация о сотрудниках предприятия
 struct Employee
@@ -29,19 +29,4 @@ struct Authentication
 {
 	std::string login;
 	std::string password;
-};
-
-// Структура для текста
-struct TextData 
-{
-	sf::Text text;
-	std::string str;
-	bool isClicked = false;
-};
-
-// Структура для спрайта
-struct SpriteData
-{
-	sf::Sprite sprite;
-	bool isClicked = false;
 };

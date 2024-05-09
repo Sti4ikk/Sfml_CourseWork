@@ -14,8 +14,7 @@ int main()
 
     std::vector<Employee> employee;;
     std::vector<Authentication> authentication;
-    // вектор для хранения индексов сотрдуников пенсионного возраста
-    std::vector<int> indexes;
+    std::vector<int> indexes;                        // вектор для хранения индексов сотрдуников пенсионного возраста
     bool isRememberMePressed;
 
     // запись данных в векторы из файлов

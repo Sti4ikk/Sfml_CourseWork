@@ -46,24 +46,16 @@ void printSearchingEmployeesWithYear(std::vector<Employee>& employee, std::strin
 
 
 // —ќ–“»–ќ¬ »
-void sortingEmpoyeesWithSurname_menu(std::vector<Employee>& employee);
 void printEmployeesLoop(std::vector<int>& indexes, std::vector<Employee>& employee);
 int successOfSorting_menu(int kindOfSort, int sortUpOrDown, std::vector<Employee>& employee);
 void sortWithSurnameDown(std::vector<Employee>& employee);
 void sortWithSurnameUp(std::vector<Employee>& employee);
-// поиск наименьшего элемента дл€ сортировки выбором
 int findSmallestPosition(std::vector<Employee>& employee, int startPosition);
-// сортировка по должности в пор€дке возрастани€(методом выбора)
 void sortWithPostUp(std::vector<Employee>& employee);
-// поиск наибольшего элемента дл€ сортировки выбором
 int findBiggestPosition(std::vector<Employee>& employee, int startPosition);
-// сортировка по должности в пор€дке убывани€(методом выбора)
 void sortWithPostDown(std::vector<Employee>& employee);
-// функци€ возвращает целое число типа годћес€цƒень
 int getNumber(std::vector<Employee>& employee, int index);
-// сортировка по стажу в пор€дке убывани€
 void sortWithExperienceDown(std::vector<Employee>& employee);
-// сортировка по стажу в пор€дке возрастани€
 void sortWithExperienceUp(std::vector<Employee>& employee);
 
 
@@ -80,6 +72,5 @@ void searchEmployeeWithStartYear_menu(std::vector<Employee>& employee);
 int successOfAdding_menu();
 int successOfEdit_menu();
 int areYouSure();
-
 
 void initArrOfRandomNumbers(std::vector<int>& numbers);

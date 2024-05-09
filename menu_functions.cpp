@@ -8,6 +8,23 @@
 #include <array>
 
 
+// Структура для текста
+struct TextData
+{
+    sf::Text text;
+    std::string str;
+    bool isClicked = false;
+};
+
+
+void handleTextField(TextData& textField, sf::Event& event, sf::RenderWindow& window);
+bool handleButton(const sf::Text& button, sf::Event& event, sf::RenderWindow& window);
+void createText(sf::Text& text, const std::wstring& str, const sf::Font& font, unsigned int size, const sf::Color& color, const sf::Vector2f& position);
+void createText(sf::Text& text, const std::string& str, const sf::Font& font, unsigned int size, const sf::Color& color, const sf::Vector2f& position);
+void highlightButton(sf::Text& button, sf::RenderWindow& window);
+void highlightButton(sf::RectangleShape& button, sf::RenderWindow& window);
+void enterLoginAndPassword(sf::Event& event, std::vector<TextData>& textFields);
+
 bool loadFont(sf::Font& font, const std::string& filePath);
 bool loadTexture(const std::string& filePath, sf::Texture& texture);
 void createSprite(sf::Sprite& sprite, const sf::Texture& texture, const float x, const float y, const sf::Vector2f& position);
@@ -16,300 +33,7 @@ void createRectangle(sf::RectangleShape& rectangle, const sf::Vector2f& size, co
 
 
 extern sf::RenderWindow window;
-using namespace sf;
 
-
-void auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>& employee, bool &isRememberMePressed)
-{
-    // Создание окна
-    window.create(sf::VideoMode(500, 412), "", sf::Style::None);
-
-
-    // Загрузка шрифта
-    sf::Font font;
-    loadFont(font, "shrift.ttf");
-
-
-    // Создание прямоугольников
-    sf::RectangleShape rectangle1;
-    createRectangle(rectangle1, Vector2f(430.f, 70.f), Vector2f(35.f, 80.f), sf::Color::Black, 1.f, sf::Color(59, 60, 54));
-
-    sf::RectangleShape rectangle2;
-    createRectangle(rectangle2, Vector2f(430.f, 70.f), Vector2f(35.f, 160.f), sf::Color::Black, 1.f, sf::Color(59, 60, 54));
-
-    sf::RectangleShape rectangle3;
-    createRectangle(rectangle3, Vector2f(430.f, 70.f), Vector2f(35.f, 255.f), sf::Color(255, 193, 7));
-
-    sf::RectangleShape square;
-    createRectangle(square, Vector2f(25.f, 25.f), Vector2f(45.f, 340.f), Color(59, 60, 54));
-
-    sf::RectangleShape line1;
-    createRectangle(line1, Vector2f(1.f, 70.f), Vector2f(99.f, 80.f), Color(59, 60, 54));
-
-    sf::RectangleShape line2;
-    createRectangle(line2, Vector2f(1.f, 70.f), Vector2f(99.f, 160.f), Color(59, 60, 54));
-
-
-    // Создание текста
-    sf::Text text(L"Авторизация", font);
-    createText(text, 46, sf::Color::White, sf::Vector2f(88.f, 8.f));
-
-    sf::Text entrance(L"Войти", font);
-    createText(entrance, 30, sf::Color::White, sf::Vector2f(188.f, 272.f));
-
-    sf::Text rememberMe(L"Запомнить меня", font);
-    createText(rememberMe, 14, sf::Color(59, 60, 54), sf::Vector2f(81.f, 344.f));
-
-    sf::Text login("", font);
-    createText(login, 28, sf::Color::White, sf::Vector2f(110.f, 98.f));
-
-    sf::Text password1("", font);
-    createText(password1, 28, sf::Color::White, sf::Vector2f(110.f, 178.f));
-
-    sf::Text password2("", font);
-    createText(password2, 44, sf::Color::White, sf::Vector2f(110.f, 178.f));
-
-    sf::Text error(L"Неверный логин или пароль!", font);
-    createText(error, 16, sf::Color::Red, sf::Vector2f(126.f, 380.f));
-
-
-    // Загрузка текстур
-    sf::Texture texture1;
-    loadTexture("user.png", texture1);
-    sf::Texture texture2;
-    loadTexture("password1.png", texture2);
-    sf::Texture texture3;
-    loadTexture("hide_eye.png", texture3);
-    sf::Texture texture4;
-    loadTexture("open_eye.png", texture4);
-    sf::Texture galka;
-    loadTexture("galka.png", galka);
-    sf::Texture krest;
-    loadTexture("krest.png", krest);
-
-
-    // Создание спрайта и установка текстуры
-    sf::Sprite sprite1;
-    createSprite(sprite1, texture1, 1.f / 10.f, 1.f / 10.f, sf::Vector2f(42.f, 92.f));
-    sf::Sprite sprite2;
-    createSprite(sprite2, texture2, 1.f / 10.f, 1.f / 10.f, sf::Vector2f(43.f, 172.f));
-    sf::Sprite sprite3;
-    createSprite(sprite3, texture3, 1.f / 12.f, 1.f / 12.f, sf::Vector2f(416.f, 175.f));
-    sf::Sprite sprite4;
-    createSprite(sprite4, texture4, 1.f / 12.f, 1.f / 12.f, sf::Vector2f(416.f, 175.f));
-    sf::Sprite sprite_galka;
-    createSprite(sprite_galka, galka, 1.f / 19.f, 1.f / 19.f, sf::Vector2f(44.f, 339.f));
-    sf::Sprite sprite_krest;
-    createSprite(sprite_krest, krest, 1.f / 30.f, 1.f / 30.f, sf::Vector2f(478.f, 6.f));
-
-
-    // Проверка, какое поле выбрали для ввода
-    bool isRectangle1Clicked = false;
-    bool isRectangle2Clicked = false;
-    bool isPasswordOpen = false;
-    bool isTextPasswordOpen = false;
-    bool isRememberMeOn = false;
-    bool isIncorrectData = false;
-    bool isDragging = false;
-
-
-    // Координаты текущего клика
-    sf::Vector2i clickPosition;
-
-    // String-переменные для ввода логина и пароля
-    std::string str_login;
-    std::string str_password;
-    std::string str_password_close;
-
-
-    while (window.isOpen())
-    {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            // закрытие приложения
-            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
-            {
-                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                if (sprite_krest.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                    window.close();
-            }
-            // для закрытия из панели задач и по клавише ESCAPE
-            if (event.type == sf::Event::Closed or (event.type == sf::Event::KeyPressed and event.key.code == sf::Keyboard::Escape))
-                window.close();
-
-
-            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
-            {
-                // Запоминаем позицию, в которой была нажата кнопка мыши
-                isDragging = true;
-                clickPosition = sf::Mouse::getPosition(window);
-            }
-            else if (event.type == sf::Event::MouseButtonReleased and event.mouseButton.button == sf::Mouse::Left)
-                // Когда кнопка мыши отпущена, заканчиваем перетаскивание
-                isDragging = false;
-
-
-            // проверка на поле для ввода
-            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
-            {
-                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                if (rectangle1.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                {
-                    isIncorrectData = false;
-                    isRectangle1Clicked = true;
-                    isRectangle2Clicked = false;
-                }
-                else if (rectangle2.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                {
-                    isIncorrectData = false;
-                    isRectangle1Clicked = false;
-                    isRectangle2Clicked = true;
-                }
-            }
-
-
-            // Изменение цвета прямоугольника, если курсор находится над ним
-            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-            if (rectangle3.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                rectangle3.setFillColor(Color(255, 245, 7));
-            else
-                rectangle3.setFillColor(Color(255, 193, 7));
-
-
-            // проверка на галочку
-            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
-            {
-                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                if (square.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isRememberMeOn)
-                {
-                    isRememberMeOn = true;
-                    isRememberMePressed = false;
-                    writeInFileIsRememberOn(isRememberMePressed);
-                }
-                else if (square.getGlobalBounds().contains(mousePos.x, mousePos.y) and isRememberMeOn)
-                {
-                    isRememberMeOn = false;
-                    isRememberMePressed = true;
-                    writeInFileIsRememberOn(isRememberMePressed);
-                }
-            }
-
-
-            // ввод текста в поле логин и пароль
-            if (event.type == sf::Event::TextEntered and event.text.unicode < 128)
-            {
-                if (event.text.unicode == 8 and isRectangle1Clicked)
-                { // Backspace
-                    if (!str_login.empty()) 
-                        str_login.pop_back();
-                }
-                else if (isRectangle1Clicked and login.getString().getSize() < 12)
-                    str_login += static_cast<char>(event.text.unicode);
-
-
-                if (event.text.unicode == 8 and isRectangle2Clicked)
-                { // Backspace
-                    if (!str_password.empty())
-                    {
-                        str_password.pop_back();
-                        str_password_close.pop_back();
-                    }
-                }
-                else if (isRectangle2Clicked and password1.getString().getSize() < 12)
-                {
-                    str_password += static_cast<char>(event.text.unicode);
-                    str_password_close += "*";
-                }
-                login.setString(str_login);
-                password1.setString(str_password);
-                password2.setString(str_password_close);
-            }
-            
-
-            // проверка на нажатие кнопки видимости пароля
-            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
-            {
-                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                if (sprite3.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isPasswordOpen)
-                {
-                    isPasswordOpen = true;
-                    isTextPasswordOpen = true;
-                }
-                else if (sprite4.getGlobalBounds().contains(mousePos.x, mousePos.y) and isPasswordOpen)
-                {
-                    isPasswordOpen = false;
-                    isTextPasswordOpen = false;
-                }
-            }
-
-
-            // проверка на правильность введенных данных
-            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
-            {
-                if (rectangle3.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
-                {
-                    std::string login1;
-                    std::string password5;
-                    login1 = login.getString();
-                    password5 = password1.getString();
-                    
-                    if (checkDataOfUser(authentication, login1, password5))
-                    {
-                        window.close();
-                        main_menu(authentication, employee, isRememberMePressed);
-                    }
-                    else
-                    {
-                        str_login = "";
-                        str_password = "";
-                        str_password_close = "";
-                        login.setString(str_login);
-                        password1.setString(str_password);
-                        password2.setString(str_password_close);
-                        isIncorrectData = true;
-                    }
-                }
-            }
-        }
-
-
-        // ПЕРЕМЕЩЕНИЕ ОКНА АВТОРИЗАЦИИ 
-        if (isDragging)
-        {
-            // Вычисляем разницу между текущей позицией мыши и позицией, где была нажата кнопка мыши
-            sf::Vector2i delta = sf::Mouse::getPosition(window) - clickPosition;
-            // Получаем текущее положение окна и сдвигаем его на delta
-            window.setPosition(sf::Vector2i(window.getPosition()) + delta);
-            // Обновляем позицию clickPosition
-            clickPosition = sf::Mouse::getPosition(window);
-        }
-
-
-        // Отрисовка всех элементов
-        window.clear(sf::Color(10, 10, 10));
-        window.draw(rectangle1);
-        window.draw(rectangle2);
-        window.draw(rectangle3);
-        window.draw(square);
-        window.draw(line1);
-        window.draw(line2);
-        window.draw(text);
-        window.draw(entrance);
-        window.draw(login);
-        window.draw(rememberMe);
-        if (isTextPasswordOpen) window.draw(password1);
-        else window.draw(password2);
-        window.draw(sprite1);
-        window.draw(sprite2);
-        window.draw(sprite_krest);
-        if (isPasswordOpen)  window.draw(sprite4);
-        else  window.draw(sprite3);
-        if (isRememberMeOn) window.draw(sprite_galka);
-        if (isIncorrectData) window.draw(error);
-        window.display();
-    }
-}
 
 
 // ОСНОВНЫЕ ФУНКЦИИ МЕНЮ
@@ -329,55 +53,16 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
     sf::Font font;
     loadFont(font, "shrift2.ttf");
 
-    
-    // Создаем массив вершин, который будет содержать три точки
-    sf::VertexArray triangle1(sf::Triangles, 3);
-    sf::VertexArray triangle2(sf::Triangles, 3);
-    sf::VertexArray triangle3(sf::Triangles, 3);
-    sf::VertexArray triangle4(sf::Triangles, 3);
-
-
-    // Определяем вершины треугольника и их цвета
-    triangle4[0].position = sf::Vector2f(1445, 540);
-    triangle4[1].position = sf::Vector2f(1435, 530);
-    triangle4[2].position = sf::Vector2f(1435, 550);
-    triangle4[0].color = sf::Color::White;
-    triangle4[1].color = sf::Color::White;
-    triangle4[2].color = sf::Color::White;
-
-
-    // Определяем вершины треугольника и их цвета
-    triangle3[0].position = sf::Vector2f(1868, 540);
-    triangle3[1].position = sf::Vector2f(1878, 530);
-    triangle3[2].position = sf::Vector2f(1878, 550);
-    triangle3[0].color = sf::Color::White;
-    triangle3[1].color = sf::Color::White;
-    triangle3[2].color = sf::Color::White;
-    // Определяем вершины треугольника и их цвета
-    triangle1[0].position = sf::Vector2f(1886, 84);
-    triangle1[1].position = sf::Vector2f(1894, 76);
-    triangle1[2].position = sf::Vector2f(1878, 76);
-    triangle1[0].color = sf::Color::White;
-    triangle1[1].color = sf::Color::White;
-    triangle1[2].color = sf::Color::White;
-    // Определяем вершины треугольника и их цвета
-    triangle2[0].position = sf::Vector2f(1886, 76);
-    triangle2[1].position = sf::Vector2f(1894, 84);
-    triangle2[2].position = sf::Vector2f(1878, 84);
-    triangle2[0].color = sf::Color::White;
-    triangle2[1].color = sf::Color::White;
-    triangle2[2].color = sf::Color::White;
-
 
     // Создание прямоугольников
-    sf::RectangleShape account(Vector2f(240.f, 90.f));
-    createRectangle(account, Vector2f(240.f, 90.f), Vector2f(1660.f, 94.f), sf::Color(59, 60, 54, 190));
+    sf::RectangleShape account(sf::Vector2f(240.f, 90.f));
+    createRectangle(account, sf::Vector2f(240.f, 90.f), sf::Vector2f(1660.f, 94.f), sf::Color(59, 60, 54, 190));
 
-    sf::RectangleShape polosa(Vector2f(1000.f, 1080.f));
-    createRectangle(polosa, Vector2f(1000.f, 1080.f), Vector2f(530.f, 0.f), sf::Color::White);
+    sf::RectangleShape polosa(sf::Vector2f(1000.f, 1080.f));
+    createRectangle(polosa, sf::Vector2f(1000.f, 1080.f), sf::Vector2f(530.f, 0.f), sf::Color::White);
 
-    sf::RectangleShape line1(Vector2f(1.f, 1080.f));
-    createRectangle(line1, Vector2f(1.f, 1080.f), Vector2f(0.f, 0.f), sf::Color(59, 60, 54));
+    sf::RectangleShape line1(sf::Vector2f(1.f, 1080.f));
+    createRectangle(line1, sf::Vector2f(1.f, 1080.f), sf::Vector2f(0.f, 0.f), sf::Color(59, 60, 54));
 
 
     // Создание текста ГЛАВНОГО МЕНЮ
@@ -425,11 +110,8 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
     sf::Text text_sorting(L"Сортировка", font2);
     createText(text_sorting, 40, sf::Color::White, sf::Vector2f(25.f, 455.f));
 
-    sf::Text text_search1(L"Поиск сотрудников", font2);
+    sf::Text text_search1(L"Поиск сотрудников\nпенсионного возраста", font2);
     createText(text_search1, 40, sf::Color::White, sf::Vector2f(25.f, 525.f));
-
-    sf::Text text_search2(L"пенсионного возраста", font2);
-    createText(text_search2, 40, sf::Color::White, sf::Vector2f(25.f, 570.f));
 
     sf::Text text_get_back1(L"Назад", font2);
     createText(text_get_back1, 40, sf::Color::White, sf::Vector2f(25.f, 640.f));
@@ -486,6 +168,26 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
     sf::Texture shtorka_orange;
     loadTexture("shtorka_orange.png", shtorka_orange);
 
+    sf::Texture triangle;
+    loadTexture("triangle.png", triangle);
+
+    sf::Texture triangle_orange;
+    loadTexture("triangle_orange.png", triangle_orange);
+
+    sf::Texture triangleForNews;
+    loadTexture("triangle.png", triangleForNews);
+
+    sf::Texture triangleForNews_orange;
+    loadTexture("triangle_orange.png", triangleForNews_orange);
+
+    sf::Sprite sprite_triangleForNews;
+    createSprite(sprite_triangleForNews, triangle, 0.04, 0.04, sf::Vector2f(1875, 540));
+
+    // Установка точки начала в центр спрайта
+    sprite_triangleForNews.setOrigin(sprite_triangleForNews.getLocalBounds().width / 2, sprite_triangleForNews.getLocalBounds().height / 2);
+    sprite_triangleForNews.setRotation(90.f);
+
+
     sf::Texture bg_news;
     loadTexture("bg_news4.png", bg_news);
 
@@ -530,6 +232,15 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
     sf::Sprite sprite_logo;
     createSprite(sprite_logo, logo, 0.8, 0.8, sf::Vector2f(570, 130));
 
+    sf::Sprite sprite_triangle;
+    createSprite(sprite_triangle, triangle, 0.04, 0.04, sf::Vector2f(1884.f, 80.f));
+
+    sf::Sprite sprite_triangle_orange;
+    createSprite(sprite_triangle_orange, triangle_orange, 0.04, 0.04, sf::Vector2f(1884.f, 80.f));
+    // Установка точки начала в центр спрайта
+    sprite_triangle.setOrigin(sprite_triangle.getLocalBounds().width / 2, sprite_triangle.getLocalBounds().height / 2);
+    sprite_triangle_orange.setOrigin(sprite_triangle.getLocalBounds().width / 2, sprite_triangle.getLocalBounds().height / 2);
+
     sf::Sprite sprite_news1;
     createSprite(sprite_news1, news1, 0.26, 0.26, sf::Vector2f(1485, 150));
 
@@ -559,6 +270,8 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
     bool isSortingPressed = false;            // Нажали ли на кнопку СОРТИРОВКА
     bool isSortingModePressed = false;        // Выбрали ли тип сортировки в меню СОРТИРОВКА
 
+    bool isMouseOnAcc = false;
+
 
     int kindOfSort = -1;
     int sortUpOrDown = -1;
@@ -585,7 +298,20 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
 
             // подсвечивание кнопок при наведении на них
             sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-            if (sprite_shtorka.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+            if (sprite_shtorka.getGlobalBounds().contains(mousePos.x, mousePos.y)) 
+            {
+                // Изменение цвета прямоугольника, если курсор находится над ним
+                isMouseOnShtorka = true;
+                triangleIsMouseOnShtorka = true;
+            }
+            else
+            {
+                triangleIsMouseOnShtorka = false;
+                isMouseOnShtorka = false;
+            }
+
+            if (sprite_shtorka.getGlobalBounds().contains(mousePos.x, mousePos.y)) 
+            {
                 // Изменение цвета прямоугольника, если курсор находится над ним
                 isMouseOnShtorka = true;
                 triangleIsMouseOnShtorka = true;
@@ -597,7 +323,8 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
             }
 
             // проерка на подсвечивание шторки после открытия новостей
-            if (sprite_shtorka1.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+            if (sprite_shtorka1.getGlobalBounds().contains(mousePos.x, mousePos.y)) 
+            {
                 // Изменение цвета прямоугольника, если курсор находится над ним
                 isMouseOnShtorka1 = true;
                 triangleIsMouseOnShtorka1 = true;
@@ -608,147 +335,56 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
                 isMouseOnShtorka1 = false;
             }
 
-            if (text_editing.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                // Изменение цвета прямоугольника, если курсор находится над ним
-                text_editing.setFillColor(Color(255, 51, 6));
-            else
-                // Возвращение к исходному цвету, если курсор не находится над прямоугольником
-                text_editing.setFillColor(sf::Color::White);
-            if (text_proccesing.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                text_proccesing.setFillColor(Color(255, 51, 6));
-            else
-                text_proccesing.setFillColor(sf::Color::White);
-            if (text_settings.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                text_settings.setFillColor(Color(255, 51, 6));
-            else
-                text_settings.setFillColor(sf::Color::White);
-            if (text_exit.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                text_exit.setFillColor(Color(255, 51, 6));
-            else
-                text_exit.setFillColor(sf::Color::White);
-            if (text_account.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                text_account.setFillColor(Color(255, 51, 6));
-            else
-                text_account.setFillColor(sf::Color::White);
-            if (text_leave_from_acc.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                text_leave_from_acc.setFillColor(Color(255, 51, 6));
-            else
-                text_leave_from_acc.setFillColor(sf::Color::White);
+            highlightButton(text_editing, window);
+            highlightButton(text_proccesing, window);
+            highlightButton(text_settings, window);
+            highlightButton(text_exit, window);
+            highlightButton(text_account, window);
+            highlightButton(text_leave_from_acc, window);
+            highlightButton(text_print_all, window);
+            highlightButton(text_leave_from_acc, window);
+            highlightButton(text_add_employee, window);
+            highlightButton(text_edit_info, window);
+            highlightButton(text_delete_employee, window);
+
+            highlightButton(text_get_back, window);
+            highlightButton(text_search, window);
+            highlightButton(text_sorting, window);
+            highlightButton(text_delete_employee, window);
+
 
             if (sprite_acc.getGlobalBounds().contains(mousePos.x, mousePos.y))
-            {
-                triangle1[0].color = sf::Color(255, 51, 6);
-                triangle1[1].color = sf::Color(255, 51, 6);
-                triangle1[2].color = sf::Color(255, 51, 6);
-            }
+                isMouseOnAcc = true;
             else
-            {
-                triangle1[0].color = sf::Color::White;
-                triangle1[1].color = sf::Color::White;
-                triangle1[2].color = sf::Color::White;
-            }
-            if (sprite_acc.getGlobalBounds().contains(mousePos.x, mousePos.y))
-            {
-                triangle2[0].color = sf::Color(255, 51, 6);
-                triangle2[1].color = sf::Color(255, 51, 6);
-                triangle2[2].color = sf::Color(255, 51, 6);
-            }
-            else
-            {
-                triangle2[0].color = sf::Color::White;
-                triangle2[1].color = sf::Color::White;
-                triangle2[2].color = sf::Color::White;
-            }
-            if (text_print_all.getGlobalBounds().contains(mousePos.x, mousePos.y) and editingMode)
-                text_print_all.setFillColor(Color(255, 51, 6));
-            else
-                text_print_all.setFillColor(sf::Color::White);
-            if (text_add_employee.getGlobalBounds().contains(mousePos.x, mousePos.y) and editingMode)
-                text_add_employee.setFillColor(Color(255, 51, 6));
-            else
-                text_add_employee.setFillColor(sf::Color::White);
-            if (text_edit_info.getGlobalBounds().contains(mousePos.x, mousePos.y) and editingMode)
-                text_edit_info.setFillColor(Color(255, 51, 6));
-            else
-                text_edit_info.setFillColor(sf::Color::White);
-            if (text_delete_employee.getGlobalBounds().contains(mousePos.x, mousePos.y) and editingMode)
-                text_delete_employee.setFillColor(Color(255, 51, 6));
-            else
-                text_delete_employee.setFillColor(sf::Color::White);
-            if (text_get_back.getGlobalBounds().contains(mousePos.x, mousePos.y) and editingMode)
-                text_get_back.setFillColor(Color(255, 51, 6));
-            else
-                text_get_back.setFillColor(sf::Color::White);
+                isMouseOnAcc = false;
+            
+            
 
-            if (text_search.getGlobalBounds().contains(mousePos.x, mousePos.y) and proccesingMode)
-                text_search.setFillColor(Color(255, 51, 6));
-            else
-                text_search.setFillColor(sf::Color::White);
-            if (text_sorting.getGlobalBounds().contains(mousePos.x, mousePos.y) and proccesingMode)
-                text_sorting.setFillColor(Color(255, 51, 6));
-            else
-                text_sorting.setFillColor(sf::Color::White);
-            if ((text_search1.getGlobalBounds().contains(mousePos.x, mousePos.y) or text_search2.getGlobalBounds().contains(mousePos.x, mousePos.y)) and proccesingMode)
+            // подсветка кнопок в меню ОБРАБОТКА
+            if (proccesingMode)
             {
-                text_search1.setFillColor(Color(255, 51, 6));
-                text_search2.setFillColor(Color(255, 51, 6));
+                highlightButton(text_search1, window);
+                highlightButton(text_get_back1, window);
             }
-            else
+            // подсветка кнопок в меню ПОИСК
+            if (isSearchPressed)
             {
-                text_search1.setFillColor(sf::Color::White);
-                text_search2.setFillColor(sf::Color::White);
+                highlightButton(text_search_with_surname, window);
+                highlightButton(text_search_with_post, window);
+                highlightButton(text_search_with_year, window);
+                highlightButton(text_get_back2, window);
             }
-            if (text_get_back1.getGlobalBounds().contains(mousePos.x, mousePos.y) and proccesingMode)
-                text_get_back1.setFillColor(Color(255, 51, 6));
-            else
-                text_get_back1.setFillColor(sf::Color::White);
-                                                // подсветка кнопок в меню ПОИСК
-            if (text_search_with_surname.getGlobalBounds().contains(mousePos.x, mousePos.y) and isSearchPressed)
-                text_search_with_surname.setFillColor(Color(255, 51, 6));
-            else
-                text_search_with_surname.setFillColor(sf::Color::White);
-            if (text_search_with_post.getGlobalBounds().contains(mousePos.x, mousePos.y) and isSearchPressed)
-                text_search_with_post.setFillColor(Color(255, 51, 6));
-            else
-                text_search_with_post.setFillColor(sf::Color::White);
-            if (text_search_with_year.getGlobalBounds().contains(mousePos.x, mousePos.y) and isSearchPressed)
-                text_search_with_year.setFillColor(Color(255, 51, 6));
-            else
-                text_search_with_year.setFillColor(sf::Color::White);
-            if (text_get_back2.getGlobalBounds().contains(mousePos.x, mousePos.y) and isSearchPressed)
-                text_get_back2.setFillColor(Color(255, 51, 6));
-            else
-                text_get_back2.setFillColor(sf::Color::White);
-                                                            // подсветка кнопок в меню СОРТИРОВКА
-            if (text_sorting_with_surname.getGlobalBounds().contains(mousePos.x, mousePos.y) and isSortingPressed)
-                text_sorting_with_surname.setFillColor(Color(255, 51, 6));
-            else
-                text_sorting_with_surname.setFillColor(sf::Color::White);
-            if (text_sorting_with_post.getGlobalBounds().contains(mousePos.x, mousePos.y) and isSortingPressed)
-                text_sorting_with_post.setFillColor(Color(255, 51, 6));
-            else
-                text_sorting_with_post.setFillColor(sf::Color::White);
-            if (text_sorting_with_experience.getGlobalBounds().contains(mousePos.x, mousePos.y) and isSortingPressed)
-                text_sorting_with_experience.setFillColor(Color(255, 51, 6));
-            else
-                text_sorting_with_experience.setFillColor(sf::Color::White);
-            if (text_get_back3.getGlobalBounds().contains(mousePos.x, mousePos.y) and isSortingPressed)
-                text_get_back3.setFillColor(Color(255, 51, 6));
-            else
-                text_get_back3.setFillColor(sf::Color::White);
-
-            if (text_get_back4.getGlobalBounds().contains(mousePos.x, mousePos.y) and isSortingPressed)
-                text_get_back4.setFillColor(Color(255, 51, 6));
-            else
-                text_get_back4.setFillColor(sf::Color::White);
-            if (text_sort_up.getGlobalBounds().contains(mousePos.x, mousePos.y) and isSortingPressed)
-                text_sort_up.setFillColor(Color(255, 51, 6));
-            else
-                text_sort_up.setFillColor(sf::Color::White);
-            if (text_sort_down.getGlobalBounds().contains(mousePos.x, mousePos.y) and isSortingPressed)
-                text_sort_down.setFillColor(Color(255, 51, 6));
-            else
-                text_sort_down.setFillColor(sf::Color::White);
+            // подсветка кнопок в меню СОРТИРОВКА
+            if (isSortingPressed)
+            {
+                highlightButton(text_sorting_with_surname, window);
+                highlightButton(text_sorting_with_post, window);
+                highlightButton(text_sorting_with_experience, window);
+                highlightButton(text_get_back3, window);
+                highlightButton(text_get_back4, window);
+                highlightButton(text_sort_up, window);
+                highlightButton(text_sort_down, window);
+            }
 
             
             // проверка на кнопку НАЗАД
@@ -1042,23 +678,32 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
             window.draw(text_search);
             window.draw(text_sorting);
             window.draw(text_search1);
-            window.draw(text_search2);
             window.draw(text_get_back1);
         }
 
 
         if (isAccPressed)
         {
-            window.draw(triangle2);
+            sprite_triangle.setRotation(180.f);
+            sprite_triangle_orange.setRotation(180.f);
             window.draw(account);
             window.draw(text_account);
             window.draw(text_leave_from_acc);
         }
         else
-            window.draw(triangle1);
+        {
+            sprite_triangle.setRotation(0.f);
+            sprite_triangle_orange.setRotation(0.f);
+        }
+
 
         if (triangleIsMouseOnShtorka and !isNewsOpen)
-            window.draw(triangle3);
+        {
+            sprite_triangleForNews.setRotation(90.f);
+            sprite_triangleForNews.setPosition(1875, 540);
+            window.draw(sprite_triangleForNews);
+        }
+
 
         if (isMouseOnShtorka and !isNewsOpen)
             window.draw(sprite_shtorka_orange);
@@ -1082,14 +727,29 @@ void main_menu(std::vector<Authentication>& authentication, std::vector<Employee
                 window.draw(sprite_shtorka1);
 
             if (triangleIsMouseOnShtorka1)
-                window.draw(triangle4);
+            {
+                sprite_triangleForNews.setRotation(270.f);
+                sprite_triangleForNews.setPosition(1436, 540);
+                window.draw(sprite_triangleForNews);
+            }
+
         }
+
+        if (isMouseOnAcc)
+            window.draw(sprite_triangle_orange);
+        else
+            window.draw(sprite_triangle);
+
+
+
 
         window.draw(sprite_logo);
         window.draw(line1);
         window.display();
     }
 }
+
+
 void settings_menu()
 {
     // Загрузка шрифтов
@@ -1219,8 +879,6 @@ void settings_menu()
            
         }
         sprite_rectangle_orange.setPosition(560, 640);
-
-
 
 
         window.clear(sf::Color::Black);
@@ -1372,67 +1030,46 @@ void aboutCompany()
     sf::Font font;
     loadFont(font, "shrift2.ttf");
 
-
     // Создание текста
-    sf::Text text_name_Of_company("Pixel World", font);
-    createText(text_name_Of_company, 64, sf::Color::White, sf::Vector2f(0, 0));
+    std::vector<TextData> textFields;
 
-    sf::Text text_history1(L"“Pixel World” была основана в 2010 году группой энтузиастов, объединенных общей страстью", font2);
-    createText(text_history1, 34, sf::Color::White, sf::Vector2f(0, 0));
+    for (int i = 0; i < 20; ++i)
+    {
+        TextData textField;
+        textFields.push_back(textField);
+    }
 
-    sf::Text text_history2(L"к видеоиграм. От скромных начинаний в гараже мы выросли в успешную компанию", font2);
-    createText(text_history2, 34, sf::Color::White, sf::Vector2f(0, 0));
+    std::array<int, 20> fontSize = { 64, 34, 34, 34, 34, 34, 34, 34, 34, 34, 34, 34, 34, 34, 34 
+    , 34, 30, 30, 30, 28};
 
-    sf::Text text_history3(L"с международным признанием.", font2);
-    createText(text_history3, 34, sf::Color::White, sf::Vector2f(0, 0));
+    std::wstring textLabels[20] =
+    {
+        L"Pixel World", // Заголовок
+        L"“Pixel World” была основана в 2010 году группой энтузиастов, объединенных общей страстью", // История - часть 1
+        L"к видеоиграм. От скромных начинаний в гараже мы выросли в успешную компанию", // История - часть 2
+        L"с международным признанием.", // История - часть 3
+        L"Мы стремимся создавать увлекательные, креативные и инновационные игры,", // Миссия - часть 1
+        L"которые приносят радость и развлечение нашим игрокам.", // Миссия - часть 2
+        L"Наша компания специализируется на создании игр для различных платформ,", // Игры - часть 1
+        L"включая мобильные устройства, ПК и консоли.", // Игры - часть 2
+        L"Разрабатываем игры в разных жанрах: от аркад и головоломок до RPG и симуляторов.", // Типы игр
+        L"Конкурентные преимущества:", // Преимущества - часть 1
+        L"Уникальный стиль: Наша команда талантливых художников и дизайнеров создает", // Преимущества - часть 2
+        L"узнаваемый пиксельный стиль, который отличает наши игры от других.", // Преимущества - часть 3
+        L"Геймплей и сюжет: Уделяем особое внимание интересному геймплею и захватывающим сюжетам.", // Преимущества - часть 4
+        L"Мы сотрудничаем с издателями, платформами и другими игровыми компаниями, такими как", // Партнеры - часть 1
+        L"Windows, Apple, Steam, EpicGames и другими.", // Партнеры - часть 2
+        L"Контактная информация:", // Контактная информация - заголовок
+        L"Адрес: г. Минск, ул. Геймплейная, 42", // Контактная информация - адрес
+        L"Телефон: +375 29 123 4567", // Контактная информация - телефон
+        L"Электронная почта: info@pixelworldgames.com", // Контактная информация - электронная почта
+        L"Мы гордимся нашей командой и продуктами и с нетерпением ждем новых вызовов и возможностей в мире игр!" // Заключительный текст
+    };
 
-    sf::Text text_mission1(L"Мы стремимся создавать увлекательные, креативные и инновационные игры,", font2);
-    createText(text_mission1, 34, sf::Color::White, sf::Vector2f(0, 0));
 
-    sf::Text text_mission2(L"которые приносят радость и развлечение нашим игрокам.", font2);
-    createText(text_mission2, 34, sf::Color::White, sf::Vector2f(0, 0));
-    
-    sf::Text text_games1(L"Наша компания специализируется на создании игр для различных платформ, ", font2);
-    createText(text_games1, 34, sf::Color::White, sf::Vector2f(0, 0));
-
-    sf::Text text_games2(L"включая мобильные устройства, ПК и консоли.", font2);
-    createText(text_games2, 34, sf::Color::White, sf::Vector2f(0, 0));
-
-    sf::Text text_type(L"Разрабатываем игры в разных жанрах: от аркад и головоломок до RPG и симуляторов.", font2);
-    createText(text_type, 34, sf::Color::White, sf::Vector2f(0, 0));
-
-    sf::Text text_advantages1(L"Конкурентные преимущества:", font2);
-    createText(text_advantages1, 34, sf::Color::White, sf::Vector2f(0, 0));
-
-    sf::Text text_advantages2(L"Уникальный стиль: Наша команда талантливых художников и дизайнеров создает", font2);
-    createText(text_advantages2, 34, sf::Color::White, sf::Vector2f(0, 0));
-
-    sf::Text text_advantages3(L"узнаваемый пиксельный стиль, который отличает наши игры от других.", font2);
-    createText(text_advantages3, 34, sf::Color::White, sf::Vector2f(0, 0));
-
-    sf::Text text_advantages4(L"Геймплей и сюжет: Уделяем особое внимание интересному геймплею и захватывающим сюжетам.", font2);
-    createText(text_advantages4, 34, sf::Color::White, sf::Vector2f(0, 0));
-
-    sf::Text text_partners1(L"Мы сотрудничаем с издателями, платформами и другими игровыми компаниями, такими как", font2);
-    createText(text_partners1, 34, sf::Color::White, sf::Vector2f(0, 0));
-
-    sf::Text text_partners2(L"Windows, Apple, Steam, EpicGames и другими.", font2);
-    createText(text_partners2, 34, sf::Color::White, sf::Vector2f(0, 0));
-
-    sf::Text text_contact_info(L"Контактная информация:", font2);
-    createText(text_contact_info, 34, sf::Color::White, sf::Vector2f(0, 0));
-
-    sf::Text text_contact_info1(L"Адрес: г. Минск, ул. Геймплейная, 42", font2);
-    createText(text_contact_info1, 30, sf::Color::White, sf::Vector2f(0, 0));
-
-    sf::Text text_contact_info2(L"Телефон: +375 29 123 4567", font2);
-    createText(text_contact_info2, 30, sf::Color::White, sf::Vector2f(0, 0));
-
-    sf::Text text_contact_info3(L"Электронная почта: info@pixelworldgames.com", font2);
-    createText(text_contact_info3, 30, sf::Color::White, sf::Vector2f(0, 0));
-
-    sf::Text text_end(L"Мы гордимся нашей командой и продуктами и с нетерпением ждем новых вызовов и возможностей в мире игр!", font2);
-    createText(text_end, 28, sf::Color::White, sf::Vector2f(0, 0));
+    // Инициализация текста
+    for (int i = 0; i < textFields.size(); ++i)
+        createText(textFields[i].text, textLabels[i], (i == 0)? font: font2, fontSize.at(i), sf::Color::White, sf::Vector2f(0, 0));
 
     
     // Создание текстур
@@ -1465,11 +1102,11 @@ void aboutCompany()
                 if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
                 {
                     // Проверяем, выходит ли текст за границы окна
-                    float lastTextBottom = 2600 + text_end.getLocalBounds().height + 15;
+                    float lastTextBottom = 2600 + textFields.at(textFields.size() - 1).text.getLocalBounds().height + 15;
                     float windowHeight = window.getSize().y;
 
 
-                    if (lastTextBottom > windowHeight || lastTextBottom < windowHeight) // Добавлена проверка на случай, если текст не заполняет окно полностью
+                    if (lastTextBottom > windowHeight or lastTextBottom < windowHeight) // Добавлена проверка на случай, если текст не заполняет окно полностью
                     {
                         // Прокрутка вниз
                         if (event.mouseWheelScroll.delta > 0)
@@ -1498,61 +1135,301 @@ void aboutCompany()
             }
 
         }
+        std::vector<sf::Vector2f> textPositions = {
+             sf::Vector2f(700.f, 50 + scrollPosition), // Позиция для "Pixel World"
+             sf::Vector2f(60.f, 200 + scrollPosition), // Позиция для истории - часть 1
+             sf::Vector2f(126.f, 270 + scrollPosition), // Позиция для истории - часть 2
+             sf::Vector2f(676.f, 340 + scrollPosition), // Позиция для истории - часть 3
+             sf::Vector2f(200.f, 460 + scrollPosition), // Позиция для миссии - часть 1
+             sf::Vector2f(410.f, 530 + scrollPosition), // Позиция для миссии - часть 2
+             sf::Vector2f(216.f, 650 + scrollPosition), // Позиция для игр - часть 1
+             sf::Vector2f(520.f, 720 + scrollPosition), // Позиция для игр - часть 2
+             sf::Vector2f(120.f, 790 + scrollPosition), // Позиция для типов игр
+             sf::Vector2f(660.f, 910 + scrollPosition), // Позиция для преимуществ - часть 1
+             sf::Vector2f(170.f, 980 + scrollPosition), // Позиция для преимуществ - часть 2
+             sf::Vector2f(270.f, 1050 + scrollPosition), // Позиция для преимуществ - часть 3
+             sf::Vector2f(20.f, 1120 + scrollPosition), // Позиция для преимуществ - часть 4
+             sf::Vector2f(66.f, 1240 + scrollPosition), // Позиция для партнеров - часть 1
+             sf::Vector2f(520.f, 1310 + scrollPosition), // Позиция для партнеров - часть 2
+             sf::Vector2f(160.f, 2280 + scrollPosition), // Позиция для контактной информации - заголовок
+             sf::Vector2f(220.f, 2350 + scrollPosition), // Позиция для контактной информации - адрес
+             sf::Vector2f(220.f, 2420 + scrollPosition), // Позиция для контактной информации - телефон
+             sf::Vector2f(220.f, 2490 + scrollPosition), // Позиция для контактной информации - электронная почта
+             sf::Vector2f(60.f, 2600 + scrollPosition) // Позиция для заключительного текста
+        };
 
         // Изменение положения элементов на экране
-        text_name_Of_company.setPosition(700.f, 50 + scrollPosition);
-        text_history1.setPosition(60.f, 200 + scrollPosition);
-        text_history2.setPosition(126.f, 270 + scrollPosition);
-        text_history3.setPosition(676.f, 340 + scrollPosition);
-        text_mission1.setPosition(200.f, 460 + scrollPosition);
-        text_mission2.setPosition(410.f, 530 + scrollPosition);
-        text_games1.setPosition(216.f, 650 + scrollPosition);
-        text_games2.setPosition(520.f, 720 + scrollPosition);
-        text_type.setPosition(120.f,790 + scrollPosition);
-        text_advantages1.setPosition(660.f, 910 + scrollPosition);
-        text_advantages2.setPosition(170.f, 980 + scrollPosition);
-        text_advantages3.setPosition(270.f, 1050 + scrollPosition);
-        text_advantages4.setPosition(20.f, 1120 + scrollPosition);
-        text_partners1.setPosition(66.f, 1240 + scrollPosition);
-        text_partners2.setPosition(520.f, 1310 + scrollPosition);
+        for (int i = 0; i < 20; i++)
+            textFields.at(i).text.setPosition(textPositions.at(i));
 
         sprite_ofice.setPosition(390, 1460 + scrollPosition);
 
-        text_contact_info.setPosition(160.f, 2280 + scrollPosition);
-        text_contact_info1.setPosition(220.f, 2350 + scrollPosition);
-        text_contact_info2.setPosition(220.f, 2420 + scrollPosition);
-        text_contact_info3.setPosition(220.f, 2490 + scrollPosition);
-        text_end.setPosition(60.f, 2600 + scrollPosition);
-
-
         // Отображение на экране
         window.clear(sf::Color::Black);
-        window.draw(text_name_Of_company);
-        window.draw(text_history1);
-        window.draw(text_history2);
-        window.draw(text_history3);
-        window.draw(text_mission1);
-        window.draw(text_mission2);
-        window.draw(text_games1);
-        window.draw(text_games2);
-        window.draw(text_type);
-        window.draw(text_advantages1);
-        window.draw(text_advantages2);
-        window.draw(text_advantages3);
-        window.draw(text_advantages4);
-        window.draw(text_partners1);
-        window.draw(text_partners2);
+        for (auto &text: textFields)
+            window.draw(text.text);
         window.draw(sprite_ofice);
-        window.draw(text_contact_info);
-        window.draw(text_contact_info1);
-        window.draw(text_contact_info2);
-        window.draw(text_contact_info3);
-        window.draw(text_end);
 
         window.display();
     }
 }
+void auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>& employee, bool& isRememberMePressed)
+{
+    // Создание окна
+    window.create(sf::VideoMode(500, 412), "", sf::Style::None);
 
+
+    // Загрузка шрифта
+    sf::Font font;
+    loadFont(font, "shrift.ttf");
+
+
+    // Создание прямоугольников
+    sf::RectangleShape rectangle1;
+    createRectangle(rectangle1, sf::Vector2f(430.f, 70.f), sf::Vector2f(35.f, 80.f), sf::Color::Black, 1.f, sf::Color(59, 60, 54));
+
+    sf::RectangleShape rectangle2;
+    createRectangle(rectangle2, sf::Vector2f(430.f, 70.f), sf::Vector2f(35.f, 160.f), sf::Color::Black, 1.f, sf::Color(59, 60, 54));
+
+    sf::RectangleShape rectangle3;
+    createRectangle(rectangle3, sf::Vector2f(430.f, 70.f), sf::Vector2f(35.f, 255.f), sf::Color(255, 193, 7));
+
+    sf::RectangleShape square;
+    createRectangle(square, sf::Vector2f(25.f, 25.f), sf::Vector2f(45.f, 340.f), sf::Color(59, 60, 54));
+
+    sf::RectangleShape line1;
+    createRectangle(line1, sf::Vector2f(1.f, 70.f), sf::Vector2f(99.f, 80.f), sf::Color(59, 60, 54));
+
+    sf::RectangleShape line2;
+    createRectangle(line2, sf::Vector2f(1.f, 70.f), sf::Vector2f(99.f, 160.f), sf::Color(59, 60, 54));
+
+
+    // Создание текста
+    std::vector<TextData> textFields;
+
+    for (int i = 0; i < 3; ++i)
+    {
+        TextData textField;
+        textFields.push_back(textField);
+    }
+
+    std::vector<sf::Vector2f> textPositions = {
+        sf::Vector2f(110.f, 98.f),
+        sf::Vector2f(110.f, 178.f),
+        sf::Vector2f(110.f, 178.f) };
+
+    std::array<int, 3> fontSize = { 28, 28, 44 };
+
+    // Инициализация текста
+    for (int i = 0; i < textFields.size(); ++i)
+        createText(textFields[i].text, "", font, fontSize.at(i), sf::Color::White, textPositions.at(i));
+
+
+    sf::Text text(L"Авторизация", font);
+    createText(text, 46, sf::Color::White, sf::Vector2f(88.f, 8.f));
+
+    sf::Text entrance(L"Войти", font);
+    createText(entrance, 30, sf::Color::White, sf::Vector2f(188.f, 272.f));
+
+    sf::Text rememberMe(L"Запомнить меня", font);
+    createText(rememberMe, 14, sf::Color(59, 60, 54), sf::Vector2f(81.f, 344.f));
+
+    sf::Text error(L"Неверный логин или пароль!", font);
+    createText(error, 16, sf::Color::Red, sf::Vector2f(126.f, 380.f));
+
+
+    // Загрузка текстур
+    sf::Texture texture1;
+    loadTexture("user.png", texture1);
+    sf::Texture texture2;
+    loadTexture("password1.png", texture2);
+    sf::Texture texture3;
+    loadTexture("hide_eye.png", texture3);
+    sf::Texture texture4;
+    loadTexture("open_eye.png", texture4);
+    sf::Texture galka;
+    loadTexture("galka.png", galka);
+    sf::Texture krest;
+    loadTexture("krest.png", krest);
+
+
+    // Создание спрайта и установка текстуры
+    sf::Sprite sprite1;
+    createSprite(sprite1, texture1, 1.f / 10.f, 1.f / 10.f, sf::Vector2f(42.f, 92.f));
+    sf::Sprite sprite2;
+    createSprite(sprite2, texture2, 1.f / 10.f, 1.f / 10.f, sf::Vector2f(43.f, 172.f));
+    sf::Sprite sprite3;
+    createSprite(sprite3, texture3, 1.f / 12.f, 1.f / 12.f, sf::Vector2f(416.f, 175.f));
+    sf::Sprite sprite4;
+    createSprite(sprite4, texture4, 1.f / 12.f, 1.f / 12.f, sf::Vector2f(416.f, 175.f));
+    sf::Sprite sprite_galka;
+    createSprite(sprite_galka, galka, 1.f / 19.f, 1.f / 19.f, sf::Vector2f(44.f, 339.f));
+    sf::Sprite sprite_krest;
+    createSprite(sprite_krest, krest, 1.f / 30.f, 1.f / 30.f, sf::Vector2f(478.f, 6.f));
+
+
+    // Проверка, какое поле выбрали для ввода
+    bool isPasswordOpen = false;
+    bool isTextPasswordOpen = false;
+    bool isRememberMeOn = false;
+    bool isIncorrectData = false;
+    bool isDragging = false;
+
+
+    // Координаты текущего клика
+    sf::Vector2i clickPosition;
+
+
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            // закрытие приложения
+            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
+            {
+                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                if (sprite_krest.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    window.close();
+            }
+            if (event.type == sf::Event::Closed or (event.type == sf::Event::KeyPressed and event.key.code == sf::Keyboard::Escape))
+                window.close();
+
+
+            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
+            {
+                // Запоминаем позицию, в которой была нажата кнопка мыши
+                isDragging = true;
+                clickPosition = sf::Mouse::getPosition(window);
+            }
+            else if (event.type == sf::Event::MouseButtonReleased and event.mouseButton.button == sf::Mouse::Left)
+                // Когда кнопка мыши отпущена, заканчиваем перетаскивание
+                isDragging = false;
+
+
+            // проверка на поле для ввода
+            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
+            {
+                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                if (rectangle1.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                {
+                    isIncorrectData = false;
+                    textFields.at(0).isClicked = true;
+                    textFields.at(1).isClicked = false;
+                }
+                else if (rectangle2.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                {
+                    isIncorrectData = false;
+                    textFields.at(0).isClicked = false;
+                    textFields.at(1).isClicked = true;
+                }
+            }
+
+            // Изменение цвета прямоугольника, если курсор находится над ним
+            highlightButton(rectangle3, window);
+
+            // ВВОД ЛОГИНА И ПАРОЛЯ
+            enterLoginAndPassword(event, textFields);
+
+            // ПРОВЕРКА НА НАЖАТИЕ ГАЛОЧКИ
+            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
+            {
+                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                if (square.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isRememberMeOn)
+                {
+                    isRememberMeOn = true;
+                    isRememberMePressed = false;
+                    writeInFileIsRememberOn(isRememberMePressed);
+                }
+                else if (square.getGlobalBounds().contains(mousePos.x, mousePos.y) and isRememberMeOn)
+                {
+                    isRememberMeOn = false;
+                    isRememberMePressed = true;
+                    writeInFileIsRememberOn(isRememberMePressed);
+                }
+            }
+
+            // проверка на нажатие кнопки видимости пароля
+            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
+            {
+                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                if (sprite3.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isPasswordOpen)
+                {
+                    isPasswordOpen = true;
+                    isTextPasswordOpen = true;
+                }
+                else if (sprite4.getGlobalBounds().contains(mousePos.x, mousePos.y) and isPasswordOpen)
+                {
+                    isPasswordOpen = false;
+                    isTextPasswordOpen = false;
+                }
+            }
+
+            // ПРОЕВРКА НА ПРАВИЛЬНОСТЬ ВВДЕННЫХ ДАННЫХ
+            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
+            {
+                if (rectangle3.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
+                {
+                    std::string login1;
+                    std::string password5;
+                    login1 = textFields.at(0).text.getString();
+                    password5 = textFields.at(1).text.getString();
+
+                    if (checkDataOfUser(authentication, login1, password5))
+                    {
+                        window.close();
+                        main_menu(authentication, employee, isRememberMePressed);
+                    }
+                    else
+                    {
+                        textFields.at(0).str = "";
+                        textFields.at(1).str = "";
+                        textFields.at(2).str = "";
+                        textFields.at(0).text.setString(textFields.at(0).str);
+                        textFields.at(1).text.setString(textFields.at(1).str);
+                        textFields.at(2).text.setString(textFields.at(2).str);
+                        isIncorrectData = true;
+                    }
+                }
+            }
+        }
+
+        // ПЕРЕМЕЩЕНИЕ ОКНА АВТОРИЗАЦИИ 
+        if (isDragging)
+        {
+            // Вычисляем разницу между текущей позицией мыши и позицией, где была нажата кнопка мыши
+            sf::Vector2i delta = sf::Mouse::getPosition(window) - clickPosition;
+            // Получаем текущее положение окна и сдвигаем его на delta
+            window.setPosition(sf::Vector2i(window.getPosition()) + delta);
+            // Обновляем позицию clickPosition
+            clickPosition = sf::Mouse::getPosition(window);
+        }
+
+
+        // Отрисовка всех элементов
+        window.clear(sf::Color(10, 10, 10));
+        window.draw(rectangle1);
+        window.draw(rectangle2);
+        window.draw(rectangle3);
+        window.draw(square);
+        window.draw(line1);
+        window.draw(line2);
+        window.draw(text);
+        window.draw(entrance);
+        window.draw(textFields.at(0).text);
+        window.draw(rememberMe);
+        if (isTextPasswordOpen) window.draw(textFields.at(1).text);
+        else window.draw(textFields.at(2).text);
+        window.draw(sprite1);
+        window.draw(sprite2);
+        window.draw(sprite_krest);
+        if (isPasswordOpen)  window.draw(sprite4);
+        else  window.draw(sprite3);
+        if (isRememberMeOn) window.draw(sprite_galka);
+        if (isIncorrectData) window.draw(error);
+        window.display();
+    }
+}
 void printAllEmployees_menu(std::vector<Employee>& employee)
 {
     float scrollPosition = 0.0f;
@@ -1565,7 +1442,6 @@ void printAllEmployees_menu(std::vector<Employee>& employee)
 
     while (window.isOpen())
     {
-
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -1744,428 +1620,195 @@ float printAllEmployeesForEditingAndDeleting(std::vector<Employee>& employee, fl
 
     return y;   // Возвращаем текущую позицию, которая будет использоваться в следующем вызове
 }
-
-
-
-
-
 void addNewEmployee_menu(std::vector<Employee>& employee)
 {
     sf::Font font2;
     loadFont(font2, "shrift.ttf");
 
 
-    // Создание текста
+    // ЗАГРУЗКА ТЕКСТУР
+    sf::Texture rectangleTexture;
+    loadTexture("rectangle.png", rectangleTexture);
+
+    sf::Texture arrowBackWhiteTexture;
+    loadTexture("arrow_back_white.png", arrowBackWhiteTexture);
+
+    sf::Texture arrowBackOrangeTexture;
+    loadTexture("arrow_back.png", arrowBackOrangeTexture);
+
+
+    // СОЗДАНИЕ ТЕКСТОВЫХ ПОЛЕЙ
+    std::vector<TextData> textFields;
+    std::vector<TextData> textFields1;    // для пометки прямоугольников
+
+    for (int i = 0; i < 8; ++i) 
+    {
+        TextData textField;
+        textFields.push_back(textField);
+    }
+
+    for (int i = 0; i < 8; ++i) 
+    {
+        TextData textField;
+        textFields1.push_back(textField);
+    }
+
+    std::wstring textLabels[] = 
+    {
+        L"Фамилия", L"Имя", L"Отчество", L"Пол",
+        L"Дата рождения", L"Название отдела", L"Должность", L"Дата начала работы"
+    };
+
+    std::vector<sf::Vector2f> spritePositions = 
+    {
+    sf::Vector2f(200.f, 210.f),    // Позиция для sprite_surName
+    sf::Vector2f(200.f, 400.f),    // Позиция для sprite_name
+    sf::Vector2f(200.f, 590.f),    // Позиция для sprite_patronymic
+    sf::Vector2f(200.f, 780.f),    // Позиция для sprite_gender
+    sf::Vector2f(1000.f, 210.f),    // Позиция для sprite_date_of_birth
+    sf::Vector2f(1000.f, 400.f),    // Позиция для sprite_department_name
+    sf::Vector2f(1000.f, 590.f),    // Позиция для sprite_post
+    sf::Vector2f(1000.f, 780.f)    // Позиция для sprite_startDate
+    };
+
+    std::vector<sf::Vector2f> textPositions1 = 
+    {
+    sf::Vector2f(420.f, 164.f),    
+    sf::Vector2f(480.f, 360.f),    
+    sf::Vector2f(420.f, 550.f),    
+    sf::Vector2f(480.f, 740.f),    
+    sf::Vector2f(1160.f, 164.f),
+    sf::Vector2f(1150.f, 360.f),
+    sf::Vector2f(1200.f, 550.f),   
+    sf::Vector2f(1100.f, 740.f)    
+    };
+
+    std::vector<sf::Vector2f> textPositions = 
+    {
+    sf::Vector2f(270.f, 256.f),    // Позиция для surName
+    sf::Vector2f(270.f, 446.f),    // Позиция для name
+    sf::Vector2f(270.f, 636.f),    // Позиция для patronymic
+    sf::Vector2f(270.f, 826.f),    // Позиция для gender
+    sf::Vector2f(1070.f, 256.f),    // Позиция для date_of_birth
+    sf::Vector2f(1070.f, 446.f),    // Позиция для department_name
+    sf::Vector2f(1070.f, 636.f),    // Позиция для post
+    sf::Vector2f(1070.f, 826.f)    // Позиция для startDate
+    };
+
+    // Инициализация текста
+    for (int i = 0; i < textFields.size(); ++i) 
+        createText(textFields[i].text, "", font2, 42, sf::Color::Black, textPositions.at(i));
+    for (int i = 0; i < textFields1.size(); ++i)
+        createText(textFields1[i].text, textLabels[i], font2, 42, sf::Color::White, textPositions1.at(i));
+
+
+    // Создание кнопки "Добавить"
+    sf::Text addButton(L"Добавить", font2, 50);
+    addButton.setFillColor(sf::Color::White);
+    addButton.setPosition(1620.f, 970.f);
+
     sf::Text text_add_employee(L"Добавление сотрудника", font2);
     createText(text_add_employee, 64, sf::Color::White, sf::Vector2f(520.f, 30.f));
 
-    sf::Text text_surName(L"Фамилия", font2);
-    createText(text_surName, 42, sf::Color::White, sf::Vector2f(420.f, 164.f));
 
-    sf::Text text_name(L"Имя", font2);
-    createText(text_name, 42, sf::Color::White, sf::Vector2f(480.f, 360.f));
-
-    sf::Text text_patronymic(L"Отчество", font2);
-    createText(text_patronymic, 42, sf::Color::White, sf::Vector2f(420.f, 550.f));
-
-    sf::Text text_gender(L"Пол", font2);
-    createText(text_gender, 42, sf::Color::White, sf::Vector2f(480.f, 740.f));
-
-    sf::Text text_DOB(L"Дата рождения", font2);
-    createText(text_DOB, 42, sf::Color::White, sf::Vector2f(1160.f, 164.f));
-
-    sf::Text text_departmentName(L"Название отдела", font2);
-    createText(text_departmentName, 42, sf::Color::White, sf::Vector2f(1150.f, 360.f));
-
-    sf::Text text_post(L"Должность", font2);
-    createText(text_post, 42, sf::Color::White, sf::Vector2f(1200.f, 550.f));
-
-    sf::Text text_startDate(L"Дата начала работы", font2);
-    createText(text_startDate, 42, sf::Color::White, sf::Vector2f(1100.f, 740.f));
-
-    sf::Text text_add(L"Добавить", font2);
-    createText(text_add, 50, sf::Color::White, sf::Vector2f(1620.f, 970.f));
-
-    sf::Text surName("", font2);
-    createText(surName, 38, sf::Color::Black, sf::Vector2f(270.f, 256.f));
-
-    sf::Text name("", font2);
-    createText(name, 38, sf::Color::Black, sf::Vector2f(270.f, 446.f));
-
-    sf::Text startDate("", font2);
-    createText(startDate, 38, sf::Color::Black, sf::Vector2f(1070.f, 826.f));
-
-    sf::Text patronymic("", font2);
-    createText(patronymic, 38, sf::Color::Black, sf::Vector2f(270.f, 636.f));
-
-    sf::Text gender("", font2);
-    createText(gender, 38, sf::Color::Black, sf::Vector2f(270.f, 826.f));
-
-    sf::Text date_of_birth("", font2);
-    createText(date_of_birth, 38, sf::Color::Black, sf::Vector2f(1070.f, 256.f));
-
-    sf::Text departmentName("", font2);
-    createText(departmentName, 38, sf::Color::Black, sf::Vector2f(1070.f, 446.f));
-
-    sf::Text post("", font2);
-    createText(post, 38, sf::Color::Black, sf::Vector2f(1070.f, 636.f));
-
-
-    // Stirng-переменные для ввода
-    std::string str_surName;
-    std::string str_name;
-    std::string str_patronymic;
-    std::string str_startDate;
-    std::string str_gender;
-    std::string str_date_of_birth;
-    std::string str_departmentName;
-    std::string str_post;
-  
-
-
-    // Создание текстур
-    sf::Texture rectangle1;
-    loadTexture("rectangle.png", rectangle1);
-
-    sf::Texture arrow_back_white;
-    loadTexture("arrow_back_white.png", arrow_back_white);
-
-    sf::Texture arrow_back_orange;
-    loadTexture("arrow_back.png", arrow_back_orange);
-
-
-    // Создание спрайтов
-    sf::Sprite sprite_surName;
-    createSprite(sprite_surName, rectangle1, 0.5, 0.5, sf::Vector2f(200, 210));
-
-    sf::Sprite sprite_name;
-    createSprite(sprite_name, rectangle1, 0.5, 0.5, sf::Vector2f(200, 400));
-
-    sf::Sprite sprite_patronymic;
-    createSprite(sprite_patronymic, rectangle1, 0.5, 0.5, sf::Vector2f(200, 590));
-
-    sf::Sprite sprite_gender;
-    createSprite(sprite_gender, rectangle1, 0.5, 0.5, sf::Vector2f(200, 780));
-
-    sf::Sprite sprite_date_of_birth;
-    createSprite(sprite_date_of_birth, rectangle1, 0.5, 0.5, sf::Vector2f(1000, 210));
-
-    sf::Sprite sprite_department_name;
-    createSprite(sprite_department_name, rectangle1, 0.5, 0.5, sf::Vector2f(1000, 400));
-
-    sf::Sprite sprite_post;
-    createSprite(sprite_post, rectangle1, 0.5, 0.5, sf::Vector2f(1000, 590));
-
-    sf::Sprite sprite_startDate;
-    createSprite(sprite_startDate, rectangle1, 0.5, 0.5, sf::Vector2f(1000, 780));
-
-    sf::Sprite sprite_arrow_back_white;
-    createSprite(sprite_arrow_back_white, arrow_back_white, 0.2, 0.2, sf::Vector2f(50, 950));
-
-    sf::Sprite sprite_arrow_back_orange;
-    createSprite(sprite_arrow_back_orange, arrow_back_orange, 0.2, 0.2, sf::Vector2f(50, 950));
-
-
-    // Переменные состояния
-    bool isMouseOnArrow = false;
-    bool isMouseOnTextAdd = false;
-    bool sprite_surNameClicked = false;
-    bool sprite_nameClicked = false;
-    bool sprite_patronymicClicked = false;
-    bool sprite_genderClicked = false;
-    bool sprite_date_of_birthClicked = false;
-    bool sprite_department_nameClicked = false;
-    bool sprite_postClicked = false;
-    bool sprite_startDateClicked = false;
-
-
-    while (window.isOpen())
+    // СОЗДАНИЕ СПРАЙТОВ
+    std::vector<sf::Sprite> sprites =
     {
+        sf::Sprite(), // Фамилия
+        sf::Sprite(), // Имя
+        sf::Sprite(), // Отчество
+        sf::Sprite(), // Пол
+        sf::Sprite(), // Дата рождения
+        sf::Sprite(), // Название отдела
+        sf::Sprite(), // Должность
+        sf::Sprite()  // Дата начала работы
+    };
 
+    for (int i = 0; i < sprites.size(); ++i)
+        createSprite(sprites[i], rectangleTexture, 0.5, 0.5, spritePositions.at(i));
+
+    sf::Sprite arrowBackWhiteSprite;
+    createSprite(arrowBackWhiteSprite, arrowBackWhiteTexture, 0.2, 0.2, sf::Vector2f(50, 950));
+
+    sf::Sprite arrowBackOrangeSprite;
+    createSprite(arrowBackOrangeSprite, arrowBackOrangeTexture, 0.2, 0.2, sf::Vector2f(50, 950));
+
+
+    while (window.isOpen()) 
+    {
         sf::Event event;
-        while (window.pollEvent(event))
+        while (window.pollEvent(event)) 
         {
-            // закрытие приложения
-            // для закрытия из панели задач
-            if (event.type == sf::Event::Closed)
+            if (event.type == sf::Event::Closed) 
                 window.close();
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
-                return;
-            if (event.type == sf::Event::MouseButtonPressed)
+            if (event.type == sf::Event::KeyPressed and event.key.code == sf::Keyboard::Escape)
+                window.close();
+
+
+            // ПОДСВЕТКА КНОПОК
+            highlightButton(addButton, window);
+
+
+            // ОБРАБОТКА НАЖАТИЯ НА ПОЛЯ
+            for (int i = 0; i < 8; i++) 
             {
-                if (event.mouseButton.button == sf::Mouse::Left)
+                if (sprites.at(i).getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
                 {
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (sprite_arrow_back_orange.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    // Если спрайт был нажат
+                    for (auto& s : textFields) 
+                    {
+                        // Выключаем все спрайты
+                        s.isClicked = false;
+                    }
+                    // Включаем только текущий спрайт
+                    textFields.at(i).isClicked = true;
+                }
+            }
+
+            // ОБРАБОТКА ТЕКСТОВЫХ ПОЛЕЙ
+            for (auto& textField : textFields)
+                handleTextField(textField, event, window);
+
+
+            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
+            {
+                if (arrowBackOrangeSprite.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) 
+                    return;
+
+                // Обработка нажатия кнопки "Добавить"
+                if (handleButton(addButton, event, window)) 
+                {
+                    addNewEmployee(employee, textFields[0].str, textFields[1].str, textFields[2].str, textFields[3].str,
+                        textFields[4].str, textFields[5].str, textFields[6].str, textFields[7].str);
+
+                    if (successOfAdding_menu() == 1) 
                         return;
                 }
             }
-
-            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-            if (sprite_arrow_back_white.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                isMouseOnArrow = true;
-            else
-                isMouseOnArrow = false;
-            if (text_add.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                isMouseOnTextAdd = true;
-            else
-                isMouseOnTextAdd = false;
-
-            // проверка на поле для ввода
-            if (event.type == sf::Event::MouseButtonPressed)
-            {
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (sprite_surName.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                    {
-                        sprite_surNameClicked = true;
-                        sprite_nameClicked = false;
-                        sprite_patronymicClicked = false;
-                        sprite_genderClicked = false;
-                        sprite_date_of_birthClicked = false;
-                        sprite_department_nameClicked = false;
-                        sprite_postClicked = false;
-                        sprite_startDateClicked = false;
-
-                    }
-                    else if (sprite_name.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                    {
-                        sprite_nameClicked = true;
-                        sprite_surNameClicked = false;
-                        sprite_patronymicClicked = false;
-                        sprite_genderClicked = false;
-                        sprite_date_of_birthClicked = false;
-                        sprite_department_nameClicked = false;
-                        sprite_postClicked = false;
-                        sprite_startDateClicked = false;
-
-                    }
-                    else if (sprite_patronymic.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                    {
-                        sprite_patronymicClicked = true;
-                        sprite_nameClicked = false;
-                        sprite_surNameClicked = false;
-                        sprite_genderClicked = false;
-                        sprite_date_of_birthClicked = false;
-                        sprite_department_nameClicked = false;
-                        sprite_postClicked = false;
-                        sprite_startDateClicked = false;
-
-                    }
-                    else if (sprite_gender.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                    {
-                        sprite_genderClicked = true;
-                        sprite_nameClicked = false;
-                        sprite_patronymicClicked = false;
-                        sprite_surNameClicked = false;
-                        sprite_date_of_birthClicked = false;
-                        sprite_department_nameClicked = false;
-                        sprite_postClicked = false;
-                        sprite_startDateClicked = false;
-
-                    }
-                    else if (sprite_date_of_birth.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                    {
-                        sprite_date_of_birthClicked = true;
-                        sprite_nameClicked = false;
-                        sprite_patronymicClicked = false;
-                        sprite_genderClicked = false;
-                        sprite_surNameClicked = false;
-                        sprite_department_nameClicked = false;
-                        sprite_postClicked = false;
-                        sprite_startDateClicked = false;
-
-                    }
-                    else if (sprite_department_name.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                    {
-                        sprite_department_nameClicked = true;
-                        sprite_nameClicked = false;
-                        sprite_patronymicClicked = false;
-                        sprite_genderClicked = false;
-                        sprite_date_of_birthClicked = false;
-                        sprite_surNameClicked = false;
-                        sprite_postClicked = false;
-                        sprite_startDateClicked = false;
-
-                    }
-                    else if (sprite_post.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                    {
-                        sprite_postClicked = true;
-                        sprite_nameClicked = false;
-                        sprite_patronymicClicked = false;
-                        sprite_genderClicked = false;
-                        sprite_date_of_birthClicked = false;
-                        sprite_department_nameClicked = false;
-                        sprite_surNameClicked = false;
-                        sprite_startDateClicked = false;
-
-                    }
-                    else if (sprite_startDate.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                    {
-                        sprite_startDateClicked = true;
-                        sprite_nameClicked = false;
-                        sprite_patronymicClicked = false;
-                        sprite_genderClicked = false;
-                        sprite_date_of_birthClicked = false;
-                        sprite_department_nameClicked = false;
-                        sprite_postClicked = false;
-                        sprite_surNameClicked = false;
-
-                    }
-                }
-            }
-
-
-            // ввод текста в поле логин и пароль
-            if (event.type == sf::Event::TextEntered)
-            {
-                if (event.text.unicode < 128)
-                {
-                    if (event.text.unicode == 8 and sprite_surNameClicked)
-                    { // Backspace
-                        if (!str_surName.empty())
-                            str_surName.pop_back();
-                    }
-                    else if (sprite_surNameClicked and surName.getString().getSize() < 15)
-                        str_surName += static_cast<char>(event.text.unicode);
-
-                    if (event.text.unicode == 8 and sprite_nameClicked)
-                    { // Backspace
-                        if (!str_name.empty())
-                            str_name.pop_back();
-                    }
-                    else if (sprite_nameClicked and name.getString().getSize() < 15)
-                        str_name += static_cast<char>(event.text.unicode);
-
-                    if (event.text.unicode == 8 and sprite_patronymicClicked)
-                    { // Backspace
-                        if (!str_patronymic.empty())
-                            str_patronymic.pop_back();
-                    }
-                    else if (sprite_patronymicClicked and patronymic.getString().getSize() < 15)
-                        str_patronymic += static_cast<char>(event.text.unicode);
-
-                    if (event.text.unicode == 8 and sprite_genderClicked)
-                    { // Backspace
-                        if (!str_gender.empty())
-                            str_gender.pop_back();
-                    }
-                    else if (sprite_genderClicked and gender.getString().getSize() < 15)
-                        str_gender += static_cast<char>(event.text.unicode);
-
-                    if (event.text.unicode == 8 and sprite_date_of_birthClicked)
-                    { // Backspace
-                        if (!str_date_of_birth.empty())
-                            str_date_of_birth.pop_back();
-                    }
-                    else if (sprite_date_of_birthClicked and date_of_birth.getString().getSize() < 15)
-                        str_date_of_birth += static_cast<char>(event.text.unicode);
-
-                    if (event.text.unicode == 8 and sprite_department_nameClicked)
-                    { // Backspace
-                        if (!str_departmentName.empty())
-                            str_departmentName.pop_back();
-                    }
-                    else if (sprite_department_nameClicked and departmentName.getString().getSize() < 15)
-                        str_departmentName += static_cast<char>(event.text.unicode);
-
-                    if (event.text.unicode == 8 and sprite_postClicked)
-                    { // Backspace
-                        if (!str_post.empty())
-                            str_post.pop_back();
-                    }
-                    else if (sprite_postClicked and post.getString().getSize() < 15)
-                        str_post += static_cast<char>(event.text.unicode);
-
-                    if (event.text.unicode == 8 and sprite_startDateClicked)
-                    { // Backspace
-                        if (!str_startDate.empty())
-                            str_startDate.pop_back();
-                    }
-                    else if (sprite_startDateClicked and startDate.getString().getSize() < 15)
-                        str_startDate += static_cast<char>(event.text.unicode);
-                }
-                surName.setString(str_surName);
-                name.setString(str_name);
-                patronymic.setString(str_patronymic);
-                gender.setString(str_gender);
-                date_of_birth.setString(str_date_of_birth);
-                departmentName.setString(str_departmentName);
-                post.setString(str_post);
-                startDate.setString(str_startDate);
-            }
-            //обработка кнопки добавить
-            if (event.type == sf::Event::MouseButtonPressed)
-            {
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (text_add.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                    {
-                        addNewEmployee(employee, str_surName, str_name, str_patronymic, str_gender, str_date_of_birth, str_departmentName, str_post, str_startDate);
-
-                        if (successOfAdding_menu() == 1)
-                            return;
-                    }
-                }
-            }
-
-
         }
 
 
         window.clear(sf::Color::Black);
+        for (const auto& sprite : sprites)
+            window.draw(sprite);
+
+        for (const auto& textField : textFields)
+            window.draw(textField.text);
+
+        for (const auto& textField : textFields1) 
+            window.draw(textField.text);
+
+        if (arrowBackOrangeSprite.getGlobalBounds().contains(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y))
+            window.draw(arrowBackOrangeSprite);
+        else
+            window.draw(arrowBackWhiteSprite);
+
+        window.draw(addButton);
         window.draw(text_add_employee);
-        window.draw(text_surName);
-        window.draw(text_name);
-        window.draw(text_patronymic);
-        window.draw(text_DOB);
-        window.draw(text_departmentName);
-        window.draw(text_gender);
-        window.draw(text_post);
-        window.draw(text_startDate);
-        if (isMouseOnTextAdd)
-        {
-            text_add.setFillColor(sf::Color(255, 51, 6));
-            window.draw(text_add);
-        }          
-        else
-        {
-            text_add.setFillColor(sf::Color::White);
-            window.draw(text_add);
-        }
 
-        window.draw(sprite_surName);
-        window.draw(sprite_name);
-        window.draw(sprite_patronymic);
-        window.draw(sprite_gender);
-        window.draw(sprite_date_of_birth);
-        window.draw(sprite_department_name);
-        window.draw(sprite_post);
-        window.draw(sprite_startDate);
-
-
-        window.draw(surName);
-        window.draw(name);
-        window.draw(patronymic);
-        window.draw(gender);
-        window.draw(date_of_birth);
-        window.draw(departmentName);
-        window.draw(post);
-        window.draw(startDate);
-        
-        if (isMouseOnArrow)
-            window.draw(sprite_arrow_back_orange);
-        else
-            window.draw(sprite_arrow_back_white);
         window.display();
     }
 }
-
-
-
-
 
 void editInfoOfEmployee_menu(std::vector<Employee>& employee)
 {
@@ -2179,10 +1822,10 @@ void editInfoOfEmployee_menu(std::vector<Employee>& employee)
 
     // Создание прмяугольнкиов
     sf::RectangleShape line;
-    createRectangle(line, Vector2f(140.f, 2.f), Vector2f(0.f, 0.f), sf::Color::White);
+    createRectangle(line, sf::Vector2f(140.f, 2.f), sf::Vector2f(0.f, 0.f), sf::Color::White);
 
     sf::RectangleShape rectangle;
-    createRectangle(rectangle, Vector2f(90.f, 46.f), Vector2f(0.f, 0.f), sf::Color(0, 0, 0, 255));
+    createRectangle(rectangle, sf::Vector2f(90.f, 46.f), sf::Vector2f(0.f, 0.f), sf::Color(0, 0, 0, 255));
 
 
     // Сздание текста
@@ -2251,57 +1894,37 @@ void editInfoOfEmployee_menu(std::vector<Employee>& employee)
             }
 
             // проверка на поле для ввода
-            if (event.type == sf::Event::MouseButtonPressed)
+            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
             {
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (rectangle.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                        isRectangleClicked = true;
-                }
+                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                if (rectangle.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    isRectangleClicked = true;
             }
 
             // проверка на поле для ПРИНЯТЬ
-            if (event.type == sf::Event::MouseButtonPressed)
+            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
             {
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (text_accept.getGlobalBounds().contains(mousePos.x, mousePos.y) and !str_number.empty())
-                        editMode(employee, str_number);
-                }
+                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                if (text_accept.getGlobalBounds().contains(mousePos.x, mousePos.y) and !str_number.empty())
+                    editMode(employee, str_number);
             }
 
             // ввод текста в поле цифры
-            if (event.type == sf::Event::TextEntered)
+            if (event.type == sf::Event::TextEntered and event.text.unicode < 128)
             {
-                if (event.text.unicode < 128)
-                {
-                    if (event.text.unicode == 8 and isRectangleClicked)
-                    { // Backspace
-                        if (!str_number.empty())
-                            str_number.pop_back();
-                    }
-                    else if (isRectangleClicked and text_number.getString().getSize() < 4)
-                        str_number += static_cast<char>(event.text.unicode);
+                if (event.text.unicode == 8 and isRectangleClicked)
+                { // Backspace
+                    if (!str_number.empty())
+                        str_number.pop_back();
                 }
+                else if (isRectangleClicked and text_number.getString().getSize() < 4)
+                    str_number += static_cast<char>(event.text.unicode);
+
                 text_number.setString(str_number);
             }
 
-
-
-
-
             // ПОДСВЕЧИВАНИЕ КНОПКИ ПРИНЯТЬ
-            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-            if (text_accept.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                // Изменение цвета прямоугольника, если курсор находится над ним
-                text_accept.setFillColor(Color(255, 51, 6));
-            else
-                // Возвращение к исходному цвету, если курсор не находится над прямоугольником
-                text_accept.setFillColor(sf::Color::White);
-
-
+            highlightButton(text_accept, window);
 
         }
         text_choose_number.setPosition(20.f, 180.f + scrollPosition);
@@ -2468,6 +2091,7 @@ void editMode(std::vector<Employee> &employee, std::string str_number)
                     else if (sprite_startDate.getGlobalBounds().contains(mousePos.x, mousePos.y))
                         kindOfFIeld = 8;
                 }
+
                 if (enterNewInfo_editMode(employee, str_number, kindOfFIeld) == 1)
                     return;
             }
@@ -2726,8 +2350,8 @@ void deleteEmployee_menu(std::vector<Employee>& employee)
     float y = 0.0f;
 
 
-    sf::RectangleShape line(Vector2f(140.f, 2.f));
-    sf::RectangleShape rectangle(Vector2f(160.f, 46.f));
+    sf::RectangleShape line(sf::Vector2f(140.f, 2.f));
+    sf::RectangleShape rectangle(sf::Vector2f(160.f, 46.f));
     line.setFillColor(sf::Color::White);
     rectangle.setFillColor(sf::Color(0, 0, 0, 255));
 
@@ -2803,60 +2427,42 @@ void deleteEmployee_menu(std::vector<Employee>& employee)
             }
 
             // проверка на поле для ввода
-            if (event.type == sf::Event::MouseButtonPressed)
+            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
             {
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (rectangle.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                        isRectangleClicked = true;
-                }
+                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                if (rectangle.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    isRectangleClicked = true;
             }
 
             // проверка на поле для ПРИНЯТЬ
-            if (event.type == sf::Event::MouseButtonPressed)
+            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
             {
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (text_accept.getGlobalBounds().contains(mousePos.x, mousePos.y) and !str_number.empty())
-                        if (areYouSure() == 1)
-                        {
-                            deleteEmployee(employee, str_number);
-                            return;
-                        }
-
-
-                }
+                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                if (text_accept.getGlobalBounds().contains(mousePos.x, mousePos.y) and !str_number.empty())
+                    if (areYouSure() == 1)
+                    {
+                        deleteEmployee(employee, str_number);
+                        return;
+                    }
             }
 
             // ввод текста в поле цифры
-            if (event.type == sf::Event::TextEntered)
+            if (event.type == sf::Event::TextEntered and event.text.unicode < 128)
             {
-                if (event.text.unicode < 128)
-                {
-                    if (event.text.unicode == 8 and isRectangleClicked)
-                    { // Backspace
-                        if (!str_number.empty())
-                            str_number.pop_back();
-                    }
-                    else if (isRectangleClicked and text_number.getString().getSize() < 4)
-                        str_number += static_cast<char>(event.text.unicode);
+                if (event.text.unicode == 8 and isRectangleClicked)
+                { // Backspace
+                    if (!str_number.empty())
+                        str_number.pop_back();
                 }
-                text_number.setString(str_number);
+                else if (isRectangleClicked and text_number.getString().getSize() < 4)
+                    str_number += static_cast<char>(event.text.unicode);
 
+                text_number.setString(str_number);
             }
 
             // ПОДСВЕЧИВАНИЕ КНОПКИ ПРИНЯТЬ
             sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-            if (text_accept.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                // Изменение цвета прямоугольника, если курсор находится над ним
-                text_accept.setFillColor(Color(255, 51, 6));
-            else
-                // Возвращение к исходному цвету, если курсор не находится над прямоугольником
-                text_accept.setFillColor(sf::Color::White);
-
-
+            highlightButton(text_accept, window);
 
         }
         text_choose_number.setPosition(20.f, 180.f + scrollPosition);
@@ -2891,12 +2497,12 @@ int areYouSure()
     createSprite(sprite_success, success, 0.6, 0.6, sf::Vector2f(680.f, 350.f));
 
     // Создание прямоугольников
-    sf::RectangleShape yes(Vector2f(240.f, 90.f));
-    createRectangle(yes, Vector2f(267.f, 100.f), Vector2f(680.f, 596.f), sf::Color(59, 60, 54, 190));
+    sf::RectangleShape yes(sf::Vector2f(240.f, 90.f));
+    createRectangle(yes, sf::Vector2f(267.f, 100.f), sf::Vector2f(680.f, 596.f), sf::Color(59, 60, 54, 190));
 
     // Создание прямоугольников
-    sf::RectangleShape no(Vector2f(240.f, 90.f));
-    createRectangle(no, Vector2f(267.f, 100.f), Vector2f(947.f, 596.f), sf::Color(59, 60, 54, 190));
+    sf::RectangleShape no(sf::Vector2f(240.f, 90.f));
+    createRectangle(no, sf::Vector2f(267.f, 100.f), sf::Vector2f(947.f, 596.f), sf::Color(59, 60, 54, 190));
 
 
     while (window.isOpen())
@@ -2923,7 +2529,6 @@ int areYouSure()
         window.display();
     }
 }
-
 
 // ПОИСК
 
@@ -2996,14 +2601,11 @@ void searchEmployeeWithSurname_menu(std::vector<Employee>& employee)
                 window.close();
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
                 return;
-            if (event.type == sf::Event::MouseButtonPressed)
+            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
             {
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (sprite_arrow_back_orange.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                        return;
-                }
+                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                if (sprite_arrow_back_orange.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    return;
             }
 
             // подсвечивание
@@ -3013,22 +2615,16 @@ void searchEmployeeWithSurname_menu(std::vector<Employee>& employee)
             else
                 isMouseOnArrow = false;
 
-            if (text_search.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                text_search.setFillColor(sf::Color(255, 51, 6));
-            else
-                text_search.setFillColor(sf::Color::White);
+            highlightButton(text_search, window);
 
 
-            if (event.type == sf::Event::MouseButtonPressed)
+            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
             {
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (text_search.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                        isButtonClicked = true;
-                    if (text_search.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isTextEmpty)
-                        printSearchingEmployeesWithSurname(employee, str_surName, isSurnameChanging);
-                }
+                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                if (text_search.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    isButtonClicked = true;
+                if (text_search.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isTextEmpty)
+                    printSearchingEmployeesWithSurname(employee, str_surName, isSurnameChanging);
             }
             else if (event.type == sf::Event::KeyPressed and event.mouseButton.button == sf::Keyboard::Enter)
                 printSearchingEmployeesWithSurname(employee, str_surName, isSurnameChanging);
@@ -3046,18 +2642,16 @@ void searchEmployeeWithSurname_menu(std::vector<Employee>& employee)
 
 
             // ввод текста в поле НОВАЯ ИНФА
-            if (event.type == sf::Event::TextEntered)
+            if (event.type == sf::Event::TextEntered and event.text.unicode < 128)
             {
-                if (event.text.unicode < 128)
-                {
-                    if (event.text.unicode == 8 and isRectangleClicked)
-                    { // Backspace
-                        if (!str_surName.empty())
-                            str_surName.pop_back();
-                    }
-                    else if (text_newInfo.getString().getSize() < 15 and isRectangleClicked)
-                        str_surName += static_cast<char>(event.text.unicode);
+                if (event.text.unicode == 8 and isRectangleClicked)
+                { // Backspace
+                    if (!str_surName.empty())
+                        str_surName.pop_back();
                 }
+                else if (text_newInfo.getString().getSize() < 15 and isRectangleClicked)
+                    str_surName += static_cast<char>(event.text.unicode);
+
                 text_newInfo.setString(str_surName);
 
                 if (str_surName.empty())
@@ -3134,16 +2728,13 @@ void printSearchingEmployeesWithSurname(std::vector<Employee>& employee, std::st
             // для закрытия из панели задач
             if (event.type == sf::Event::Closed)
                 window.close();
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+            if (event.type == sf::Event::KeyPressed and event.key.code == sf::Keyboard::Escape)
                 return;
-            if (event.type == sf::Event::MouseButtonPressed)
+            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
             {
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (sprite_arrow_back_orange.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                        return;
-                }
+                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                if (sprite_arrow_back_orange.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    return;
             }
 
 
@@ -3182,7 +2773,6 @@ void printSearchingEmployeesWithSurname(std::vector<Employee>& employee, std::st
 }
 void printEmployeesLoop(std::vector<int>& indexes, std::vector<Employee>& employee)
 {
-
     sf::Font font2;
     if (!font2.loadFromFile("shrift.ttf"))
         return;
@@ -3269,6 +2859,7 @@ void searchEmployeeWithPost_menu(std::vector<Employee>& employee)
     bool isPostChanging = false;
     bool isTextEmpty = true;
     bool isButtonClicked = false;
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -3278,16 +2869,13 @@ void searchEmployeeWithPost_menu(std::vector<Employee>& employee)
             // для закрытия из панели задач
             if (event.type == sf::Event::Closed)
                 window.close();
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+            if (event.type == sf::Event::KeyPressed and event.key.code == sf::Keyboard::Escape)
                 return;
-            if (event.type == sf::Event::MouseButtonPressed)
+            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
             {
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (sprite_arrow_back_orange.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                        return;
-                }
+                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                if (sprite_arrow_back_orange.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    return;
             }
 
             // подсвечивание
@@ -3297,10 +2885,7 @@ void searchEmployeeWithPost_menu(std::vector<Employee>& employee)
             else
                 isMouseOnArrow = false;
 
-            if (text_search.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                text_search.setFillColor(sf::Color(255, 51, 6));
-            else
-                text_search.setFillColor(sf::Color::White);
+            highlightButton(text_search, window);
 
 
             if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
@@ -3405,6 +2990,7 @@ void printSearchingEmployeesWithPost(std::vector<Employee>& employee, std::strin
     indexes.reserve(10);
 
     bool isMouseOnArrow = false;
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -3415,16 +3001,13 @@ void printSearchingEmployeesWithPost(std::vector<Employee>& employee, std::strin
             // для закрытия из панели задач
             if (event.type == sf::Event::Closed)
                 window.close();
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+            if (event.type == sf::Event::KeyPressed and event.key.code == sf::Keyboard::Escape)
                 return;
-            if (event.type == sf::Event::MouseButtonPressed)
+            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
             {
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (sprite_arrow_back_orange.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                        return;
-                }
+                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                if (sprite_arrow_back_orange.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    return;
             }
 
 
@@ -3550,6 +3133,7 @@ void searchEmployeeWithStartYear_menu(std::vector<Employee> &employee)
     bool isYearChanging = false;
     bool isTextEmpty = true;
     bool isButtonClicked = false;
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -3559,16 +3143,13 @@ void searchEmployeeWithStartYear_menu(std::vector<Employee> &employee)
             // для закрытия из панели задач
             if (event.type == sf::Event::Closed)
                 window.close();
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+            if (event.type == sf::Event::KeyPressed and event.key.code == sf::Keyboard::Escape)
                 return;
-            if (event.type == sf::Event::MouseButtonPressed)
+            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
             {
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (sprite_arrow_back_orange.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                        return;
-                }
+                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                if (sprite_arrow_back_orange.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    return;
             }
 
             // подсвечивание
@@ -3578,51 +3159,40 @@ void searchEmployeeWithStartYear_menu(std::vector<Employee> &employee)
             else
                 isMouseOnArrow = false;
 
-            if (text_search.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                text_search.setFillColor(sf::Color(255, 51, 6));
-            else
-                text_search.setFillColor(sf::Color::White);
+            highlightButton(text_search, window);
 
 
-            if (event.type == sf::Event::MouseButtonPressed)
+            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
             {
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (text_search.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                        isButtonClicked = true;
-                    if (text_search.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isTextEmpty)
-                        printSearchingEmployeesWithYear(employee, str_year, isYearChanging);
-                }
+                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                if (text_search.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    isButtonClicked = true;
+                if (text_search.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isTextEmpty)
+                    printSearchingEmployeesWithYear(employee, str_year, isYearChanging);
             }
             else if (event.type == sf::Event::KeyPressed and event.mouseButton.button == sf::Keyboard::Enter)
                 printSearchingEmployeesWithYear(employee, str_year, isYearChanging);
 
             // проверка на поле для ввода
-            if (event.type == sf::Event::MouseButtonPressed)
+            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
             {
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (sprite_rectangle.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                        isRectangleClicked = true;
-                }
+                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                if (sprite_rectangle.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    isRectangleClicked = true;
             }
 
 
             // ввод текста в поле НОВАЯ ИНФА
-            if (event.type == sf::Event::TextEntered)
+            if (event.type == sf::Event::TextEntered and event.text.unicode < 128)
             {
-                if (event.text.unicode < 128)
-                {
-                    if (event.text.unicode == 8 and isRectangleClicked)
-                    { // Backspace
-                        if (!str_year.empty())
-                            str_year.pop_back();
-                    }
-                    else if (text_newInfo.getString().getSize() < 15 and isRectangleClicked)
-                        str_year += static_cast<char>(event.text.unicode);
+                if (event.text.unicode == 8 and isRectangleClicked)
+                { // Backspace
+                    if (!str_year.empty())
+                        str_year.pop_back();
                 }
+                else if (text_newInfo.getString().getSize() < 15 and isRectangleClicked)
+                    str_year += static_cast<char>(event.text.unicode);
+
                 text_newInfo.setString(str_year);
 
                 if (str_year.empty())
@@ -3699,16 +3269,13 @@ void printSearchingEmployeesWithYear(std::vector<Employee>& employee, std::strin
             // для закрытия из панели задач
             if (event.type == sf::Event::Closed)
                 window.close();
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+            if (event.type == sf::Event::KeyPressed and event.key.code == sf::Keyboard::Escape)
                 return;
-            if (event.type == sf::Event::MouseButtonPressed)
+            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
             {
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (sprite_arrow_back_orange.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                        return;
-                }
+                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                if (sprite_arrow_back_orange.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    return;
             }
 
 
@@ -3722,8 +3289,6 @@ void printSearchingEmployeesWithYear(std::vector<Employee>& employee, std::strin
         }
 
         window.clear(sf::Color::Black);
-
-
 
         if (!isYearChanging)
         {
@@ -3747,7 +3312,6 @@ void printSearchingEmployeesWithYear(std::vector<Employee>& employee, std::strin
 }
 void printEmployeesLoopYear(std::vector<int>& indexes, std::vector<Employee>& employee)
 {
-
     sf::Font font2;
     if (!font2.loadFromFile("shrift.ttf"))
         return;
@@ -3804,8 +3368,8 @@ int successOfSorting_menu(int kindOfSort, int sortUpOrDown, std::vector<Employee
     createSprite(sprite_success, success, 0.6, 0.6, sf::Vector2f(680.f, 350.f));
 
     // Создание прямоугольников
-    sf::RectangleShape yes(Vector2f(240.f, 90.f));
-    createRectangle(yes, Vector2f(535.f, 100.f), Vector2f(680.f, 596.f), sf::Color(59, 60, 54, 190));
+    sf::RectangleShape yes(sf::Vector2f(240.f, 90.f));
+    createRectangle(yes, sf::Vector2f(535.f, 100.f), sf::Vector2f(680.f, 596.f), sf::Color(59, 60, 54, 190));
 
 
     while (window.isOpen())
@@ -3836,8 +3400,8 @@ int successOfAdding_menu()
     createSprite(sprite_success, success, 0.6, 0.6, sf::Vector2f(680.f, 350.f));
 
     // Создание прямоугольников
-    sf::RectangleShape yes(Vector2f(240.f, 90.f));
-    createRectangle(yes, Vector2f(535.f, 100.f), Vector2f(680.f, 596.f), sf::Color(59, 60, 54, 190));
+    sf::RectangleShape yes(sf::Vector2f(240.f, 90.f));
+    createRectangle(yes, sf::Vector2f(535.f, 100.f), sf::Vector2f(680.f, 596.f), sf::Color(59, 60, 54, 190));
 
 
     while (window.isOpen())
@@ -3868,8 +3432,8 @@ int successOfEdit_menu()
     createSprite(sprite_success, success, 0.6, 0.6, sf::Vector2f(680.f, 350.f));
 
     // Создание прямоугольников
-    sf::RectangleShape yes(Vector2f(240.f, 90.f));
-    createRectangle(yes, Vector2f(535.f, 100.f), Vector2f(680.f, 596.f), sf::Color(59, 60, 54, 190));
+    sf::RectangleShape yes(sf::Vector2f(240.f, 90.f));
+    createRectangle(yes, sf::Vector2f(535.f, 100.f), sf::Vector2f(680.f, 596.f), sf::Color(59, 60, 54, 190));
 
 
     while (window.isOpen())

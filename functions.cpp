@@ -8,6 +8,7 @@
 #include <fstream>
 
 
+// Проверка введённых данных
 int checkDataOfUser(std::vector<Authentication>& authentication, std::string login, std::string password)
 {
 	// проверка правильности для вывода сообщение об ошибке
