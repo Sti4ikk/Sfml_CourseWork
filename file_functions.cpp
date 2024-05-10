@@ -17,6 +17,11 @@ void writingToVectorsFromFileAuth(std::vector<Authentication>& authentication)
 		Authentication authen;
 		auth >> authen.login;
 		auth >> authen.password;
+		auth >> authen.auth_info.surName;
+		auth >> authen.auth_info.name;
+		auth >> authen.auth_info.patronymic;
+		auth >> authen.auth_info.photoLink;
+		auth >> authen.auth_info.post;
 
 		authentication.push_back(authen);
 		i++;
@@ -171,4 +176,21 @@ void writeInToFileAfterDeleteEmployee(std::vector<Employee>& employee)
 	}
 
 	empl.close();
+}
+
+// запись в файл номера сотрудника (аккаунта)
+void writeNumberOfPersonalEmployee(int numberOfPersonalEmployee)
+{
+	std::fstream file("numberOfPersonalEmployee.txt");
+	file << numberOfPersonalEmployee;
+	file.close();
+}
+
+int readNumberOfPersonalEmployee()
+{
+	std::fstream file("numberOfPersonalEmployee.txt");
+	int num;
+	file >> num;
+
+	return num;
 }

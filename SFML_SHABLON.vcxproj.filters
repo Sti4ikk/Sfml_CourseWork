@@ -46,6 +46,7 @@
     <None Include="sfml-system-d-2.dll" />
     <None Include="sfml-window-2.dll" />
     <None Include="sfml-window-d-2.dll" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="prototypes.h">
@@ -66,6 +67,12 @@
       <Filter>Файлы ресурсов</Filter>
     </Text>
     <Text Include="isRememberMePressed.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
+    <Text Include="numberOfPersonalEmployee.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
+    <Text Include="Admin_data.txt">
       <Filter>Файлы ресурсов</Filter>
     </Text>
   </ItemGroup>

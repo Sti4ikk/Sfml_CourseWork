@@ -5,6 +5,9 @@
 #include <string>
 #include <ctime>
 
+#include <iostream>
+#include <array>
+
 sf::RenderWindow window(sf::VideoMode(500, 412), "", sf::Style::None);
 
 
@@ -12,21 +15,24 @@ int main()
 {
     srand(time(NULL));
 
+
     std::vector<Employee> employee;;
     std::vector<Authentication> authentication;
     std::vector<int> indexes;                        // вектор для хранения индексов сотрдуников пенсионного возраста
     bool isRememberMePressed;
+    int numberOfPersonalEmployee;
 
     // запись данных в векторы из файлов
     writingToVectorsFromFileAuth(authentication);
     writingToVectorsFromFileEmployee(employee); 
     wrtiteIsRememberMeOn(isRememberMePressed);
+    numberOfPersonalEmployee = readNumberOfPersonalEmployee();
 
 
     if (isRememberMePressed)
         auth_menu(authentication, employee, isRememberMePressed);
     else
-        main_menu(authentication, employee, isRememberMePressed);
+        main_menu(authentication, employee, isRememberMePressed, numberOfPersonalEmployee);
     
     return 0;
 }

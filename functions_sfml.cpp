@@ -22,7 +22,7 @@ struct SpriteData
 // Функция для загрузки текстуры из файла
 bool loadTexture(const std::string& filePath, sf::Texture& texture) 
 {
-    if (!texture.loadFromFile("Images\\" + filePath))
+    if (!texture.loadFromFile("Images/" + filePath))
     {
         // Если загрузка не удалась, выводим сообщение об ошибке
         std::cerr << "Failed to load texture: " << filePath << std::endl;

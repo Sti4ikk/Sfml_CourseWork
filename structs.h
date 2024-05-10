@@ -24,9 +24,19 @@ struct Date
 	int years;
 };
 
+struct Auth_info
+{
+	std::string surName;
+	std::string name;
+	std::string patronymic;
+	std::string photoLink;
+	std::string post;
+};
+
 // данные для авторизации
 struct Authentication
 {
 	std::string login;
 	std::string password;
+	Auth_info auth_info;
 };

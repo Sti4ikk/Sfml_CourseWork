@@ -15,7 +15,7 @@ void writeInToFileAfterDeleteEmployee(std::vector<Employee>& employee);
 
 
 // Œ—ÕŒ¬Õ€≈ ‘”Õ ÷»»
-int checkDataOfUser(std::vector<Authentication>& authentication, std::string login, std::string password);
+std::array<int, 2> checkDataOfUser(std::vector<Authentication>& authentication, std::string login, std::string password);
 void addNewEmployee(std::vector<Employee>& employee, std::string str_surName, std::string str_name, std::string str_patronymic, 
 	std::string str_gender, std::string str_date_of_birth, std::string str_departmentName, std::string str_post, std::string str_startDate);
 void writeEmployeeIntoVector(std::vector<Employee>& employee, std::string str_surName, std::string str_name, std::string str_patronymic, 
@@ -24,7 +24,7 @@ void editEmployee(std::vector<Employee>& employee, std::string  str_newInfo, std
 
 
 // ‘”Õ ÷»» Ã≈Õﬁ
-void main_menu(std::vector<Authentication>& authentication, std::vector<Employee>& employee, bool& isRememberMePressed);
+void main_menu(std::vector<Authentication>& authentication, std::vector<Employee>& employee, bool& isRememberMePressed, int numberOfPersonalEmployee);
 void auth_menu(std::vector<Authentication>& authentication, std::vector<Employee>& employee, bool& isRememberMePressed);
 void settings_menu();
 void aboutApp();
@@ -74,3 +74,23 @@ int successOfEdit_menu();
 int areYouSure();
 
 void initArrOfRandomNumbers(std::vector<int>& numbers);
+
+
+int ageOfEmployee(std::vector<Employee>& employee, const int index);
+int checkGenderOfEmployee(std::vector<Employee>& employee, const int index);
+std::vector<int> searchForEmployeesOfRetirementAge(std::vector<Employee>& employee);
+
+void employeesOfRetirementAge_menu(std::vector<Employee>& employee);
+float printEmployeesOfRetirementAge(std::vector<Employee>& employee);
+
+void account_menu(std::vector<Authentication>& authentication, int numberOfPersonalEmployee);
+
+
+void writeNumberOfPersonalEmployee(int numberOfPersonalEmployee);
+int readNumberOfPersonalEmployee();
+
+
+
+std::array<std::string, 2> encryptData(std::string &login, std::string &password);
+std::array<std::string, 2> decryptData();
+void encryptDataForAdmin();

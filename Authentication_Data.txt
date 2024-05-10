@@ -1,3 +1,4 @@
-admin1 Admin123
-admin2 Admin321
-admin3 Admin213
+       
+login1 Admin123 Vashkevich Daria Andreevna PersonalPhoto\1.jpg accountant
+login2 Admin321	Postolaki Elizaveta Victorovna PersonalPhoto\2.jpg accountant
+login3 Admin213 Borova Natalia Vladimirovna PersonalPhoto\3.jpg accountant

@@ -6,22 +6,50 @@
 #include "structs.h"
 #include <Windows.h>
 #include <fstream>
+#include <array>
+#include <sstream>
+#include <iostream>
 
 
 // Проверка введённых данных
-int checkDataOfUser(std::vector<Authentication>& authentication, std::string login, std::string password)
+std::array<int, 2> checkDataOfUser(std::vector<Authentication>& authentication, std::string login, std::string password)
 {
 	// проверка правильности для вывода сообщение об ошибке
 	bool check = false;
+	std::array<int, 2> arr;
+
+	encryptDataForAdmin();
+	std::array<std::string, 2> admin_data = decryptData();
+
+
+	if (login == admin_data.at(0) and password == admin_data.at(1))
+	{
+		arr.at(0) = 1;
+		arr.at(1) = -1;
+		writeNumberOfPersonalEmployee(arr.at(1));
+		return arr;
+	}
+
+
 
 	for (int i = 0; i < authentication.size(); i++)
 	{
 		if (login == authentication.at(i).login and password == authentication.at(i).password)
-			return 1;
+		{
+			arr.at(0) = 1;
+			arr.at(1) = i;
+			writeNumberOfPersonalEmployee(arr.at(1));
+			return arr;
+		}
 	}
 	if (!check)
-		return 0;
+	{
+		arr.at(0) = 0;
+		arr.at(1) = 0;
+		return arr;
+	}
 }
+
 
 
 void addNewEmployee(std::vector<Employee>& employee, std::string str_surName, std::string str_name, 
@@ -333,3 +361,127 @@ void sortWithExperienceUp(std::vector<Employee>& employee)
 			break;
 	}
 }
+
+
+
+// вычисляет возраст сотрудника(в годах)
+int ageOfEmployee(std::vector<Employee>& employee, const int index)
+{
+	std::tm timeinfo = {};
+	timeinfo.tm_year = atoi(employee.at(index).dateOfBirthday.substr(6).c_str()) - 1900;  // год смещается на 1900
+	timeinfo.tm_mon = atoi(employee.at(index).dateOfBirthday.substr(3, 2).c_str()) - 1;
+	timeinfo.tm_mday = atoi(employee.at(index).dateOfBirthday.substr(0, 2).c_str());
+
+	std::time_t custom_time = std::mktime(&timeinfo);
+
+	// Получаем текущую дату
+	std::time_t end = std::time(nullptr);
+
+	// Рассчитываем возраст
+	std::tm end_tm = {};
+	localtime_s(&end_tm, &end);
+	int years = end_tm.tm_year - timeinfo.tm_year;
+
+	// Проверяем, достигнут ли день рождения в этом году
+	if (end_tm.tm_mon < timeinfo.tm_mon or (end_tm.tm_mon == timeinfo.tm_mon && end_tm.tm_mday < timeinfo.tm_mday))
+		--years; // Если ещё не достиг, уменьшаем возраст на 1 год
+
+	return years;
+}
+
+// проверка на пол сотрудника
+int checkGenderOfEmployee(std::vector<Employee>& employee, const int index)
+{
+	if (employee.at(index).gender == "Man")
+		return 1;
+	else if (employee.at(index).gender == "Woman")
+		return 0;
+}
+
+// Поиск сотрудников с пенсионным возрастом
+std::vector<int> searchForEmployeesOfRetirementAge(std::vector<Employee>& employee)
+{
+	// вектор для хранения индексов сотрдуников пенсионного возраста
+	std::vector<int> indexes;
+	indexes.reserve(employee.size());
+
+	for (int index = 0; index < employee.size(); index++)
+	{
+		if ((checkGenderOfEmployee(employee, index) and ageOfEmployee(employee, index) >= 63) or (!checkGenderOfEmployee(employee, index) and ageOfEmployee(employee, index) >= 58))
+			indexes.push_back(index);
+	}
+
+	return indexes;
+}
+
+
+
+// Функция для шифрования данных методом простой замены
+std::array<std::string, 2> encryptData(std::string &login, std::string& password)
+{
+	std::array<std::string, 2> ciphertext = { login, password };
+
+	// Пример простой замены: символ 'A' заменяется на 'Z', 'B' на 'Y' и так далее
+	for (char& c : ciphertext.at(0)) 
+	{
+		if (std::isalpha(c)) 
+		{
+			c += 1;
+		}
+	}
+	for (char& c : ciphertext.at(1))
+	{
+		if (std::isalpha(c))
+		{
+			c += 1;
+		}
+	}
+
+	std::fstream file("Admin_data.txt");
+	file << ciphertext.at(0);
+	file << std::endl;
+	file << ciphertext.at(1);
+	file.close();
+
+	return ciphertext;
+}
+
+// Функция для дешифрования данных методом простой замены
+std::array<std::string, 2> decryptData()
+{
+	std::fstream file("Admin_data.txt");
+	std::array<std::string, 2> ciphertext;
+
+	file >> ciphertext.at(0);
+	file >> ciphertext.at(1);
+
+	std::array<std::string, 2> plaintext;
+
+	// Проходим по каждой зашифрованной строке и применяем обратное преобразование
+	for (size_t i = 0; i < 2; ++i)
+	{
+		std::string decryptedString;
+		int count = 0;
+		for (char c : ciphertext[i])
+		{
+			// Применяем обратное преобразование: символ 'Z' заменяем на 'A', 'Y' на 'B' и так далее
+			if (std::isalpha(c))
+			{
+				decryptedString.push_back(c - 1);
+			}
+		}
+
+		plaintext[i] = decryptedString;
+	}
+
+	return plaintext;
+}
+
+void encryptDataForAdmin()
+{
+	// зашифровываем данные для админа
+	std::string login = "adminOne";
+	std::string password = "AdminXX";
+	encryptData(login, password);
+}
+
