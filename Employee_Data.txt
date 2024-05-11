@@ -17,7 +17,7 @@ Ponomarenko Dmitriy Olegovich Man 16.01.1995 Game_design Project_manager 17.06.2
 Revin Andrei Dmitrievich Man 17.02.1959 Management Director_of_department 19.06.1999
 Romanko Stanislaw Yurievich Man 09.09.2005 Gameplay Senior 25.01.2018
 Rosova Svetlana Stanislavovna Woman 28.11.2000 Audio Middle 12.10.2020
-Subotnik Kirill Dmitrievich Man 11.09.1956 Gameplay Deputy_general_diretor 19.03.2006
+Subotnik Kirill Dmitrievich Man 11.09.1956 Gameplay Middle 19.03.2006
 Tsander Maksim Alexandrovich Man 24.08.2003 Game_engine_development Project_manager 28.01.2014
 Vitovich Ivan Genrihovich Man 18.02.2005 Graphics_and_animation Junior 23.10.2023
 Yakusik Artyom Dmitrievich Man 29.10.2005 Content_development Middle 08.08.2019
