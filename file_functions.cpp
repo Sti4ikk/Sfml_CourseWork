@@ -194,3 +194,19 @@ int readNumberOfPersonalEmployee()
 
 	return num;
 }
+
+
+void writeNewPersonalEmployee(std::vector<Authentication>& authentication, std::string str_login, std::string str_password, std::string str_surName, std::string str_name,
+	std::string str_patronymic, std::string str_link, std::string str_post)
+{
+	std::fstream file("Authentication_Data.txt", std::ios::app);
+	file <<std::endl<< str_login << " ";
+	file << str_password << " ";
+	file << str_surName << " ";
+	file << str_name << " ";
+	file << str_patronymic << " ";
+	file << str_link << " ";
+	file << str_post;
+
+	file.close();
+}

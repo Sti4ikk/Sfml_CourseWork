@@ -58,7 +58,6 @@ void addNewEmployee(std::vector<Employee>& employee, std::string str_surName, st
 
 	writeInfoOfNewEmployeeInFile(employee, str_surName, str_name, str_patronymic, str_gender, str_date_of_birth, str_departmentName, str_post, str_startDate);
 	writeEmployeeIntoVector(employee, str_surName, str_name, str_patronymic, str_gender, str_date_of_birth, str_departmentName, str_post, str_startDate);
-
 }
 void editEmployee(std::vector<Employee>& employee, std::string  str_newInfo, std::string str_number, int kindOfField)
 {
@@ -485,3 +484,34 @@ void encryptDataForAdmin()
 	encryptData(login, password);
 }
 
+
+// получаем стаж сотрудников в годах, мес€цах и дн€х
+void getExperienceOfEmployees(std::vector<Employee>& employee)
+{
+	for (int i = 0; i < employee.size(); i++)
+	{
+		// ћожно установить start в конкретную дату и врем€
+		std::tm timeinfo = {};
+		timeinfo.tm_year = atoi(employee.at(i).startDate.substr(6).c_str()) - 1900;  // год смещаетс€ на 1900
+		timeinfo.tm_mon = atoi(employee.at(i).startDate.substr(3, 2).c_str()) - 1;
+		timeinfo.tm_mday = atoi(employee.at(i).startDate.substr(0, 2).c_str());
+
+		std::time_t custom_time = std::mktime(&timeinfo);
+
+		// ѕолучаем текущую дату
+		std::time_t end = std::time(nullptr);
+
+		// ¬ычисл€ем разницу в секундах
+		std::time_t diff = end - custom_time;
+
+		// ѕереводим разницу в года, мес€цы и дни
+		int years = diff / (60 * 60 * 24 * 365);
+		int months = (diff % (60 * 60 * 24 * 365)) / (60 * 60 * 24 * 30);
+		int days = ((diff % (60 * 60 * 24 * 365)) % (60 * 60 * 24 * 30)) / (60 * 60 * 24);
+
+
+		employee.at(i).experience.years = years;
+		employee.at(i).experience.months = months;
+		employee.at(i).experience.days = days;
+	}
+}

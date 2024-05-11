@@ -94,3 +94,11 @@ int readNumberOfPersonalEmployee();
 std::array<std::string, 2> encryptData(std::string &login, std::string &password);
 std::array<std::string, 2> decryptData();
 void encryptDataForAdmin();
+
+void addNewPersonalEmployee(std::vector<Authentication>& authentication);
+void writeNewPersonalEmployee(std::vector<Authentication>& authentication, std::string str_surName, std::string str_name,
+	std::string str_patronymic, std::string str_login, std::string str_password, std::string str_link, std::string str_post);
+void getExperienceOfEmployees(std::vector<Employee>& employee);
+
+void printExperience_menu(std::vector<Employee>& employee);
+float printAllEmployeesExperience(std::vector<Employee>& employee, float scrollPosition);

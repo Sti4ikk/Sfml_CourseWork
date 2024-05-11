@@ -2,7 +2,15 @@
 
 #include "enums.h"
 #include <string>
+#include <array>
 
+// СТАЖ
+struct Experience
+{
+	int years;
+	int months;
+	int days;
+};
 
 // Информация о сотрудниках предприятия
 struct Employee
@@ -15,13 +23,7 @@ struct Employee
 	std::string departmentName;
 	Post post;
 	std::string startDate;
-};
-
-struct Date
-{
-	int day;
-	int months;
-	int years;
+	Experience experience;
 };
 
 struct Auth_info
