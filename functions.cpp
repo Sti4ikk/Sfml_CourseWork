@@ -131,7 +131,7 @@ void searchWithSurname(std::vector<Employee>& employee, std::string str_surName,
 {
 	for (int i = 0; i < employee.size(); i++)
 	{
-		if (employee[i].surName == str_surName)
+		if (employee.at(i).surName == str_surName)
 			indexes.push_back(i);
 	}
 }
@@ -425,14 +425,14 @@ std::array<std::string, 2> encryptData(std::string &login, std::string& password
 	{
 		if (std::isalpha(c)) 
 		{
-			c += 1;
+			c += 5;
 		}
 	}
 	for (char& c : ciphertext.at(1))
 	{
 		if (std::isalpha(c))
 		{
-			c += 1;
+			c += 5;
 		}
 	}
 
@@ -466,7 +466,7 @@ std::array<std::string, 2> decryptData()
 			// Применяем обратное преобразование: символ 'Z' заменяем на 'A', 'Y' на 'B' и так далее
 			if (std::isalpha(c))
 			{
-				decryptedString.push_back(c - 1);
+				decryptedString.push_back(c - 5);
 			}
 		}
 
@@ -480,7 +480,7 @@ void encryptDataForAdmin()
 {
 	// зашифровываем данные для админа
 	std::string login = "adminOne";
-	std::string password = "AdminXX";
+	std::string password = "AdminQQ";
 	encryptData(login, password);
 }
 

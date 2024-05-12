@@ -2474,56 +2474,47 @@ int areYouSure()
 // ПОИСК
 
 // по фамилии
-void searchEmployeeWithSurname_menu(std::vector<Employee>& employee)
+void searchEmployeeWithSurname_menu(std::vector<Employee>& employee) 
 {
+    // Загрузка шрифтов
     sf::Font font2;
-    if (!font2.loadFromFile("shrift.ttf"))
-        return;
+    loadFont(font2, "shrift.ttf");
 
 
+    // Создание текстов
     sf::Text text_enterSurname(L"Введите фамилию сотрудника", font2);
-    text_enterSurname.setCharacterSize(48);
-    text_enterSurname.setFillColor(sf::Color::White);
-    text_enterSurname.setPosition(560.f, 50.f);
+    createText(text_enterSurname, 48, sf::Color::White, sf::Vector2f(560.f, 50.f));
 
     sf::Text text_search(L"Поиск", font2);
-    text_search.setCharacterSize(48);
-    text_search.setFillColor(sf::Color::White);
-    text_search.setPosition(1700.f, 970.f);
+    createText(text_search, 48, sf::Color::White, sf::Vector2f(1700.f, 970.f));
 
     sf::Text text_empty(L"Введите хотя бы один символ", font2);
-    text_empty.setCharacterSize(30);
-    text_empty.setFillColor(sf::Color::Red);
-    text_empty.setPosition(692.f, 574.f);
+    createText(text_empty, 30, sf::Color::Red, sf::Vector2f(692.f, 574.f));
 
     sf::Text text_newInfo("", font2);
-    text_newInfo.setCharacterSize(48);
-    text_newInfo.setFillColor(sf::Color::Black);
-    text_newInfo.setPosition(638.f, 450.f);
+    createText(text_newInfo, 48, sf::Color::Black, sf::Vector2f(638.f, 450.f));
 
-    std::string str_surName;
 
+    // Создание текстур
     sf::Texture rectangle;
-    if (!rectangle.loadFromFile("Images\\rectangle.png"))
-        return;
-    sf::Sprite sprite_rectangle(rectangle);
-    sprite_rectangle.setScale(0.6, 0.6);
-    sprite_rectangle.setPosition(570, 400);
-
+    loadTexture("rectangle.png", rectangle);
 
     sf::Texture arrow_back_white;
-    if (!arrow_back_white.loadFromFile("Images\\arrow_back_white.png"))
-        return;
-    sf::Sprite sprite_arrow_back_white(arrow_back_white);
-    sprite_arrow_back_white.setScale(0.2, 0.2);
-    sprite_arrow_back_white.setPosition(50, 950);
+    loadTexture("arrow_back_white.png", arrow_back_white);
 
     sf::Texture arrow_back_orange;
-    if (!arrow_back_orange.loadFromFile("Images\\arrow_back.png"))
-        return;
-    sf::Sprite sprite_arrow_back_orange(arrow_back_orange);
-    sprite_arrow_back_orange.setScale(0.2, 0.2);
-    sprite_arrow_back_orange.setPosition(50, 950);
+    loadTexture("arrow_back.png", arrow_back_orange);
+
+    
+    // Создание спрайтов
+    sf::Sprite sprite_arrow_back_orange;
+    createSprite(sprite_arrow_back_orange, arrow_back_orange, 0.2, 0.2, sf::Vector2f(50, 950));
+
+    sf::Sprite sprite_rectangle;
+    createSprite(sprite_rectangle, rectangle, 0.6, 0.6, sf::Vector2f(570, 400));
+
+    sf::Sprite sprite_arrow_back_white;
+    createSprite(sprite_arrow_back_white, arrow_back_white, 0.2, 0.2, sf::Vector2f(50, 950));
 
 
     bool isMouseOnArrow = false;
@@ -2531,6 +2522,8 @@ void searchEmployeeWithSurname_menu(std::vector<Employee>& employee)
     bool isSurnameChanging = false;
     bool isTextEmpty = true;
     bool isButtonClicked = false;
+    std::string str_surName;
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -2540,47 +2533,27 @@ void searchEmployeeWithSurname_menu(std::vector<Employee>& employee)
             // для закрытия из панели задач
             if (event.type == sf::Event::Closed)
                 window.close();
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+            if (event.type == sf::Event::KeyPressed and event.key.code == sf::Keyboard::Escape)
                 return;
             if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
             {
                 sf::Vector2i mousePos = sf::Mouse::getPosition(window);
                 if (sprite_arrow_back_orange.getGlobalBounds().contains(mousePos.x, mousePos.y))
                     return;
-            }
-
-            // подсвечивание
-            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-            if (sprite_arrow_back_white.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                isMouseOnArrow = true;
-            else
-                isMouseOnArrow = false;
-
-            highlightButton(text_search, window);
 
 
-            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
-            {
-                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
                 if (text_search.getGlobalBounds().contains(mousePos.x, mousePos.y))
                     isButtonClicked = true;
                 if (text_search.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isTextEmpty)
                     printSearchingEmployeesWithSurname(employee, str_surName, isSurnameChanging);
+
+
+                // проверка на поле для ввода
+                if (sprite_rectangle.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    isRectangleClicked = true;
             }
             else if (event.type == sf::Event::KeyPressed and event.mouseButton.button == sf::Keyboard::Enter)
                 printSearchingEmployeesWithSurname(employee, str_surName, isSurnameChanging);
-
-            // проверка на поле для ввода
-            if (event.type == sf::Event::MouseButtonPressed)
-            {
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (sprite_rectangle.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                        isRectangleClicked = true;
-                }
-            }
-
 
             // ввод текста в поле НОВАЯ ИНФА
             if (event.type == sf::Event::TextEntered and event.text.unicode < 128)
@@ -2602,6 +2575,16 @@ void searchEmployeeWithSurname_menu(std::vector<Employee>& employee)
 
                 isSurnameChanging = false;
             }
+
+
+            // подсвечивание
+            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+            if (sprite_arrow_back_white.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                isMouseOnArrow = true;
+            else
+                isMouseOnArrow = false;
+
+            highlightButton(text_search, window);
         }
 
         window.clear(sf::Color::Black);
@@ -2624,48 +2607,44 @@ void searchEmployeeWithSurname_menu(std::vector<Employee>& employee)
 }
 void printSearchingEmployeesWithSurname(std::vector<Employee>& employee, std::string str_surName, bool isSurnameChanging)
 {
+    // Загрузка шрифтов
     sf::Font font2;
-    if (!font2.loadFromFile("shrift.ttf"))
-        return;
+    loadFont(font2, "shrift.ttf");
 
 
+    // Создание текстов
     sf::Text text_searchEmployees(L"Найденные сотрудники", font2);
-    text_searchEmployees.setCharacterSize(46);
-    text_searchEmployees.setFillColor(sf::Color::White);
-    text_searchEmployees.setPosition(670.f, 30.f);
+    createText(text_searchEmployees, 46, sf::Color::White, sf::Vector2f(670.f, 30.f));
 
     sf::Text text_currentEmployeeNo(L"Сотрудников с такой фамилией не найдено!", font2);
-    text_currentEmployeeNo.setCharacterSize(46);
-    text_currentEmployeeNo.setFillColor(sf::Color::White);
-    text_currentEmployeeNo.setPosition(420.f, 500.f);
+    createText(text_currentEmployeeNo, 46, sf::Color::White, sf::Vector2f(420.f, 500.f));
 
 
+    // Создание текстур
     sf::Texture arrow_back_white;
-    if (!arrow_back_white.loadFromFile("Images\\arrow_back_white.png"))
-        return;
-    sf::Sprite sprite_arrow_back_white(arrow_back_white);
-    sprite_arrow_back_white.setScale(0.2, 0.2);
-    sprite_arrow_back_white.setPosition(50, 950);
+    loadTexture("arrow_back_white.png", arrow_back_white);
 
     sf::Texture arrow_back_orange;
-    if (!arrow_back_orange.loadFromFile("Images\\arrow_back.png"))
-        return;
-    sf::Sprite sprite_arrow_back_orange(arrow_back_orange);
-    sprite_arrow_back_orange.setScale(0.2, 0.2);
-    sprite_arrow_back_orange.setPosition(50, 950);
+    loadTexture("arrow_back.png", arrow_back_orange);
+
+ 
+    // Создание спрайтов
+    sf::Sprite sprite_arrow_back_white;
+    createSprite(sprite_arrow_back_white, arrow_back_white, 0.2, 0.2, sf::Vector2f(50, 950));
+
+    sf::Sprite sprite_arrow_back_orange;
+    createSprite(sprite_arrow_back_orange, arrow_back_orange, 0.2, 0.2, sf::Vector2f(50, 950));
 
 
+    bool isMouseOnArrow = false;
     std::vector<int> indexes;
     indexes.reserve(10);
 
-    bool isMouseOnArrow = false;
     while (window.isOpen())
     {
         sf::Event event;
         while (window.pollEvent(event))
         {
-
-            // закрытие приложения
             // для закрытия из панели задач
             if (event.type == sf::Event::Closed)
                 window.close();
@@ -2690,8 +2669,6 @@ void printSearchingEmployeesWithSurname(std::vector<Employee>& employee, std::st
 
         window.clear(sf::Color::Black);
 
-
-
         if (!isSurnameChanging)
         {
             searchWithSurname(employee, str_surName, indexes);
@@ -2708,32 +2685,51 @@ void printSearchingEmployeesWithSurname(std::vector<Employee>& employee, std::st
         else
             window.draw(sprite_arrow_back_white);
 
-
         window.display();
     }
 }
 void printEmployeesLoop(std::vector<int>& indexes, std::vector<Employee>& employee)
 {
+    // Загрузка шрифтов
     sf::Font font2;
-    if (!font2.loadFromFile("shrift.ttf"))
-        return;
+    loadFont(font2, "shrift.ttf");
 
 
+    // Создание текстов
     sf::Text text_currentEmployee("", font2);
-    text_currentEmployee.setCharacterSize(32);
-    text_currentEmployee.setFillColor(sf::Color::White);
+    createText(text_currentEmployee, 28, sf::Color::White, sf::Vector2f(0, 0));
+
 
     std::string str_currentEmployee;
-
-    float x = 120.0;
+    float x = 100.0;
     float y = 120.0f;
     int count = 0;
+
     for (int i = 0; i < indexes.size(); i++)
     {
+        std::string post;
+        if (employee.at(indexes.at(i)).post == Post::JUNIOR)
+            post = "Junior";
+        else if (employee.at(indexes.at(i)).post == Post::MIDDLE)
+            post = "Middle";
+        else if (employee.at(indexes.at(i)).post == Post::SENIOR)
+            post = "Senior";
+        else if (employee.at(indexes.at(i)).post == Post::TEAM_LEADER)
+            post = "Team leader";
+        else if (employee.at(indexes.at(i)).post == Post::PROJECT_MANAGER)
+            post = "Project manager";
+        else if (employee.at(indexes.at(i)).post == Post::DIRECTOR_OF_DEPARTMENT)
+            post = "Director of department";
+        else if (employee.at(indexes.at(i)).post == Post::DEPUTY_GENERAL_DIRECTOR)
+            post = "Deputy general director";
+        else if (employee.at(indexes.at(i)).post == Post::GENERAL_DIRECTOR)
+            post = "General director";
+
         text_currentEmployee.setPosition(x, y);
-        str_currentEmployee = std::to_string(i + 1) + ((i < 9) ? ".   " : ".  ") + employee.at(indexes.at(count)).surName + " " +
-            employee.at(indexes.at(count)).name + " " + employee.at(indexes.at(count)).patronymic + " " + employee.at(indexes.at(count)).gender +
-            " " + employee.at(indexes.at(count)).dateOfBirthday + " " + employee.at(indexes.at(count)).departmentName + " " + employee.at(indexes.at(count)).startDate;
+        str_currentEmployee = std::to_string(i + 1) + ((i < 9) ? ".   " : ".  ") + employee.at(indexes.at(i)).surName + " " + employee.at(indexes.at(i)).name + " " +
+            employee.at(indexes.at(i)).patronymic + " " + employee.at(indexes.at(i)).gender + " " + employee.at(indexes.at(i)).dateOfBirthday
+            + " " + employee.at(indexes.at(i)).departmentName + " " + post + " " + employee.at(indexes.at(i)).startDate;
+
         text_currentEmployee.setString(str_currentEmployee);
 
         y += 50;
@@ -2745,54 +2741,45 @@ void printEmployeesLoop(std::vector<int>& indexes, std::vector<Employee>& employ
 // по должности
 void searchEmployeeWithPost_menu(std::vector<Employee>& employee)
 {
+    // Загрузка шрифтов
     sf::Font font2;
-    if (!font2.loadFromFile("shrift.ttf"))
-        return;
+    loadFont(font2, "shrift.ttf");
 
 
+    // Создание текстов
     sf::Text text_enterPost(L"Введите должность сотрудника", font2);
-    text_enterPost.setCharacterSize(48);
-    text_enterPost.setFillColor(sf::Color::White);
-    text_enterPost.setPosition(560.f, 50.f);
+    createText(text_enterPost, 48, sf::Color::White, sf::Vector2f(560.f, 50.f));
 
     sf::Text text_search(L"Поиск", font2);
-    text_search.setCharacterSize(48);
-    text_search.setFillColor(sf::Color::White);
-    text_search.setPosition(1700.f, 970.f);
+    createText(text_search, 48, sf::Color::White, sf::Vector2f(1700.f, 970.f));
 
     sf::Text text_empty(L"Введите хотя бы один символ", font2);
-    text_empty.setCharacterSize(30);
-    text_empty.setFillColor(sf::Color::Red);
-    text_empty.setPosition(692.f, 574.f);
+    createText(text_empty, 30, sf::Color::Red, sf::Vector2f(692.f, 574.f));
 
     sf::Text text_newInfo("", font2);
-    text_newInfo.setCharacterSize(48);
-    text_newInfo.setFillColor(sf::Color::Black);
-    text_newInfo.setPosition(638.f, 450.f);
+    createText(text_newInfo, 48, sf::Color::Black, sf::Vector2f(638.f, 450.f));
 
-    std::string str_post;
 
+    // Создание текстур
     sf::Texture rectangle;
-    if (!rectangle.loadFromFile("Images\\rectangle.png"))
-        return;
-    sf::Sprite sprite_rectangle(rectangle);
-    sprite_rectangle.setScale(0.6, 0.6);
-    sprite_rectangle.setPosition(570, 400);
-
+    loadTexture("rectangle.png", rectangle);
 
     sf::Texture arrow_back_white;
-    if (!arrow_back_white.loadFromFile("Images\\arrow_back_white.png"))
-        return;
-    sf::Sprite sprite_arrow_back_white(arrow_back_white);
-    sprite_arrow_back_white.setScale(0.2, 0.2);
-    sprite_arrow_back_white.setPosition(50, 950);
+    loadTexture("arrow_back_white.png", arrow_back_white);
 
     sf::Texture arrow_back_orange;
-    if (!arrow_back_orange.loadFromFile("Images\\arrow_back.png"))
-        return;
-    sf::Sprite sprite_arrow_back_orange(arrow_back_orange);
-    sprite_arrow_back_orange.setScale(0.2, 0.2);
-    sprite_arrow_back_orange.setPosition(50, 950);
+    loadTexture("arrow_back.png", arrow_back_orange);
+
+
+    // Создание спрайтов
+    sf::Sprite sprite_arrow_back_orange;
+    createSprite(sprite_arrow_back_orange, arrow_back_orange, 0.2, 0.2, sf::Vector2f(50, 950));
+
+    sf::Sprite sprite_rectangle;
+    createSprite(sprite_rectangle, rectangle, 0.6, 0.6, sf::Vector2f(570, 400));
+
+    sf::Sprite sprite_arrow_back_white;
+    createSprite(sprite_arrow_back_white, arrow_back_white, 0.2, 0.2, sf::Vector2f(50, 950));
 
 
     bool isMouseOnArrow = false;
@@ -2800,6 +2787,7 @@ void searchEmployeeWithPost_menu(std::vector<Employee>& employee)
     bool isPostChanging = false;
     bool isTextEmpty = true;
     bool isButtonClicked = false;
+    std::string str_post;
 
     while (window.isOpen())
     {
@@ -2817,21 +2805,8 @@ void searchEmployeeWithPost_menu(std::vector<Employee>& employee)
                 sf::Vector2i mousePos = sf::Mouse::getPosition(window);
                 if (sprite_arrow_back_orange.getGlobalBounds().contains(mousePos.x, mousePos.y))
                     return;
-            }
-
-            // подсвечивание
-            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-            if (sprite_arrow_back_white.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                isMouseOnArrow = true;
-            else
-                isMouseOnArrow = false;
-
-            highlightButton(text_search, window);
 
 
-            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
-            {
-                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
                 if (text_search.getGlobalBounds().contains(mousePos.x, mousePos.y))
                     isButtonClicked = true;
                 if (text_search.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isTextEmpty)
@@ -2839,6 +2814,7 @@ void searchEmployeeWithPost_menu(std::vector<Employee>& employee)
             }
             else if (event.type == sf::Event::KeyPressed and event.mouseButton.button == sf::Keyboard::Enter)
                 printSearchingEmployeesWithPost(employee, str_post, isPostChanging);
+
 
             // проверка на поле для ввода
             if (event.type == sf::Event::MouseButtonPressed)
@@ -2874,6 +2850,19 @@ void searchEmployeeWithPost_menu(std::vector<Employee>& employee)
 
                 isPostChanging = false;
             }
+
+
+
+            // подсвечивание
+            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+            if (sprite_arrow_back_white.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                isMouseOnArrow = true;
+            else
+                isMouseOnArrow = false;
+
+            highlightButton(text_search, window);
+
+
         }
 
         window.clear(sf::Color::Black);
@@ -2896,40 +2885,35 @@ void searchEmployeeWithPost_menu(std::vector<Employee>& employee)
 }
 void printSearchingEmployeesWithPost(std::vector<Employee>& employee, std::string str_post, bool isPostChanging)
 {
+    // Загрузка шрифтов
     sf::Font font2;
-    if (!font2.loadFromFile("shrift.ttf"))
-        return;
+    loadFont(font2, "shrift.ttf");
 
 
     sf::Text text_searchEmployees(L"Найденные сотрудники", font2);
-    text_searchEmployees.setCharacterSize(46);
-    text_searchEmployees.setFillColor(sf::Color::White);
-    text_searchEmployees.setPosition(670.f, 30.f);
+    createText(text_searchEmployees, 46, sf::Color::White, sf::Vector2f(670.f, 30.f));
 
     sf::Text text_currentEmployeeNo(L"Сотрудников с такой должностью не найдено!", font2);
-    text_currentEmployeeNo.setCharacterSize(46);
-    text_currentEmployeeNo.setFillColor(sf::Color::White);
-    text_currentEmployeeNo.setPosition(420.f, 500.f);
+    createText(text_currentEmployeeNo, 46, sf::Color::White, sf::Vector2f(420.f, 500.f));
 
 
     sf::Texture arrow_back_white;
-    if (!arrow_back_white.loadFromFile("Images\\arrow_back_white.png"))
-        return;
-    sf::Sprite sprite_arrow_back_white(arrow_back_white);
-    sprite_arrow_back_white.setScale(0.2, 0.2);
-    sprite_arrow_back_white.setPosition(50, 950);
+    loadTexture("arrow_back_white.png", arrow_back_white);
 
     sf::Texture arrow_back_orange;
-    if (!arrow_back_orange.loadFromFile("Images\\arrow_back.png"))
-        return;
-    sf::Sprite sprite_arrow_back_orange(arrow_back_orange);
-    sprite_arrow_back_orange.setScale(0.2, 0.2);
-    sprite_arrow_back_orange.setPosition(50, 950);
+    loadTexture("arrow_back.png", arrow_back_orange);
+
+
+    // Создание спрайтов
+    sf::Sprite sprite_arrow_back_white;
+    createSprite(sprite_arrow_back_white, arrow_back_white, 0.2, 0.2, sf::Vector2f(50, 950));
+
+    sf::Sprite sprite_arrow_back_orange;
+    createSprite(sprite_arrow_back_orange, arrow_back_orange, 0.2, 0.2, sf::Vector2f(50, 950));
 
 
     std::vector<int> indexes;
     indexes.reserve(10);
-
     bool isMouseOnArrow = false;
 
     while (window.isOpen())
@@ -2963,8 +2947,6 @@ void printSearchingEmployeesWithPost(std::vector<Employee>& employee, std::strin
 
         window.clear(sf::Color::Black);
 
-
-
         if (!isPostChanging)
         {
             searchWithPost(employee, str_post, indexes);
@@ -2981,33 +2963,50 @@ void printSearchingEmployeesWithPost(std::vector<Employee>& employee, std::strin
         else
             window.draw(sprite_arrow_back_white);
 
-
         window.display();
     }
 }
 void printEmployeesLoopPost(std::vector<int>& indexes, std::vector<Employee>& employee)
 {
-
+    // Загрузка шрифтов
     sf::Font font2;
-    if (!font2.loadFromFile("shrift.ttf"))
-        return;
+    loadFont(font2, "shrift.ttf");
 
 
+    // Создание текстов
     sf::Text text_currentEmployee("", font2);
-    text_currentEmployee.setCharacterSize(32);
-    text_currentEmployee.setFillColor(sf::Color::White);
+    createText(text_currentEmployee, 28, sf::Color::White, sf::Vector2f(0, 0));
+
 
     std::string str_currentEmployee;
-
-    float x = 120.0;
+    float x = 100.0;
     float y = 120.0f;
     int count = 0;
+
     for (int i = 0; i < indexes.size(); i++)
     {
+        std::string post;
+        if (employee.at(indexes.at(i)).post == Post::JUNIOR)
+            post = "Junior";
+        else if (employee.at(indexes.at(i)).post == Post::MIDDLE)
+            post = "Middle";
+        else if (employee.at(indexes.at(i)).post == Post::SENIOR)
+            post = "Senior";
+        else if (employee.at(indexes.at(i)).post == Post::TEAM_LEADER)
+            post = "Team leader";
+        else if (employee.at(indexes.at(i)).post == Post::PROJECT_MANAGER)
+            post = "Project manager";
+        else if (employee.at(indexes.at(i)).post == Post::DIRECTOR_OF_DEPARTMENT)
+            post = "Director of department";
+        else if (employee.at(indexes.at(i)).post == Post::DEPUTY_GENERAL_DIRECTOR)
+            post = "Deputy general director";
+        else if (employee.at(indexes.at(i)).post == Post::GENERAL_DIRECTOR)
+            post = "General director";
+
         text_currentEmployee.setPosition(x, y);
-        str_currentEmployee = std::to_string(i + 1) + ((i < 9) ? ".   " : ".  ") + employee.at(indexes.at(count)).surName + " " +
-            employee.at(indexes.at(count)).name + " " + employee.at(indexes.at(count)).patronymic + " " + employee.at(indexes.at(count)).gender +
-            " " + employee.at(indexes.at(count)).dateOfBirthday + " " + employee.at(indexes.at(count)).departmentName + " " + employee.at(indexes.at(count)).startDate;
+        str_currentEmployee = std::to_string(i + 1) + ((i < 9) ? ".   " : ".  ") + employee.at(indexes.at(i)).surName + " " + employee.at(indexes.at(i)).name + " " +
+            employee.at(indexes.at(i)).patronymic + " " + employee.at(indexes.at(i)).gender + " " + employee.at(indexes.at(i)).dateOfBirthday
+            + " " + employee.at(indexes.at(i)).departmentName + " " + post + " " + employee.at(indexes.at(i)).startDate;
         text_currentEmployee.setString(str_currentEmployee);
 
         y += 50;
@@ -3019,54 +3018,45 @@ void printEmployeesLoopPost(std::vector<int>& indexes, std::vector<Employee>& em
 // по дате начала работы
 void searchEmployeeWithStartYear_menu(std::vector<Employee>& employee)
 {
+    // Загрузка шрифтов
     sf::Font font2;
-    if (!font2.loadFromFile("shrift.ttf"))
-        return;
+    loadFont(font2, "shrift.ttf");
 
 
+    // Создание текстов
     sf::Text text_enterYear(L"Введите год начала работы сотрудника", font2);
-    text_enterYear.setCharacterSize(48);
-    text_enterYear.setFillColor(sf::Color::White);
-    text_enterYear.setPosition(560.f, 50.f);
+    createText(text_enterYear, 48, sf::Color::White, sf::Vector2f(470.f, 50.f));
 
     sf::Text text_search(L"Поиск", font2);
-    text_search.setCharacterSize(48);
-    text_search.setFillColor(sf::Color::White);
-    text_search.setPosition(1700.f, 970.f);
+    createText(text_search, 48, sf::Color::White, sf::Vector2f(1700.f, 970.f));
 
     sf::Text text_empty(L"Введите хотя бы один символ", font2);
-    text_empty.setCharacterSize(30);
-    text_empty.setFillColor(sf::Color::Red);
-    text_empty.setPosition(692.f, 574.f);
+    createText(text_empty, 30, sf::Color::Red, sf::Vector2f(692.f, 574.f));
 
     sf::Text text_newInfo("", font2);
-    text_newInfo.setCharacterSize(48);
-    text_newInfo.setFillColor(sf::Color::Black);
-    text_newInfo.setPosition(638.f, 450.f);
+    createText(text_newInfo, 48, sf::Color::Black, sf::Vector2f(638.f, 450.f));
 
-    std::string str_year;
 
+    // Создание текстур
     sf::Texture rectangle;
-    if (!rectangle.loadFromFile("Images\\rectangle.png"))
-        return;
-    sf::Sprite sprite_rectangle(rectangle);
-    sprite_rectangle.setScale(0.6, 0.6);
-    sprite_rectangle.setPosition(570, 400);
-
+    loadTexture("rectangle.png", rectangle);
 
     sf::Texture arrow_back_white;
-    if (!arrow_back_white.loadFromFile("Images\\arrow_back_white.png"))
-        return;
-    sf::Sprite sprite_arrow_back_white(arrow_back_white);
-    sprite_arrow_back_white.setScale(0.2, 0.2);
-    sprite_arrow_back_white.setPosition(50, 950);
+    loadTexture("arrow_back_white.png", arrow_back_white);
 
     sf::Texture arrow_back_orange;
-    if (!arrow_back_orange.loadFromFile("Images\\arrow_back.png"))
-        return;
-    sf::Sprite sprite_arrow_back_orange(arrow_back_orange);
-    sprite_arrow_back_orange.setScale(0.2, 0.2);
-    sprite_arrow_back_orange.setPosition(50, 950);
+    loadTexture("arrow_back.png", arrow_back_orange);
+
+
+    // Создание спрайтов
+    sf::Sprite sprite_arrow_back_orange;
+    createSprite(sprite_arrow_back_orange, arrow_back_orange, 0.2, 0.2, sf::Vector2f(50, 950));
+
+    sf::Sprite sprite_rectangle;
+    createSprite(sprite_rectangle, rectangle, 0.6, 0.6, sf::Vector2f(570, 400));
+
+    sf::Sprite sprite_arrow_back_white;
+    createSprite(sprite_arrow_back_white, arrow_back_white, 0.2, 0.2, sf::Vector2f(50, 950));
 
 
     bool isMouseOnArrow = false;
@@ -3074,6 +3064,7 @@ void searchEmployeeWithStartYear_menu(std::vector<Employee>& employee)
     bool isYearChanging = false;
     bool isTextEmpty = true;
     bool isButtonClicked = false;
+    std::string str_year;
 
     while (window.isOpen())
     {
@@ -3091,21 +3082,7 @@ void searchEmployeeWithStartYear_menu(std::vector<Employee>& employee)
                 sf::Vector2i mousePos = sf::Mouse::getPosition(window);
                 if (sprite_arrow_back_orange.getGlobalBounds().contains(mousePos.x, mousePos.y))
                     return;
-            }
 
-            // подсвечивание
-            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-            if (sprite_arrow_back_white.getGlobalBounds().contains(mousePos.x, mousePos.y))
-                isMouseOnArrow = true;
-            else
-                isMouseOnArrow = false;
-
-            highlightButton(text_search, window);
-
-
-            if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
-            {
-                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
                 if (text_search.getGlobalBounds().contains(mousePos.x, mousePos.y))
                     isButtonClicked = true;
                 if (text_search.getGlobalBounds().contains(mousePos.x, mousePos.y) and !isTextEmpty)
@@ -3113,6 +3090,7 @@ void searchEmployeeWithStartYear_menu(std::vector<Employee>& employee)
             }
             else if (event.type == sf::Event::KeyPressed and event.mouseButton.button == sf::Keyboard::Enter)
                 printSearchingEmployeesWithYear(employee, str_year, isYearChanging);
+
 
             // проверка на поле для ввода
             if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left)
@@ -3123,7 +3101,7 @@ void searchEmployeeWithStartYear_menu(std::vector<Employee>& employee)
             }
 
 
-            // ввод текста в поле НОВАЯ ИНФА
+            // ввод текста в поле НОВАЯ ИНФО
             if (event.type == sf::Event::TextEntered and event.text.unicode < 128)
             {
                 if (event.text.unicode == 8 and isRectangleClicked)
@@ -3143,6 +3121,16 @@ void searchEmployeeWithStartYear_menu(std::vector<Employee>& employee)
 
                 isYearChanging = false;
             }
+
+
+            // подсвечивание
+            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+            if (sprite_arrow_back_white.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                isMouseOnArrow = true;
+            else
+                isMouseOnArrow = false;
+
+            highlightButton(text_search, window);
         }
 
         window.clear(sf::Color::Black);
@@ -3165,41 +3153,39 @@ void searchEmployeeWithStartYear_menu(std::vector<Employee>& employee)
 }
 void printSearchingEmployeesWithYear(std::vector<Employee>& employee, std::string str_year, bool isYearChanging)
 {
+    // Загрузка шрифтов
     sf::Font font2;
-    if (!font2.loadFromFile("shrift.ttf"))
-        return;
+    loadFont(font2, "shrift.ttf");
 
 
+    // Создание текстов
     sf::Text text_searchEmployees(L"Найденные сотрудники", font2);
-    text_searchEmployees.setCharacterSize(46);
-    text_searchEmployees.setFillColor(sf::Color::White);
-    text_searchEmployees.setPosition(670.f, 30.f);
+    createText(text_searchEmployees, 46, sf::Color::White, sf::Vector2f(670.f, 30.f));
 
     sf::Text text_currentEmployeeNo(L"Сотрудников с такой датой не найдено!", font2);
-    text_currentEmployeeNo.setCharacterSize(46);
-    text_currentEmployeeNo.setFillColor(sf::Color::White);
-    text_currentEmployeeNo.setPosition(420.f, 500.f);
+    createText(text_currentEmployeeNo, 46, sf::Color::White, sf::Vector2f(420.f, 500.f));
 
 
+    // Создание текстур
     sf::Texture arrow_back_white;
-    if (!arrow_back_white.loadFromFile("Images\\arrow_back_white.png"))
-        return;
-    sf::Sprite sprite_arrow_back_white(arrow_back_white);
-    sprite_arrow_back_white.setScale(0.2, 0.2);
-    sprite_arrow_back_white.setPosition(50, 950);
+    loadTexture("arrow_back_white.png", arrow_back_white);
 
     sf::Texture arrow_back_orange;
-    if (!arrow_back_orange.loadFromFile("Images\\arrow_back.png"))
-        return;
-    sf::Sprite sprite_arrow_back_orange(arrow_back_orange);
-    sprite_arrow_back_orange.setScale(0.2, 0.2);
-    sprite_arrow_back_orange.setPosition(50, 950);
+    loadTexture("arrow_back.png", arrow_back_orange);
+
+
+    // Создание спрайтов
+    sf::Sprite sprite_arrow_back_white;
+    createSprite(sprite_arrow_back_white, arrow_back_white, 0.2, 0.2, sf::Vector2f(50, 950));
+
+    sf::Sprite sprite_arrow_back_orange;
+    createSprite(sprite_arrow_back_orange, arrow_back_orange, 0.2, 0.2, sf::Vector2f(50, 950));
 
 
     std::vector<int> indexes;
     indexes.reserve(10);
-
     bool isMouseOnArrow = false;
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -3247,32 +3233,50 @@ void printSearchingEmployeesWithYear(std::vector<Employee>& employee, std::strin
         else
             window.draw(sprite_arrow_back_white);
 
-
         window.display();
     }
 }
 void printEmployeesLoopYear(std::vector<int>& indexes, std::vector<Employee>& employee)
 {
+    // Загрузка шрифтов
     sf::Font font2;
-    if (!font2.loadFromFile("shrift.ttf"))
-        return;
+    loadFont(font2, "shrift.ttf");
 
 
+    // Создание текстов
     sf::Text text_currentEmployee("", font2);
-    text_currentEmployee.setCharacterSize(32);
-    text_currentEmployee.setFillColor(sf::Color::White);
+    createText(text_currentEmployee, 28, sf::Color::White, sf::Vector2f(670.f, 30.f));
+
 
     std::string str_currentEmployee;
-
-    float x = 120.0;
+    float x = 100.0;
     float y = 120.0f;
     int count = 0;
+
     for (int i = 0; i < indexes.size(); i++)
     {
+        std::string post;
+        if (employee.at(indexes.at(i)).post == Post::JUNIOR)
+            post = "Junior";
+        else if (employee.at(indexes.at(i)).post == Post::MIDDLE)
+            post = "Middle";
+        else if (employee.at(indexes.at(i)).post == Post::SENIOR)
+            post = "Senior";
+        else if (employee.at(indexes.at(i)).post == Post::TEAM_LEADER)
+            post = "Team leader";
+        else if (employee.at(indexes.at(i)).post == Post::PROJECT_MANAGER)
+            post = "Project manager";
+        else if (employee.at(indexes.at(i)).post == Post::DIRECTOR_OF_DEPARTMENT)
+            post = "Director of department";
+        else if (employee.at(indexes.at(i)).post == Post::DEPUTY_GENERAL_DIRECTOR)
+            post = "Deputy general director";
+        else if (employee.at(indexes.at(i)).post == Post::GENERAL_DIRECTOR)
+            post = "General director";
+
         text_currentEmployee.setPosition(x, y);
-        str_currentEmployee = std::to_string(i + 1) + ((i < 9) ? ".   " : ".  ") + employee.at(indexes.at(count)).surName + " " +
-            employee.at(indexes.at(count)).name + " " + employee.at(indexes.at(count)).patronymic + " " + employee.at(indexes.at(count)).gender +
-            " " + employee.at(indexes.at(count)).dateOfBirthday + " " + employee.at(indexes.at(count)).departmentName + " " + employee.at(indexes.at(count)).startDate;
+        str_currentEmployee = std::to_string(i + 1) + ((i < 9) ? ".   " : ".  ") + employee.at(indexes.at(i)).surName + " " + employee.at(indexes.at(i)).name + " " +
+            employee.at(indexes.at(i)).patronymic + " " + employee.at(indexes.at(i)).gender + " " + employee.at(indexes.at(i)).dateOfBirthday
+            + " " + employee.at(indexes.at(i)).departmentName + " " + post + " " + employee.at(indexes.at(i)).startDate;
         text_currentEmployee.setString(str_currentEmployee);
 
         y += 50;
