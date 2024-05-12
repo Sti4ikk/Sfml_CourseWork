@@ -50,8 +50,6 @@ std::array<int, 2> checkDataOfUser(std::vector<Authentication>& authentication, 
 	}
 }
 
-
-
 void addNewEmployee(std::vector<Employee>& employee, std::string str_surName, std::string str_name, 
 	std::string str_patronymic, std::string str_gender, std::string str_date_of_birth, std::string str_departmentName, std::string str_post, std::string str_startDate)
 {

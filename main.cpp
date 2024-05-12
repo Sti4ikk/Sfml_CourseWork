@@ -4,7 +4,6 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <ctime>
-
 #include <iostream>
 #include <array>
 
@@ -25,7 +24,7 @@ int main()
     // запись данных в векторы из файлов
     writingToVectorsFromFileAuth(authentication);
     writingToVectorsFromFileEmployee(employee); 
-    wrtiteIsRememberMeOn(isRememberMePressed);
+    readIsRememberMeOn(isRememberMePressed);
     numberOfPersonalEmployee = readNumberOfPersonalEmployee();
 
 

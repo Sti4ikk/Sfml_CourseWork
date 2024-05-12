@@ -7,6 +7,7 @@
 #include <fstream>
 
 
+// Чтение данных пользователей из файла
 void writingToVectorsFromFileAuth(std::vector<Authentication>& authentication)
 {
 	std::ifstream auth("Authentication_Data.txt");
@@ -29,6 +30,7 @@ void writingToVectorsFromFileAuth(std::vector<Authentication>& authentication)
 	auth.close();
 }
 
+// Чтение данных сотрудников из файла
 void writingToVectorsFromFileEmployee(std::vector<Employee>& employee)
 {
 	std::ifstream empl("Employee_Data.txt");
@@ -72,7 +74,8 @@ void writingToVectorsFromFileEmployee(std::vector<Employee>& employee)
 	empl.close();
 }
 
-void wrtiteIsRememberMeOn(bool &isRememberMePressed)
+// Чтение из файла переменной-состояния входа
+void readIsRememberMeOn(bool &isRememberMePressed)
 {
 	std::fstream file("isRememberMePressed.txt");
 
@@ -81,6 +84,7 @@ void wrtiteIsRememberMeOn(bool &isRememberMePressed)
 	file.close();
 }
 
+// Запись в файл переменной-состояния входа
 void writeInFileIsRememberOn(bool& isRememberMePressed)
 {
 	std::fstream file("isRememberMePressed.txt");
@@ -186,6 +190,7 @@ void writeNumberOfPersonalEmployee(int numberOfPersonalEmployee)
 	file.close();
 }
 
+// Читаем число из файла для идентификации работника
 int readNumberOfPersonalEmployee()
 {
 	std::fstream file("numberOfPersonalEmployee.txt");
@@ -195,7 +200,7 @@ int readNumberOfPersonalEmployee()
 	return num;
 }
 
-
+// Функция для записи в файл нового члена-персонала
 void writeNewPersonalEmployee(std::vector<Authentication>& authentication, std::string str_login, std::string str_password, std::string str_surName, std::string str_name,
 	std::string str_patronymic, std::string str_link, std::string str_post)
 {

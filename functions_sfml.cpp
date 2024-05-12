@@ -10,14 +10,6 @@ struct TextData
     bool isClicked = false;
 };
 
-// Структура для спрайта
-struct SpriteData
-{
-    sf::Sprite sprite;
-    bool isClicked = false;
-};
-
-
 
 // Функция для загрузки текстуры из файла
 bool loadTexture(const std::string& filePath, sf::Texture& texture) 
@@ -47,6 +39,7 @@ void createText(sf::Text& text, unsigned int characterSize, const sf::Color& col
     text.setPosition(position);
 }
 
+// Функция для создания прямоугольника
 void createRectangle(sf::RectangleShape &rectangle, const sf::Vector2f& size, const sf::Vector2f& position, const sf::Color& color, const float outlineThickness = 0, const sf::Color outlineColor = sf::Color::Black)
 {
     rectangle.setSize(size);
@@ -67,9 +60,6 @@ bool loadFont(sf::Font& font, const std::string& filePath)
     }
     return true;
 }
-
-
-
 
 // Функция для обработки текстовых полей
 void handleTextField(TextData& textField, sf::Event& event, sf::RenderWindow& window) 
@@ -149,7 +139,6 @@ bool handleButton(const sf::Text& button, sf::Event& event, sf::RenderWindow& wi
     return isButtonClicked;
 }
 
-
 // Функция для создания текста
 void createText(sf::Text& text, const std::wstring& str, const sf::Font& font, unsigned int size, const sf::Color& color, const sf::Vector2f& position) {
     text.setFont(font);
@@ -168,6 +157,7 @@ void createText(sf::Text& text, const std::string& str, const sf::Font& font, un
     text.setPosition(position);
 }
 
+// Функция для выделения текста при наведении
 void highlightButton(sf::Text& button, sf::RenderWindow& window) 
 {
     if (button.getGlobalBounds().contains(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y)) 
@@ -178,6 +168,7 @@ void highlightButton(sf::Text& button, sf::RenderWindow& window)
         button.setFillColor(sf::Color::White);
 }
 
+// Функция для выделения прямоугольника при наведении
 void highlightButton(sf::RectangleShape& button, sf::RenderWindow& window)
 {
     if (button.getGlobalBounds().contains(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y))
