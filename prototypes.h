@@ -90,3 +90,8 @@ int successOfAdding_menu();
 int successOfEdit_menu();
 int successOfSorting_menu(int kindOfSort, int sortUpOrDown, std::vector<Employee>& employee);
 int areYouSure();
+
+
+// ’≈ÿ»–Œ¬¿Õ»≈ œ¿–ŒÀ≈…
+std::string sha256(std::string str);
+std::array<std::string, 2> shifrovanie();

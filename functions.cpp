@@ -9,6 +9,8 @@
 #include <array>
 #include <sstream>
 #include <iostream>
+#include <iomanip>
+#include "openssl/sha.h"
 
 
 // Проверка введённых данных
@@ -18,11 +20,10 @@ std::array<int, 2> checkDataOfUser(std::vector<Authentication>& authentication, 
 	bool check = false;
 	std::array<int, 2> arr;
 
-	encryptDataForAdmin();
-	std::array<std::string, 2> admin_data = decryptData();
+	std::array<std::string, 2> admin_data = shifrovanie();
 
 
-	if (login == admin_data.at(0) and password == admin_data.at(1))
+	if (login == admin_data.at(0) and sha256(password) == admin_data.at(1))
 	{
 		arr.at(0) = 1;
 		arr.at(1) = -1;
@@ -34,7 +35,7 @@ std::array<int, 2> checkDataOfUser(std::vector<Authentication>& authentication, 
 
 	for (int i = 0; i < authentication.size(); i++)
 	{
-		if (login == authentication.at(i).login and password == authentication.at(i).password)
+		if (login == authentication.at(i).login and sha256(password) == authentication.at(i).password)
 		{
 			arr.at(0) = 1;
 			arr.at(1) = i;
@@ -360,7 +361,6 @@ void sortWithExperienceUp(std::vector<Employee>& employee)
 }
 
 
-
 // вычисляет возраст сотрудника(в годах)
 int ageOfEmployee(std::vector<Employee>& employee, const int index)
 {
@@ -411,78 +411,6 @@ std::vector<int> searchForEmployeesOfRetirementAge(std::vector<Employee>& employ
 	return indexes;
 }
 
-
-
-// Функция для шифрования данных методом простой замены
-std::array<std::string, 2> encryptData(std::string &login, std::string& password)
-{
-	std::array<std::string, 2> ciphertext = { login, password };
-
-	// Пример простой замены: символ 'A' заменяется на 'Z', 'B' на 'Y' и так далее
-	for (char& c : ciphertext.at(0)) 
-	{
-		if (std::isalpha(c)) 
-		{
-			c += 5;
-		}
-	}
-	for (char& c : ciphertext.at(1))
-	{
-		if (std::isalpha(c))
-		{
-			c += 5;
-		}
-	}
-
-	std::fstream file("Admin_data.txt");
-	file << ciphertext.at(0);
-	file << std::endl;
-	file << ciphertext.at(1);
-	file.close();
-
-	return ciphertext;
-}
-
-// Функция для дешифрования данных методом простой замены
-std::array<std::string, 2> decryptData()
-{
-	std::fstream file("Admin_data.txt");
-	std::array<std::string, 2> ciphertext;
-
-	file >> ciphertext.at(0);
-	file >> ciphertext.at(1);
-
-	std::array<std::string, 2> plaintext;
-
-	// Проходим по каждой зашифрованной строке и применяем обратное преобразование
-	for (size_t i = 0; i < 2; ++i)
-	{
-		std::string decryptedString;
-		int count = 0;
-		for (char c : ciphertext[i])
-		{
-			// Применяем обратное преобразование: символ 'Z' заменяем на 'A', 'Y' на 'B' и так далее
-			if (std::isalpha(c))
-			{
-				decryptedString.push_back(c - 5);
-			}
-		}
-
-		plaintext[i] = decryptedString;
-	}
-
-	return plaintext;
-}
-
-void encryptDataForAdmin()
-{
-	// зашифровываем данные для админа
-	std::string login = "adminOne";
-	std::string password = "AdminQQ";
-	encryptData(login, password);
-}
-
-
 // получаем стаж сотрудников в годах, месяцах и днях
 void getExperienceOfEmployees(std::vector<Employee>& employee)
 {
@@ -512,4 +440,44 @@ void getExperienceOfEmployees(std::vector<Employee>& employee)
 		employee.at(i).experience.months = months;
 		employee.at(i).experience.days = days;
 	}
+}
+
+
+// Хеширование паролей
+std::string sha256(std::string str) 
+{
+	unsigned char hash[SHA256_DIGEST_LENGTH];
+	const unsigned char* data = (const unsigned char*)str.c_str();
+	SHA256(data, str.size(), hash);
+	std::stringstream ss;
+	for (int i = 0; i < SHA256_DIGEST_LENGTH; i++)
+	{
+		ss << std::hex << std::setw(2) << std::setfill('0') << (int)hash[i];
+	}
+	return ss.str();
+}
+
+// Запись в файл хешированных паролей
+std::array<std::string, 2> shifrovanie()
+{
+	std::array<std::string, 2> arr;
+
+	std::string login;
+	std::string password;
+	std::fstream file("Admin_data.txt");
+	file >> login;
+	password = sha256("AdminQQ");
+
+
+	file.close();
+
+	std::fstream file1("Admin_data.txt");
+	file1 << "adminOne";
+	file1 << " "<<password;
+
+	file1.close();
+
+
+	arr = { login, password };
+	return arr;
 }

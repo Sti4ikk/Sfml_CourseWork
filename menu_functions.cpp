@@ -1535,15 +1535,13 @@ float printAllEmployees(std::vector<Employee>& employee, float scrollPosition)
 }
 float printAllEmployeesForEditingAndDeleting(std::vector<Employee>& employee, float scrollPosition)
 {
+    // Загрузка шрифтов
     sf::Font font2;
-    if (!font2.loadFromFile("shrift.ttf"))
-        return 0.0;
+    loadFont(font2, "shrift.ttf");
 
 
     sf::Text employee1(L"", font2);
-    employee1.setCharacterSize(32);
-    employee1.setFillColor(sf::Color::White);
-    employee1.setPosition(30.f, 30.f);
+    createText(employee1, 30, sf::Color::White, sf::Vector2f(30.f, 30.f));
 
 
     float x = 120.0;
@@ -2851,7 +2849,7 @@ float printAllEmployeesExperience(std::vector<Employee>& employee, float scrollP
     createText(text_listOfEmployees, 64, sf::Color::White, sf::Vector2f(0, 0));
 
     sf::Text employee1(L"", font2);
-    createText(employee1, 28, sf::Color::White, sf::Vector2f(30, 30));
+    createText(employee1, 30, sf::Color::White, sf::Vector2f(30, 30));
 
 
     float x = 100.0;
@@ -3115,7 +3113,7 @@ void printEmployeesLoop(std::vector<int>& indexes, std::vector<Employee>& employ
 
     // Создание текстов
     sf::Text text_currentEmployee("", font2);
-    createText(text_currentEmployee, 28, sf::Color::White, sf::Vector2f(0, 0));
+    createText(text_currentEmployee, 30, sf::Color::White, sf::Vector2f(0, 0));
 
 
     std::string str_currentEmployee;
@@ -3393,7 +3391,7 @@ void printEmployeesLoopPost(std::vector<int>& indexes, std::vector<Employee>& em
 
     // Создание текстов
     sf::Text text_currentEmployee("", font2);
-    createText(text_currentEmployee, 28, sf::Color::White, sf::Vector2f(0, 0));
+    createText(text_currentEmployee, 30, sf::Color::White, sf::Vector2f(0, 0));
 
 
     std::string str_currentEmployee;
@@ -3663,7 +3661,7 @@ void printEmployeesLoopYear(std::vector<int>& indexes, std::vector<Employee>& em
 
     // Создание текстов
     sf::Text text_currentEmployee("", font2);
-    createText(text_currentEmployee, 28, sf::Color::White, sf::Vector2f(670.f, 30.f));
+    createText(text_currentEmployee, 30, sf::Color::White, sf::Vector2f(670.f, 30.f));
 
 
     std::string str_currentEmployee;
@@ -3895,7 +3893,7 @@ float printEmployeesOfRetirementAge(std::vector<Employee>& employee)
     createText(text_listOfEmployees, 64, sf::Color::White, sf::Vector2f(0, 0));
 
     sf::Text employee1(L"", font2);
-    createText(employee1, 32, sf::Color::White, sf::Vector2f(30, 30));
+    createText(employee1, 30, sf::Color::White, sf::Vector2f(30, 30));
 
 
     std::vector<int> indexes = searchForEmployeesOfRetirementAge(employee);

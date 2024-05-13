@@ -1,5 +1,4 @@
-Antonenko Roman Victorovich Man 13.12.1980 Gameplay Project_manager 25.09.2014
-Aronova Victoria Dmitrievna Woman 19.08.2002 Content_development Junior 20.10.2022
+Antonenko Roman Victorovich Man 13.12.1980 DD Project_manager 25.09.2014
 Dikevich Lev Alekseevich Man 15.05.1996 Content_development Senior 14.01.2015
 Gromov Georgiy Nitikovich Man 21.08.1997 Graphics_and_animation Middle 29.03.2019
 Gvozdovskiy Evgeniy Dmitrievich Man 21.05.2006 Game_testing Junior 14.12.2023

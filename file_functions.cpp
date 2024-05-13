@@ -206,7 +206,8 @@ void writeNewPersonalEmployee(std::vector<Authentication>& authentication, std::
 {
 	std::fstream file("Authentication_Data.txt", std::ios::app);
 	file <<std::endl<< str_login << " ";
-	file << str_password << " ";
+	std::string hashPassword = sha256(str_password);
+	file << hashPassword << " ";
 	file << str_surName << " ";
 	file << str_name << " ";
 	file << str_patronymic << " ";
