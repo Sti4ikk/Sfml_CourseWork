@@ -14,6 +14,7 @@ void writeInfoOfNewEmployeeInFile(std::vector<Employee>& employee, std::string s
 void writeInToFileAfterDeleteEmployee(std::vector<Employee>& employee);
 void writeNumberOfPersonalEmployee(int numberOfPersonalEmployee);
 int readNumberOfPersonalEmployee();
+void writeInToFileAfterDeleteRersonalEmployee(std::vector<Authentication>& authentication);
 
 
 // Œ—ÕŒ¬Õ€≈ ‘”Õ ÷»»
@@ -33,6 +34,10 @@ void encryptDataForAdmin();
 void writeNewPersonalEmployee(std::vector<Authentication>& authentication, std::string str_surName, std::string str_name,
 	std::string str_patronymic, std::string str_login, std::string str_password, std::string str_link, std::string str_post);
 void getExperienceOfEmployees(std::vector<Employee>& employee);
+void deletePersonalEmployee(std::vector<Authentication>& authentication, std::string str_number);
+int isLoginAvailable(std::string login, std::vector<Authentication>& authentication);
+int isPasswordGood(std::string password, std::string login);
+int checkIfLoginInPassword(std::string login, std::string password);
 
 
 // ‘”Õ ÷»» Ã≈Õﬁ
@@ -61,6 +66,10 @@ void account_menu(std::vector<Authentication>& authentication, int numberOfPerso
 void printExperience_menu(std::vector<Employee>& employee);
 float printAllEmployeesExperience(std::vector<Employee>& employee, float scrollPosition);
 void addNewPersonalEmployee(std::vector<Authentication>& authentication);
+void deleteNewPersonalEmployee_menu(std::vector<Authentication>& authentication);
+void printAllPersonalEmployees_menu(std::vector<Authentication>& authentication);
+void printAllPersonalEmployees(std::vector<Authentication>& authentication);
+void printAllPersonalEmployeesForDeleting(std::vector<Authentication>& authentication);
 
 
 // —Œ–“»–Œ¬ »
@@ -90,6 +99,7 @@ int successOfAdding_menu();
 int successOfEdit_menu();
 int successOfSorting_menu(int kindOfSort, int sortUpOrDown, std::vector<Employee>& employee);
 int areYouSure();
+void exceptOutOfRange();
 
 
 // ’≈ÿ»–Œ¬¿Õ»≈ œ¿–ŒÀ≈…

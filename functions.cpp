@@ -178,34 +178,6 @@ void searchWithYear(std::vector<Employee>& employee, std::string str_year, std::
 }
 
 
-// заполнение массива случайными числами для отображения случайных новостей
-void initArrOfRandomNumbers(std::vector<int> &numbers)
-{
-	int count = 0;
-	int number;
-	int index = 0;
-
-	numbers.reserve(5);
-	for (int i = 0; numbers.size() != 5; i++)
-	{
-		number = rand() % 9 + 1;
-
-		for (int j = 0; j < numbers.size(); j++)
-		{
-			if (numbers.at(j) == number)
-				count++;
-		}
-
-		if (!count)
-		{
-			numbers.push_back(number);
-			index++;
-		}
-
-		count = 0;
-	}
-}
-
 // сортировка по Фамилии в порядке убывания(пузырьком)
 void sortWithSurnameDown(std::vector<Employee>& employee)
 {
@@ -480,4 +452,97 @@ std::array<std::string, 2> shifrovanie()
 
 	arr = { login, password };
 	return arr;
+}
+
+
+void deletePersonalEmployee(std::vector<Authentication>& authentication, std::string str_number)
+{
+	authentication.erase(authentication.begin() + (std::stoi(str_number) - 1));
+	// обновление записей в файле
+	writeInToFileAfterDeleteRersonalEmployee(authentication);
+}
+
+// проверка доступности логина
+int isLoginAvailable(std::string login, std::vector<Authentication>& authentication)
+{
+	int count = 0;
+	for (int i = 0; i < authentication.size(); i++)
+	{
+		if (login == authentication.at(i).login)
+			return 0;
+
+		count++;
+
+		if (count == authentication.size())
+			return 1;   // если переменная count будет равна длине массива, то логин не повторяется 
+	}
+}
+
+// проверка на выполнение требований для пароля
+int isPasswordGood(std::string password, std::string login)
+{
+	// счётчик цифр
+	int count = 0;
+
+	// проверка на наличие цифры в пароле
+	for (int i = 0; i < password.length(); i++)
+	{
+		if (isdigit(password[i]))
+			count++;
+	}
+
+
+	int capitalLetter = 0;
+
+	for (int i = 0; i < password.length(); i++)
+	{
+		if (isupper(password[i]))
+		{
+			capitalLetter++;
+			break;        // потому что нужна хотя бы Заглавная буква
+		}
+	}
+
+
+	if (password.length() >= 6 and count >= 1 and capitalLetter == 1 and checkIfLoginInPassword(login, password))
+		return 1;
+	else
+		return 0;
+}
+
+// проверка, нет ли в пароле логина(для безопасноти) | 1 - не подходи пароль, 0 - подходит
+int checkIfLoginInPassword(std::string login, std::string password)
+{
+	if (password.find(login) != std::string::npos)
+		return 0;
+	else
+		return 1;
+}
+
+// заполнение массива случайными числами для отображения случайных новостей
+void initArrOfRandomNumbers(std::vector<int>& numbers)
+{
+	int count = 0;
+	int number;
+	int index = 0;
+
+	numbers.reserve(5);
+	for (int i = 0; numbers.size() != 5; i++)
+	{
+		number = rand() % 9 + 1;
+
+		for (int j = 0; j < numbers.size(); j++)
+		{
+			if (numbers.at(j) == number)
+				count++;
+		}
+
+		if (!count)
+		{
+			numbers.push_back(number);
+			index++;
+		}
+
+		count = 0;
+	}
 }

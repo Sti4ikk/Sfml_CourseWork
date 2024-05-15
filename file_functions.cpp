@@ -182,7 +182,7 @@ void writeInToFileAfterDeleteEmployee(std::vector<Employee>& employee)
 	empl.close();
 }
 
-// запись в файл номера сотрудника (аккаунта)
+// запись в файл номера аккаунта
 void writeNumberOfPersonalEmployee(int numberOfPersonalEmployee)
 {
 	std::fstream file("numberOfPersonalEmployee.txt");
@@ -200,7 +200,7 @@ int readNumberOfPersonalEmployee()
 	return num;
 }
 
-// Функция для записи в файл нового члена-персонала
+// Функция для записи в файл нового аккаунта
 void writeNewPersonalEmployee(std::vector<Authentication>& authentication, std::string str_login, std::string str_password, std::string str_surName, std::string str_name,
 	std::string str_patronymic, std::string str_link, std::string str_post)
 {
@@ -215,4 +215,25 @@ void writeNewPersonalEmployee(std::vector<Authentication>& authentication, std::
 	file << str_post;
 
 	file.close();
+}
+
+// Перезапись файла после удаления аккаунта
+void writeInToFileAfterDeleteRersonalEmployee(std::vector<Authentication>& authentication)
+{
+	std::ofstream empl("Authentication_Data.txt");
+
+	for (int i = 0; i < authentication.size(); i++)
+	{
+
+		if (i != 0) empl << std::endl;
+		empl << authentication.at(i).login << " ";
+		empl << authentication.at(i).password << " ";
+		empl << authentication.at(i).auth_info.surName << " ";
+		empl << authentication.at(i).auth_info.name << " ";
+		empl << authentication.at(i).auth_info.patronymic << " ";
+		empl << authentication.at(i).auth_info.photoLink << " ";
+		empl << authentication.at(i).auth_info.post;
+	}
+
+	empl.close();
 }
