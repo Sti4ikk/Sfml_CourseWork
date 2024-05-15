@@ -111,7 +111,7 @@ void editEmployee(std::vector<Employee>& employee, std::string  str_newInfo, std
 			break;
 		}
 	}
-	case(8): employee.at(std::stoi(str_number)).startDate = str_newInfo; break;
+	case(8): employee.at(std::stoi(str_number) - 1).startDate = str_newInfo; break;
 	}
 
 	writeInToFileAfterDeleteEmployee(employee);

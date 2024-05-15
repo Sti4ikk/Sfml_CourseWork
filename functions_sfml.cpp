@@ -178,3 +178,13 @@ void highlightButton(sf::RectangleShape& button, sf::RenderWindow& window)
         // В противном случае возвращаем исходный цвет
         button.setFillColor(sf::Color(255, 193, 7));
 }
+
+int isTextEmpty(std::vector<TextData>& textFields)
+{
+    for (int i = 0; i < textFields.size(); i++)
+    {
+        if (textFields.at(i).str.empty())
+            return 1;
+    }
+    return 0;
+}
